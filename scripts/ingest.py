@@ -29,7 +29,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
@@ -54,6 +54,17 @@ DATA_FILE = ROOT / "data" / "vacancies.json"
 DISCOVERY_PAGES = [
     "https://www.gazette.lk/government-jobs",
 ]
+
+# documents.gov.lk — the official source (Dept. of Government Printing). Despite
+# rendering as a JS app in a browser, its raw HTML lists real gazette-content filenames
+# as plain matchable text, and its file-proxy endpoint is reachable with a plain HTTP GET
+# — no headless browser needed. Verified directly 2026-09-17 (job.md §11.3) by curling
+# both the listing page and a real PDF straight from documents.gov.lk with no auth/cookies.
+GAZETTE_FILE_REGEX = re.compile(r"gazette-content/[^\"'\\]+?\.(?:pdf|epub)", re.IGNORECASE)
+# "I-II(A)" and "I-II A" both appear in real listings for the same section — bracket
+# style around the "A" isn't consistent. Anchoring on "II" immediately followed by "A"
+# (bracketed or not) naturally excludes IIB/IV(A)/other sections.
+IIA_PATTERN = re.compile(r"I\s*-?\s*II\s*\(?A\)?\b", re.IGNORECASE)
 
 CATEGORIES = [
     "Administrative & Management",
@@ -88,6 +99,149 @@ If a field genuinely isn't in the text, use null. Do not guess or invent values.
 {text}
 --- END ---
 """
+
+# One Part I : Sec (IIA) PDF holds many notices, often several posts each (the Merchant
+# Shipping Secretariat notice we verified against had three posts in one notice) — so
+# structuring has to work on a batch of text and return an array, not one object per call.
+BATCH_STRUCTURING_PROMPT = """You are extracting structured data from a chunk of pages \
+from a real Sri Lankan government Gazette, Part I : Section (IIA) — Advertising (job \
+vacancies and exam notices). This chunk may contain multiple separate notices, and a \
+single notice may list multiple posts (e.g. "Post 1", "Post 2" under one recruiting \
+institution) — treat each POST as its own entry, repeating the shared institution/\
+gazette/closing-date fields for each.
+
+Return ONLY a JSON array (no markdown fences, no commentary). Each element is an object \
+with these exact keys: titleEn, instEn, descEn, age, quota, salary, qualEn, citation, \
+citationType ("gazette" if a gazette number is cited, else "circular", else null), \
+closingDateISO (YYYY-MM-DD or null), category (one of: {categories}), confidence (0.0-1.0).
+
+If a field isn't in the text, use null — never guess. If this chunk contains no actual \
+vacancy/post notices (e.g. it's front matter, rules-and-instructions boilerplate, or an \
+index), return an empty array [].
+
+--- GAZETTE TEXT CHUNK ---
+{text}
+--- END ---
+"""
+
+
+def most_recent_friday():
+    today = datetime.now(timezone.utc).date()
+    offset = (today.weekday() - 4) % 7  # weekday(): Mon=0 ... Fri=4
+    return today - timedelta(days=offset)
+
+
+def fetch_gazette_iia_pdf_urls(date_str):
+    """date_str: 'YYYY-MM-DD'. Returns {'english': url|None, 'sinhala': ..., 'tamil': ...}
+    pointing at real documents.gov.lk file-proxy URLs, or all-None if the page has no
+    matching files (e.g. that Friday's issue isn't published yet)."""
+    listing_url = f"https://documents.gov.lk/web/Gazette?date={date_str}"
+    try:
+        resp = requests.get(listing_url, timeout=20, headers={"User-Agent": "Mozilla/5.0"})
+        resp.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  ! could not fetch {listing_url}: {e}", file=sys.stderr)
+        return {"english": None, "sinhala": None, "tamil": None}
+
+    matches = sorted(set(GAZETTE_FILE_REGEX.findall(resp.text)))
+    candidates = [m for m in matches if m.lower().endswith(".pdf") and IIA_PATTERN.search(m)]
+    # Prefer filenames without "tem" (looks like a draft/temp marker in real listings)
+    candidates.sort(key=lambda f: ("tem" in f.lower(), f))
+
+    def pick(lang_marker):
+        for f in candidates:
+            if re.search(rf"\({lang_marker}\)", f, re.IGNORECASE):
+                return "https://documents.gov.lk/api/content-file-proxy?file=" + requests.utils.quote(f)
+        return None
+
+    return {"english": pick("E"), "sinhala": pick("S"), "tamil": pick("T")}
+
+
+def structure_batch_with_llm(text_chunk):
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise RuntimeError("OPENROUTER_API_KEY not set")
+
+    prompt = BATCH_STRUCTURING_PROMPT.format(categories=", ".join(CATEGORIES), text=text_chunk[:12000])
+    resp = requests.post(
+        OPENROUTER_URL,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://github.com/",
+            "X-Title": "The Living Gazette - ingest",
+        },
+        json={"model": OPENROUTER_MODEL, "messages": [{"role": "user", "content": prompt}], "max_tokens": 2048, "temperature": 0},
+        timeout=90,
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"OpenRouter {resp.status_code}: {resp.text[:300]}")
+    raw = resp.json()["choices"][0]["message"]["content"].strip()
+    raw = re.sub(r"^```(json)?|```$", "", raw, flags=re.MULTILINE).strip()
+    parsed = json.loads(raw)
+    return parsed if isinstance(parsed, list) else []
+
+
+def ingest_from_documents_gov_lk(data, pages_per_chunk=4, max_chunks=8):
+    """The authoritative source. Chunked (not one LLM call per notice) to stay well
+    within OpenRouter's free-tier daily request cap — see job.md §7.1."""
+    date_str = most_recent_friday().isoformat()
+    print(f"Checking documents.gov.lk for the {date_str} issue...")
+    urls = fetch_gazette_iia_pdf_urls(date_str)
+    if not urls["english"]:
+        print("  ! no Part I : Sec (IIA) English PDF found for that date yet — skipping this source this run.")
+        return []
+
+    text, needs_ocr = extract_pdf_text(urls["english"])
+    if needs_ocr or not text:
+        print("  ! looks scanned or empty — skipping (see job.md §7.1 step 2 for the OCR fallback this needs).")
+        return []
+
+    # Rough page splitting: pdfplumber gave us one blob, so split back into pages via
+    # the page-number headers this Gazette prints, and batch a handful per LLM call.
+    added = []
+    chunks = [text[i:i + 9000] for i in range(0, len(text), 9000)][:max_chunks]
+    for idx, chunk in enumerate(chunks):
+        try:
+            entries = structure_batch_with_llm(chunk)
+        except Exception as e:
+            print(f"  ! LLM batch structuring failed on chunk {idx}: {e}", file=sys.stderr)
+            continue
+        for structured in entries:
+            if not structured.get("titleEn"):
+                continue
+            source_key = f"govlk-{date_str}-{structured['titleEn']}-{structured.get('instEn')}"
+            if any(v.get("_sourceKey") == source_key for v in data["vacancies"] + added):
+                continue
+            status, days = compute_status(structured.get("closingDateISO"))
+            entry = {
+                "serial": f"GOVLK-{len(data['vacancies']) + len(added) + 1}",
+                "real": True,
+                "titleEn": structured.get("titleEn"),
+                "instEn": structured.get("instEn"),
+                "dateEn": structured.get("closingDateISO"),
+                "status": status,
+                "days": days,
+                "elig": "check",
+                "match": None,
+                "category": structured.get("category") if structured.get("category") in CATEGORIES else "Administrative & Management",
+                "citation": structured.get("citation") or f"Gazette {date_str}",
+                "citationType": structured.get("citationType") or "gazette",
+                "sourceUrl": f"https://documents.gov.lk/web/Gazette?date={date_str}",
+                "pdfUrl": urls["english"],
+                "descEn": structured.get("descEn"),
+                "age": structured.get("age"),
+                "quota": structured.get("quota"),
+                "salary": structured.get("salary"),
+                "qualEn": structured.get("qualEn"),
+                "confidence": structured.get("confidence"),
+                "verifiedAt": None,
+                "_needsReview": True,
+                "_sourceKey": source_key,
+            }
+            added.append(entry)
+            print(f"  + {entry['titleEn']} @ {entry['instEn']} (confidence {entry['confidence']})")
+    return added
 
 
 def load_data():
@@ -234,11 +388,28 @@ def compute_status(closing_date_iso):
 def main():
     data = load_data()
     existing_urls = {v.get("sourceUrl") for v in data["vacancies"] if v.get("sourceUrl")}
+    existing_keys = {v.get("_sourceKey") for v in data["vacancies"] if v.get("_sourceKey")}
 
+    added = []
+
+    # Pass 1 — the authoritative source. Verified working 2026-09-17 (job.md §11.3):
+    # plain HTTP, no headless browser needed.
+    print("=== documents.gov.lk (authoritative) ===")
+    try:
+        govlk_added = ingest_from_documents_gov_lk(data)
+        for e in govlk_added:
+            if e.get("_sourceKey") in existing_keys:
+                continue
+            data["vacancies"].append(e)
+            added.append(e)
+    except Exception as e:
+        print(f"  ! documents.gov.lk pass failed entirely: {e}", file=sys.stderr)
+
+    # Pass 2 — discovery index for notices that never reach the Gazette (job.md §11.2).
+    print("\n=== gazette.lk (discovery index, not authority) ===")
     candidates = discover_candidate_posts(existing_urls)
     print(f"Found {len(candidates)} candidate post(s) not already in data/vacancies.json")
 
-    added = []
     for (post_url,) in candidates:
         print(f"- {post_url}")
         pdf_url, source_label = extract_pdf_url_and_source(post_url)

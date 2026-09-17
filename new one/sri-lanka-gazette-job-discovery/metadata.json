@@ -1,0 +1,7 @@
+{
+  "name": "Sri Lanka Gazette Job Discovery",
+  "description": "Discover, search, and read newly published Sri Lankan Government Gazette job vacancies and open competitive examinations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

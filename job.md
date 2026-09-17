@@ -601,6 +601,49 @@ product knowingly broadens past its own name (more coverage, weaker claim to "th
 Gazette, digitised"). Worth a deliberate call before Phase 2 ingestion scope is locked,
 not something to drift into.
 
+### 11.3 documents.gov.lk cracked — gate #1 from §7.1 is resolved
+
+*2026-09-17.* A separate, independently-built implementation of this same product idea
+(a Google AI Studio app, found sitting in a sibling folder — see the project memory for
+how it was discovered) included an Express server that fetched `documents.gov.lk`
+server-side. Rather than trust the code, it was run and tested directly:
+
+- `curl https://documents.gov.lk/web/Gazette?date=2026-09-11` returns raw HTML that
+  **does** contain plain, regex-matchable `gazette-content/....pdf` filenames — 21 of
+  them for that date, across every Part/Section, in all three languages. No headless
+  browser, no cookies, no auth. The earlier "confirmed JS SPA" finding (§7.1) was correct
+  about what a *browser* renders, but irrelevant to what a plain HTTP GET returns — the
+  raw payload already carries the file list before any client-side rendering happens.
+- `https://documents.gov.lk/api/content-file-proxy?file=<path>` serves the actual PDF
+  bytes directly, publicly, no auth. Downloaded the real Part I : Sec (IIA) English PDF
+  for 11.09.2026 this way — 872KB, 79 pages, genuine current Gazette No. 2,506.
+- **Confirmed genuinely real**, not a mockup: extracted 237,206 characters of clean text
+  via `pdfplumber` with `pdfplumber` alone (no OCR). Real notices inside — e.g. Merchant
+  Shipping Secretariat, Ministry of Ports and Civil Aviation: Port State Controller,
+  Examiner (Engineering), Legal Officer, full salary scale (`SL 1-2025`), age limits,
+  structured-interview marking scheme, submission address, closing date 12.10.2026.
+- **New nuance: "text vs. scanned" isn't the real distinction — it's per-language even
+  within one text-layer PDF.** English extracted perfectly. The Sinhala running text on
+  the same pages came out as mojibake (`Y %S ,xld mc% d;dk;a...`) — a legacy non-Unicode
+  Sinhala font (common in older Sri Lankan print/typesetting workflows), not a scan.
+  Extracting Sinhala content from these PDFs will need either OCR specifically for the
+  Sinhala-language edition PDFs, or a glyph-remap table for the specific legacy font(s)
+  in use — a different problem than #4 in §7.1, not solved by this finding.
+- **Confirmed the "one notice, several posts" pattern is common**, not a one-off — the
+  Merchant Shipping Secretariat notice alone had three posts bundled together, same
+  pattern as the MFAP notice in §11.1.
+
+**This is now implemented for real in `scripts/ingest.py`**, not just documented:
+`fetch_gazette_iia_pdf_urls()` (the proven regex, generalised to compute "most recent
+Friday" rather than depending on a fragile date-discovery endpoint — the AI Studio app's
+own attempt at that specific endpoint failed and silently fell back to hardcoded dates,
+which is itself worth knowing) and `ingest_from_documents_gov_lk()`, which chunks a full
+edition's text and asks the LLM to return an *array* of posts per chunk (not one call per
+notice — a 79-page issue would blow through OpenRouter's free daily request cap
+otherwise). This now runs as **Pass 1 (authoritative)** in the ingestion script, with the
+existing gazette.lk discovery index demoted to Pass 2, exactly matching the two-source-
+class design from §11.2.
+
 ---
 
 ## 12. Definition of done for v1
