@@ -1,0 +1,43 @@
+name: Weekly vacancy ingest
+
+on:
+  schedule:
+    # 06:30 UTC Friday = noon in Colombo, a few hours after the Gazette's weekly release.
+    - cron: "30 6 * * 5"
+  workflow_dispatch: {} # manual "Run workflow" button, for testing without waiting a week
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run ingestion
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/ingest.py
+
+      - name: Open a PR with any new vacancies
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "ingest: pull in new vacancy postings"
+          title: "New vacancy postings for review"
+          body: |
+            Automated ingestion run found new postings. Nothing here is public yet —
+            each entry is marked `_needsReview: true` until a human confirms the
+            extracted fields (especially the closing date) against the source PDF and
+            adds the Sinhala/Tamil text. See job.md §7.1 for the full pipeline and why
+            this review step exists.
+          branch: ingest/weekly-update
+          add-paths: data/vacancies.json
