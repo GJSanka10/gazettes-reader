@@ -401,6 +401,12 @@ It's a background job, not an API route.
    template-per-institution approach breaks on the second institution. Prompt built from
    the exact `Vacancy` schema (§6); model returns structured JSON with a **confidence
    score per field** (the schema's `confidence` field exists for exactly this).
+   **Runs on a free-tier model via OpenRouter** (`nvidia/nemotron-3-ultra-550b-a55b:free`
+   as of 2026-09-17 — verified real, 1M context, 50 req/day unfunded / 20 req/min, well
+   above what a weekly batch of a few dozen postings needs), not a paid API — chosen
+   specifically because there's no budget for one. Free-tier models get rotated out by
+   providers with little notice, so the model ID is a one-line env var
+   (`scripts/ingest.py`), not hardcoded into the prompting logic.
 4. **Human review — the non-negotiable gate.** Every record lands in an admin queue next
    to an embedded view of the source PDF. Nothing gets a public `verifiedAt` until a human
    sets it. Same rule §9 already states for `closingDate`: a wrong date costs someone a

@@ -25,7 +25,7 @@ jobs:
 
       - name: Run ingestion
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python scripts/ingest.py
 
       - name: Open a PR with any new vacancies

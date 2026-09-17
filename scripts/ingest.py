@@ -12,6 +12,11 @@ publishes anything by itself: the workflow opens a pull request with whatever th
 adds, and a human merging that PR is the verification gate job.md requires before a
 closing date is ever shown to a real user.
 
+Structuring uses a free-tier model via OpenRouter (see OPENROUTER_MODEL below), not a
+paid API — deliberately, so this pipeline costs nothing to run beyond GitHub Actions'
+free compute minutes. Needs an OPENROUTER_API_KEY repo secret (a free OpenRouter account,
+no card required for :free models).
+
 Source strategy (see job.md §11.2): starting narrow and honest rather than pretending
 this is comprehensive. gazette.lk's own listing page is used only as a *discovery* index
 (it already aggregates many institutions and cites where each notice really came from) —
@@ -35,10 +40,12 @@ try:
 except ImportError:
     pdfplumber = None
 
-try:
-    import anthropic
-except ImportError:
-    anthropic = None
+# Free-tier model on OpenRouter (openrouter.ai) — no self-hosting, no per-token cost.
+# Free models get rotated out occasionally; if this ID stops working, check
+# https://openrouter.ai/models?max_price=0 for a current replacement and either edit
+# the default below or set OPENROUTER_MODEL as a repo variable/secret.
+OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "nvidia/nemotron-3-ultra-550b-a55b:free")
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_FILE = ROOT / "data" / "vacancies.json"
@@ -173,22 +180,35 @@ def extract_pdf_text(pdf_url):
 
 
 def structure_with_llm(raw_text):
-    if anthropic is None:
-        raise RuntimeError("anthropic package not installed")
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY not set")
+        raise RuntimeError("OPENROUTER_API_KEY not set")
 
-    client = anthropic.Anthropic(api_key=api_key)
     prompt = STRUCTURING_PROMPT.format(categories=", ".join(CATEGORIES), text=raw_text[:12000])
 
-    resp = client.messages.create(
-        model="claude-sonnet-5",
-        max_tokens=1024,
-        messages=[{"role": "user", "content": prompt}],
+    resp = requests.post(
+        OPENROUTER_URL,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            # Optional but recommended by OpenRouter for attribution on free-tier usage.
+            "HTTP-Referer": "https://github.com/",
+            "X-Title": "The Living Gazette - ingest",
+        },
+        json={
+            "model": OPENROUTER_MODEL,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": 1024,
+            "temperature": 0,
+        },
+        timeout=60,
     )
-    raw = resp.content[0].text.strip()
-    raw = re.sub(r"^```(json)?|```$", "", raw.strip(), flags=re.MULTILINE).strip()
+    if resp.status_code != 200:
+        raise RuntimeError(f"OpenRouter {resp.status_code}: {resp.text[:300]}")
+
+    body = resp.json()
+    raw = body["choices"][0]["message"]["content"].strip()
+    raw = re.sub(r"^```(json)?|```$", "", raw, flags=re.MULTILINE).strip()
     return json.loads(raw)
 
 
