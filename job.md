@@ -644,6 +644,32 @@ otherwise). This now runs as **Pass 1 (authoritative)** in the ingestion script,
 existing gazette.lk discovery index demoted to Pass 2, exactly matching the two-source-
 class design from §11.2.
 
+### 11.4 The AI Studio sample data itself is not trustworthy — verified, not assumed
+
+*2026-09-17.* Having the real PDF already downloaded made it possible to check, not just
+assume: cross-referenced the AI Studio app's flagship `isRealGovernmentData: true` sample
+(Inspector of Customs, Grade II, `gazettesData.ts`) against PDF page 72 of the same
+Gazette No. 2,506 it cites. Institution, ministry, title, gazette number/date, and even
+the specific physical-fitness figures (5'5", 33" chest, 5'3") all matched the real text
+exactly. But:
+
+- **Closing date claimed `2026-10-02`; the real notice says `12.10.2026`.** Off by ten
+  days, on the one field job.md §6 calls safety-critical.
+- **Notice number claimed `09-648/1`; the real notice's is `09-99/1`.** Fabricated.
+- **Salary claimed Rs. 31,490–67,610 under code `MN-4-2016`, "Circular 03/2016."** The
+  real notice states Rs. 49,550–71,420, category "Rs.-1," under **Circular 10/2025** —
+  not a rounding difference, a different scale under a different circular entirely.
+
+**Conclusion, stated plainly: `isRealGovernmentData: true` is not a guarantee of
+accuracy, and this dataset should never be used as a seed or reference without
+re-verifying every field against the source PDF.** The fabricated fields are dangerous
+precisely because the real ones (institution, ministry, gazette number) make the whole
+record read as trustworthy — this is a sharper, concretely-evidenced version of the exact
+risk §9's human-verification rule exists to catch, not a hypothetical anymore. Our own
+`data/vacancies.json` entries (§11.1's MFAP posts) remain trustworthy because they were
+extracted directly from a source PDF by us, not inherited from another system's output
+without re-checking it.
+
 ---
 
 ## 12. Definition of done for v1
