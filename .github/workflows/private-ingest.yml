@@ -1,0 +1,39 @@
+name: Private-sector vacancy ingest
+
+on:
+  workflow_dispatch: {} # manual "Run workflow" button only, for now -- no cron until
+                        # this pipeline has run cleanly a few times by hand
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/private-ingest/requirements.txt
+
+      - name: Run private-sector ingestion
+        run: python scripts/private-ingest/ingest_structured.py
+
+      - name: Open a PR with any new private-sector vacancies
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "private-ingest: pull in new private-sector postings"
+          title: "New private-sector vacancy postings for review"
+          body: |
+            Automated private-sector ingestion run found new postings from
+            scripts/private-ingest/ (separate from the Gazette pipeline in
+            scripts/ingest.py). Nothing here is public yet -- each entry is marked
+            `_needsReview: true` until a human confirms the extracted fields against
+            the source posting.
+          branch: private-ingest/weekly-update
+          add-paths: data/private-vacancies.json

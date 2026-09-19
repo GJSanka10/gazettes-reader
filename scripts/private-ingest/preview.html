@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Private-sector ingest preview</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+    max-width: 760px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    line-height: 1.5;
+  }
+  h1 { font-size: 1.3rem; }
+  .note {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+  }
+  .card {
+    border: 1px solid rgba(128,128,128,0.35);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .card h2 { margin: 0 0 0.2rem; font-size: 1.05rem; }
+  .meta { font-size: 0.85rem; opacity: 0.75; margin-bottom: 0.6rem; }
+  .desc { font-size: 0.9rem; }
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(128,128,128,0.2);
+    margin-left: 0.4rem;
+  }
+  a { color: inherit; }
+  #status { opacity: 0.7; }
+</style>
+</head>
+<body>
+  <h1>Private-sector ingest — local preview</h1>
+  <p class="note">Reads <code>data/private-vacancies.json</code> directly. Not part of
+  the real site (<code>main.html</code> is untouched) — just a way to eyeball what the
+  connector actually extracted.</p>
+  <div id="status">Loading&hellip;</div>
+  <div id="cards"></div>
+
+  <script>
+    fetch('../../data/private-vacancies.json')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(data => {
+        const vacancies = data.vacancies || [];
+        document.getElementById('status').textContent =
+          vacancies.length + ' entr' + (vacancies.length === 1 ? 'y' : 'ies') +
+          ' — last updated ' + (data.updatedAt || 'unknown');
+
+        const cardsEl = document.getElementById('cards');
+        cardsEl.innerHTML = vacancies.map(v => {
+          const desc = (v.descEn || '').slice(0, 320);
+          return `
+            <div class="card">
+              <h2>${escapeHtml(v.titleEn || '(untitled)')}</h2>
+              <div class="meta">
+                ${escapeHtml(v.employerName || '')} &middot;
+                ${escapeHtml(v.location || 'location unknown')} &middot;
+                ${escapeHtml(v.employmentType || '')} &middot;
+                posted ${escapeHtml(v.datePosted || '?')}
+                <span class="badge">${escapeHtml(v.status || '')}</span>
+                <span class="badge">${escapeHtml(v.sourceType || '')}</span>
+                <span class="badge">risk: ${escapeHtml(v._legalRisk || '?')}</span>
+              </div>
+              <div class="desc">${escapeHtml(desc)}${(v.descEn || '').length > 320 ? '…' : ''}</div>
+              <p><a href="${v.sourceUrl}" target="_blank" rel="noopener">View original posting →</a></p>
+            </div>`;
+        }).join('') || '<p>No entries yet.</p>';
+      })
+      .catch(err => {
+        document.getElementById('status').textContent =
+          'Could not load data/private-vacancies.json: ' + err.message +
+          ' — make sure you are viewing this via http://localhost:.../scripts/private-ingest/preview.html ' +
+          '(run "python -m http.server" from the repo root), not by double-clicking the file.';
+      });
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+  </script>
+</body>
+</html>

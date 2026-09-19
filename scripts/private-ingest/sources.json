@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ifs-smartrecruiters",
+    "name": "IFS",
+    "url": "https://careers.smartrecruiters.com/IFS1",
+    "method": "schema-microdata",
+    "sourceType": "company-direct",
+    "sector": "technology",
+    "legalRisk": "low",
+    "crawlFrequency": "weekly",
+    "active": true,
+    "lastChecked": "2026-09-19",
+    "lastSuccessfulCrawl": null,
+    "consecutiveFailures": 0,
+    "notes": "Verified 2026-09-19: listing page links to jobs.smartrecruiters.com/IFS1/<id>-<slug> detail pages. Each detail page has real schema.org Microdata (itemprop attributes, not JSON-LD script) with title/jobLocation/datePosted/employmentType/hiringOrganization/description/qualifications/responsibilities. No validThrough field observed. NOTE: address itemprop fields (addressLocality/addressCountry) were wrong/stale on the one job checked (said Pune, India for a Colombo-based role) -- trust the visible formattedAddress text over the meta address fields."
+  },
+  {
+    "id": "seylan-bank-direct",
+    "name": "Seylan Bank PLC",
+    "url": "https://www.seylan.lk/careers",
+    "method": "none",
+    "sourceType": "company-direct",
+    "sector": "banking",
+    "legalRisk": "low",
+    "crawlFrequency": "weekly",
+    "active": false,
+    "lastChecked": "2026-09-19",
+    "lastSuccessfulCrawl": null,
+    "consecutiveFailures": 0,
+    "notes": "Verified 2026-09-19: no JSON-LD or microdata. Postings are scanned JPG images of the notice, not parseable text at all. Not viable for this connector."
+  },
+  {
+    "id": "combank-direct",
+    "name": "Commercial Bank of Ceylon",
+    "url": "https://www.combank.lk/careers",
+    "method": "none",
+    "sourceType": "company-direct",
+    "sector": "banking",
+    "legalRisk": "low",
+    "crawlFrequency": "weekly",
+    "active": false,
+    "lastChecked": "2026-09-19",
+    "lastSuccessfulCrawl": null,
+    "consecutiveFailures": 0,
+    "notes": "Verified 2026-09-19: no JSON-LD/microdata. Postings are inline plain HTML text (title + closing date readable) with no detail pages, applications via external Google Forms. Could be revisited later with a plain custom parser if the JSON-LD-first approach proves too thin, but out of v1 scope per the plan."
+  },
+  {
+    "id": "wso2-direct",
+    "name": "WSO2",
+    "url": "https://wso2.com/careers/",
+    "method": "none",
+    "sourceType": "company-direct",
+    "sector": "technology",
+    "legalRisk": "low",
+    "crawlFrequency": "weekly",
+    "active": false,
+    "lastChecked": "2026-09-19",
+    "lastSuccessfulCrawl": null,
+    "consecutiveFailures": 0,
+    "notes": "Verified 2026-09-19: no JSON-LD/microdata, but has clean per-job detail pages with predictable URLs. Same as Commercial Bank -- candidate for a future plain-HTML parser, not in v1 scope."
+  }
+]
