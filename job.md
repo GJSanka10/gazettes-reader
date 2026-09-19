@@ -486,7 +486,7 @@ Unverified records show a visible "pending verification" state or don't render a
 | Gazette source URL/format changes | Medium | Ingestion adapter layer; monitoring alert if Friday's fetch returns nothing. |
 | Friday traffic spike | Medium | Static-render issue pages, ISR, edge cache; load test before launch. |
 | Trilingual copy drifting out of sync | Medium | Translation keys in one file per locale; CI fails on missing keys. |
-| Scope creep into a full ATS | Medium | Out of scope for v1: applying through the site, employer accounts, private-sector jobs, CV builder. |
+| Scope creep into a full ATS | Medium | Out of scope for v1: applying through the site, employer accounts, private-sector jobs, CV builder. **Addendum 2026-09-19: private-sector jobs are now being built, but as a genuinely separate pipeline/data file/schema (see §11.5), not folded into this product's scope — the "no scope creep" principle is preserved by keeping them apart, not by refusing to build them at all.** |
 
 ---
 
@@ -670,6 +670,75 @@ risk §9's human-verification rule exists to catch, not a hypothetical anymore. 
 extracted directly from a source PDF by us, not inherited from another system's output
 without re-checking it.
 
+### 11.5 Repo went live on GitHub, and a separate private-sector pipeline was built and proven
+
+*2026-09-19.* Two structural changes, plus real operational findings from actually
+running things on GitHub for the first time rather than just locally.
+
+**The repo was pushed to GitHub for the first time**, at
+`github.com/GJSanka10/gazettes-reader` — everything before this was local-only. One
+consequence worth flagging: `scripts/ingest.py`'s own `.github/workflows/ingest.yml`
+Friday cron has therefore **never actually run on GitHub Actions either**, only tested
+locally (per §11.3). Verifying that it opens a real PR on this live repo is an open
+item, not something to assume still works just because the script itself is proven.
+
+**Removed the unused AI Studio reference prototype** (`new one/sri-lanka-gazette-job-discovery/`,
+discovered §11.3–§11.4) — its sample data was already shown untrustworthy and nothing in
+the working pipeline depended on it. Still recoverable from git history if ever needed.
+
+**Built a separate private-sector job ingestion pipeline**, resolving the tension flagged
+in §11.2 and the exclusion in §10: rather than fold private-sector jobs into this
+product's scope, or refuse to build them, they live in a **fully independent pipeline** —
+`scripts/private-ingest/` (own `sources.json` source registry, `dedupe.py`,
+`ingest_structured.py`, own `data/private-vacancies.json` schema with `sourceType` /
+`sector` / `_legalRisk` fields the government schema never needed) and its own
+`.github/workflows/private-ingest.yml`. Zero shared code or data with `scripts/ingest.py`
+/ `data/vacancies.json`; the two will only meet at final display, later, once there's
+enough private-sector volume to justify it.
+
+Real findings from actually building and running this end-to-end (useful for any future
+ingestion work on this project, not just the private-sector one):
+
+- **JSON-LD job markup is rare on Sri Lankan company sites.** Checked Seylan Bank
+  (postings are scanned JPG images, not even parseable text), Commercial Bank of Ceylon
+  (inline plain-text postings, no JSON-LD, Google Form applications), and WSO2 (clean
+  detail pages, still no JSON-LD) directly — none had it.
+- **What worked: checking by ATS platform, not by company.** IFS, found via its careers
+  platform (SmartRecruiters), has real schema.org job data — just encoded as **Microdata**
+  (`itemprop=` HTML attributes) rather than a JSON-LD `<script>` block. One parser covering
+  a platform's markup format covers every company on that platform, which is a much
+  better-leveraged search strategy than checking individual company sites one at a time.
+- **A tool-specific trap worth naming: WebFetch cannot see `<script>` tag contents** — it
+  converts HTML to markdown before analysis, which strips scripts entirely. A "no JSON-LD
+  found" result from WebFetch is unreliable; confirmed this by getting a false negative on
+  IFS's own job page via WebFetch, then finding real Microdata on the same page via plain
+  `curl` + `grep`. Verify structured-data absence with raw HTML, not WebFetch's summary.
+- **topjobs.lk** (Sri Lanka's dominant private job board) has no robots.txt and is
+  technically easy to scrape, but it's a paid commercial product (companies pay to post
+  vacancies), which is a materially different legal posture than scraping the free public
+  Gazette. Not built yet (would be Phase 3 of the private-ingest plan); the source
+  registry design carries an explicit `legalRisk` field so this stays a visible,
+  deliberate call at review time rather than something silently treated as equivalent to
+  a company's own site.
+- **GitHub Actions on a brand-new repo defaults to blocking PR creation** — Settings →
+  Actions → General → "Allow GitHub Actions to create and approve pull requests" is off
+  by default. `peter-evans/create-pull-request` pushes its branch successfully but fails
+  at the actual PR-open step (shown as an annotation, not a job failure — easy to miss).
+  Also: if a run fails *after* pushing the branch but *before* opening the PR, the branch
+  survives and silently blocks the next run's PR too, because the action only acts when
+  there's a diff versus the existing branch — delete the stale branch to unblock. Both
+  hit for real during this session's first-ever GitHub Actions run of any pipeline in
+  this repo, private or government.
+
+**Result: the full loop was proven end-to-end** — local script → GitHub Actions run →
+PR opened → human review → merge — for the private-sector pipeline. 9 real, currently-open
+IFS/Colombo postings are now live in `data/private-vacancies.json` on `main`.
+
+Separately (not part of this repo): the Gazette pipeline's fetch→PDF→chunk→LLM-structure
+logic was also rebuilt as a local n8n workflow (Docker, `localhost:5678`) purely as a
+tool-learning exercise, not saved anywhere in this repo. Worth knowing if it ever comes up
+again, but it has no bearing on `scripts/ingest.py`, which remains the real pipeline.
+
 ---
 
 ## 12. Definition of done for v1
@@ -683,6 +752,28 @@ page. And the page looks like it was typeset, not assembled.
 
 ### Immediate next step
 
+*Updated 2026-09-19 — the Phase 0 spike below is long done; this section had gone stale.*
+
+In priority order, given today's findings (§11.5):
+
+1. **Verify `ingest.yml` actually works on the now-live repo** — trigger it via
+   `workflow_dispatch` and confirm it opens a real PR, the same way the private-sector
+   pipeline's run was just proven. Never actually confirmed on GitHub Actions before today.
+2. **Private-ingest Phase 2** — find 2-3 more companies with a Sri Lanka presence on
+   SmartRecruiters/Greenhouse/Lever/Workday (platform-based search, not one-off company
+   guessing, per §11.5's finding); consider turning on a cron for `private-ingest.yml`.
+3. **Frontend merge** (private-ingest plan's Phase 4) — show government and private-sector
+   listings together on the real site, once there's enough private-sector volume to be
+   worth it. Not started.
+4. **The actual Next.js build** — `main.html` is still the Phase 0 static spike (masthead,
+   ledger, one detail view). Routing, real detail pages, and trilingual rendering per §5–§7
+   haven't been started at all yet; this remains the biggest untouched piece of work.
+
+<details>
+<summary>Original Phase 0 instruction (superseded, kept for history)</summary>
+
 Build the Phase 0 spike in `main.html`: masthead, ledger with dotted leaders and serials,
 one detail view. Sinhala and English side by side. Sign off the design language before a
 single Next.js file exists.
+
+</details>
