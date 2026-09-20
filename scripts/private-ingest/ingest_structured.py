@@ -1,12 +1,14 @@
 """
-Private-sector vacancy ingestion via structured-data connectors (schema.org JSON-LD or
-Microdata embedded on a company's own careers site). Separate pipeline from
-scripts/ingest.py -- no shared code, no shared data file. See sources.json for the
-source registry; only entries with active:true and method in
-("schema-microdata", "json-ld") are processed here.
+Private-sector vacancy ingestion via structured-data connectors. Two families:
+1. schema.org JSON-LD or Microdata embedded on a company's own careers site
+   (method: "schema-microdata" / "json-ld").
+2. Workday's public CXS JSON API, used by any company on <tenant>.wdN.myworkdayjobs.com
+   (method: "workday-api") -- a plain, unauthenticated REST API, not HTML scraping.
+Separate pipeline from scripts/ingest.py -- no shared code, no shared data file. See
+sources.json for the source registry.
 
-Global companies list jobs from every office on one careers page, so each candidate
-posting is filtered down to ones whose visible location text mentions Sri Lanka.
+Global companies list jobs from every office, so candidates are filtered down to ones
+whose location actually mentions Sri Lanka.
 """
 
 import json
@@ -164,6 +166,109 @@ def ingest_source(source, existing_keys):
     return added
 
 
+def strip_html(html):
+    if not html:
+        return None
+    return BeautifulSoup(html, "html.parser").get_text(" ", strip=True) or None
+
+
+def parse_workday_end_date(end_date_text):
+    """'End Date: September 30, 2026' -> '2026-09-30'. Returns None if absent/unparseable."""
+    if not end_date_text:
+        return None
+    try:
+        date_part = end_date_text.split(":", 1)[1].strip()
+        return datetime.strptime(date_part, "%B %d, %Y").strftime("%Y-%m-%d")
+    except (IndexError, ValueError):
+        return None
+
+
+def ingest_workday_source(source, existing_keys):
+    """source['url'] is the CXS API base, e.g.
+    'https://lseg.wd3.myworkdayjobs.com/wday/cxs/lseg/Careers' (no trailing slash)."""
+    print(f"=== {source['name']} ({source['id']}) ===")
+    api_base = source["url"]
+    try:
+        resp = requests.post(
+            f"{api_base}/jobs",
+            headers={**HEADERS, "Content-Type": "application/json"},
+            json={"appliedFacets": {}, "limit": 20, "offset": 0, "searchText": "Sri Lanka"},
+            timeout=20,
+        )
+        resp.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  ! could not fetch job list: {e}", file=sys.stderr)
+        return []
+
+    postings = resp.json().get("jobPostings", [])
+    print(f"  found {len(postings)} job posting(s) matching 'Sri Lanka'")
+
+    added = []
+    for posting in postings:
+        time.sleep(REQUEST_DELAY_SECONDS)
+        external_path = posting.get("externalPath")
+        if not external_path:
+            continue
+        detail_url = f"{api_base}{external_path}"
+        try:
+            detail_resp = requests.get(detail_url, headers=HEADERS, timeout=20)
+            detail_resp.raise_for_status()
+        except requests.RequestException as e:
+            print(f"  ! could not fetch {detail_url}: {e}", file=sys.stderr)
+            continue
+
+        body = detail_resp.json()
+        info = body.get("jobPostingInfo", {})
+        title = info.get("title")
+        location = info.get("location")
+        if not title or not location:
+            continue
+
+        # Trust the same real-location check used for the HTML connectors -- Workday
+        # tenants list every office's jobs behind one search API, same as the schema.org
+        # sources, so a "Sri Lanka" text match on the search itself isn't a guarantee.
+        if "sri lanka" not in location.lower():
+            continue
+
+        employer = (body.get("hiringOrganization") or {}).get("name") or source["name"]
+        closing_date = parse_workday_end_date(info.get("jobPostingEndDateAsText"))
+        status, days = compute_status(closing_date)
+
+        entry = {
+            "sourceType": source["sourceType"],
+            "sector": source["sector"],
+            "employerName": employer,
+            "titleEn": title,
+            "descEn": strip_html(info.get("jobDescription")),
+            "location": location,
+            "employmentType": info.get("timeType"),
+            "datePosted": info.get("startDate"),
+            "closingDate": closing_date,
+            "status": status,
+            "days": days,
+            "applyUrl": info.get("externalUrl") or detail_url,
+            "sourceUrl": info.get("externalUrl") or detail_url,
+            "citationType": "workday-api",
+            "salary": None,
+            "qualEn": None,
+            "confidence": 1.0,
+            "verifiedAt": None,
+            "_needsReview": True,
+            "_sourceKey": fingerprint(employer, title, location),
+            "_legalRisk": source["legalRisk"],
+        }
+
+        if entry["_sourceKey"] in existing_keys:
+            print(f"  = skip (already have): {title}")
+            continue
+
+        added.append(entry)
+        existing_keys.add(entry["_sourceKey"])
+        print(f"  + {title} @ {location}")
+
+    return added
+
+
 def main():
     sources = load_sources()
     data = load_data()
@@ -173,9 +278,11 @@ def main():
     for source in sources:
         if not source.get("active"):
             continue
-        if source.get("method") not in ("schema-microdata", "json-ld"):
-            continue
-        total_added.extend(ingest_source(source, existing_keys))
+        method = source.get("method")
+        if method in ("schema-microdata", "json-ld"):
+            total_added.extend(ingest_source(source, existing_keys))
+        elif method == "workday-api":
+            total_added.extend(ingest_workday_source(source, existing_keys))
 
     if total_added:
         data["vacancies"].extend(total_added)
