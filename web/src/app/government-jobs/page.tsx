@@ -1,7 +1,8 @@
 import { Breadcrumb, EmptyState, ErrorState } from "@/components/Chrome";
-import { FilterBar } from "@/components/FilterBar";
+import { FeedControls, FilterBar } from "@/components/FilterBar";
 import { GovJobCard, Pagination } from "@/components/JobCards";
-import { daysUntil, facetCounts, getGovVacancies } from "@/lib/jobs";
+import { Icon } from "@/components/Icon";
+import { daysUntil, facetCounts, getGovVacancies, matchesAnyParam } from "@/lib/jobs";
 import type { GovVacancy, SearchParamsShape } from "@/lib/types";
 import Link from "next/link";
 
@@ -45,7 +46,7 @@ export default async function GovernmentJobsPage({
 
   let results = all;
   if (sp.search) results = results.filter((v) => matches(v, sp.search!));
-  if (sp.category) results = results.filter((v) => v.category === sp.category);
+  if (sp.category) results = results.filter((v) => matchesAnyParam(v.category, sp.category));
   if (sp.institution) results = results.filter((v) => v.instEn === sp.institution);
 
   if (sp.closing) {
@@ -106,6 +107,21 @@ export default async function GovernmentJobsPage({
     }).length,
   }));
 
+  const facets = [
+    {
+      key: "category",
+      label: "Category",
+      options: facetCounts(all, (v) => v.category),
+      multi: true,
+    },
+    {
+      key: "institution",
+      label: "Institution",
+      options: facetCounts(all, (v) => v.instEn),
+    },
+    { key: "closing", label: "Closing within", options: closingCounts },
+  ];
+
   // The "Most urgent" lead treatment only ever applies to a genuinely urgent
   // real listing at the top of the default, unfiltered, first page.
   const showFeatured =
@@ -117,58 +133,75 @@ export default async function GovernmentJobsPage({
     <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-8">
       <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Government Gazette Jobs" }]} />
 
-      <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
-        Government Gazette Jobs
-      </h1>
-      <p className="mt-2 max-w-[62ch] text-[17px] leading-[27px] text-ink-soft">
-        Find the latest government vacancies published through official Gazette notifications.
-      </p>
-
-      <div className="mt-5 grid grid-cols-3 gap-2 border border-rule-strong bg-surface-sunken p-3 sm:max-w-md">
-        <div className="border-r border-rule pr-2">
-          <div className="font-mono text-[20px] font-bold text-ink">{all.length}</div>
-          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">Total posts</div>
-        </div>
-        <div className="border-r border-rule pr-2">
-          <div className="font-mono text-[20px] font-bold text-ink">{institutionCount}</div>
-          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">Institutions</div>
-        </div>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-10">
         <div>
-          {/* Crimson: this is an urgency stat (closing soon), not a prestige one. */}
-          <div className="font-mono text-[20px] font-bold text-stamp">{closingSoonCount}</div>
-          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">&lt;7d close</div>
+          <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
+            Government Gazette Jobs
+          </h1>
+          <p className="mt-2 max-w-[62ch] text-[17px] leading-[27px] text-ink-soft">
+            Find the latest government vacancies published through official Gazette
+            notifications, summarised and cross-linked to the original document.
+          </p>
+          <p className="mt-4 max-w-[62ch] border-l-2 border-stamp bg-stamp-wash px-4 py-3 text-[14px] leading-relaxed text-ink">
+            Always check the original Gazette notice for official requirements, deadlines and
+            application instructions.
+          </p>
+        </div>
+
+        {/* Real ledger stats — no invented "current edition" number or file. */}
+        <div className="border border-rule-strong bg-surface-raised">
+          <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-4 py-2.5">
+            <span className="font-ui text-[13px] font-bold uppercase tracking-wide text-ink">
+              Gazette Register
+            </span>
+            <Icon name="verified" className="text-[18px] text-accent" />
+          </div>
+          <div className="grid grid-cols-3 gap-2 p-4">
+            <div className="border-r border-rule pr-2">
+              <div className="font-mono text-[22px] font-bold leading-none text-ink">{all.length}</div>
+              <div className="font-ui mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-faint">
+                Total posts
+              </div>
+            </div>
+            <div className="border-r border-rule pr-2">
+              <div className="font-mono text-[22px] font-bold leading-none text-ink">{institutionCount}</div>
+              <div className="font-ui mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-faint">
+                Institutions
+              </div>
+            </div>
+            <div>
+              {/* Crimson: an urgency stat, not a prestige one. */}
+              <div className="font-mono text-[22px] font-bold leading-none text-stamp">{closingSoonCount}</div>
+              <div className="font-ui mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-faint">
+                &lt;7d close
+              </div>
+            </div>
+          </div>
+          <a
+            href="https://documents.gov.lk/web/gazettes"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-ui flex min-h-[44px] items-center justify-center gap-1.5 border-t border-rule-strong bg-ink px-4 text-[12px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#163a5f]"
+          >
+            <Icon name="folder_open" className="text-[16px]" />
+            Browse official Gazette archive
+          </a>
         </div>
       </div>
 
-      <p className="mt-4 max-w-[70ch] border-l-2 border-stamp bg-stamp-wash px-4 py-3 text-[14px] leading-relaxed text-ink">
-        Always check the original Gazette notice for official requirements, deadlines and
-        application instructions.
-      </p>
-
       <div className="mt-6 grid grid-cols-12 gap-6 lg:gap-8">
-        <FilterBar
-          placeholder="Search government jobs..."
-          resultCount={results.length}
-          facets={[
-            {
-              key: "category",
-              label: "Category",
-              options: facetCounts(all, (v) => v.category),
-            },
-            {
-              key: "institution",
-              label: "Institution",
-              options: facetCounts(all, (v) => v.instEn),
-            },
-            { key: "closing", label: "Closing within", options: closingCounts },
-          ]}
-          sorts={[
-            { value: "closing", label: "Closing soon" },
-            { value: "serial", label: "Gazette order" },
-          ]}
-        />
+        <FilterBar placeholder="Search government jobs..." facets={facets} />
 
-        <div className="col-span-12 lg:col-span-8 xl:col-span-9">
+        <div className="col-span-12 space-y-4 lg:col-span-8 xl:col-span-9">
+          <FeedControls
+            facets={facets}
+            resultCount={results.length}
+            sorts={[
+              { value: "closing", label: "Closing soon" },
+              { value: "serial", label: "Gazette order" },
+            ]}
+          />
+
           {pageItems.length === 0 ? (
             <EmptyState
               title={hasFilters ? "No matching jobs" : "No government jobs available"}

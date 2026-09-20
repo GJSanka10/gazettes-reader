@@ -3,6 +3,38 @@ import type { GovVacancy, PrivateJob } from "@/lib/types";
 import { JobStatusLabel } from "./JobStatus";
 import { Icon } from "./Icon";
 
+/** No real photography exists for these listings, so instead of a stock
+ *  image we use a real, meaningful signal — a category/sector icon — in the
+ *  same left-column position a photo would occupy. */
+function iconForCategory(category?: string | null): string {
+  const c = (category ?? "").toLowerCase();
+  if (c.includes("agricult")) return "agriculture";
+  if (c.includes("educat") || c.includes("language")) return "school";
+  if (c.includes("engineer") || c.includes("technical")) return "engineering";
+  if (c.includes("ict") || c.includes("technology")) return "computer";
+  if (c.includes("security")) return "shield";
+  if (c.includes("health") || c.includes("medical")) return "medical_services";
+  if (c.includes("legal") || c.includes("justice")) return "gavel";
+  return "account_balance";
+}
+
+function iconForSector(sector?: string | null): string {
+  const s = (sector ?? "").toLowerCase();
+  if (s.includes("tech")) return "computer";
+  return "business_center";
+}
+
+function IconPanel({ icon }: { icon: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="hidden w-[104px] shrink-0 items-center justify-center border-r border-rule bg-surface-sunken sm:flex"
+    >
+      <Icon name={icon} className="text-[36px] text-ink-faint" />
+    </div>
+  );
+}
+
 function FactGrid({ items }: { items: { label: string; value?: string | null }[] }) {
   const cells = items.filter((i) => i.value);
   if (cells.length === 0) return null;
@@ -47,18 +79,84 @@ export function GovJobCard({
 }) {
   const closed = vacancy.status === "closed";
 
+  const icon = iconForCategory(vacancy.category);
+
   if (featured) {
     return (
-      <article className={`relative border-b border-rule px-1 py-6 ${closed ? "opacity-75" : ""}`}>
+      <article className={`relative flex border border-ink bg-surface-raised ${closed ? "opacity-75" : ""}`}>
+        <IconPanel icon={icon} />
+        <div className="min-w-0 flex-1 p-5">
+          <div className="mb-2 flex flex-wrap items-center gap-3">
+            <JobStatusLabel status={vacancy.status} closingDate={vacancy.dateEn ?? vacancy.dateSi} />
+            <CategoryBadge category={vacancy.category} />
+          </div>
+          <div className="font-ui flex items-baseline justify-between gap-3 text-[12px] text-ink-faint">
+            <span className="truncate">{vacancy.instEn}</span>
+            {vacancy.page && <span className="shrink-0 font-mono">{vacancy.page}</span>}
+          </div>
+          <h3 className="mt-1 font-display text-[26px] font-semibold leading-tight text-ink">
+            <Link
+              href={`/government-jobs/${vacancy.slug}`}
+              className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
+            >
+              {vacancy.titleEn}
+            </Link>
+          </h3>
+          <div aria-hidden="true" className="mt-3 h-0.5 w-14 bg-accent" />
+          {vacancy.titleSi && (
+            <p lang="si" className="si-body mt-2 font-[family-name:var(--font-siserif)] text-[15px] text-ink-soft">
+              {vacancy.titleSi}
+            </p>
+          )}
+          <FactGrid
+            items={[
+              { label: "Age limit", value: vacancy.age },
+              { label: "Vacancies", value: vacancy.quota },
+              { label: "Salary", value: vacancy.salary },
+            ]}
+          />
+          {vacancy.real && (
+            <span className="font-ui mt-3 inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-verified">
+              <Icon name="verified" className="text-[13px]" />
+              Verified against Gazette
+            </span>
+          )}
+          {vacancy.citation && <p className="citation-box mt-3 inline-block">{vacancy.citation}</p>}
+        </div>
+      </article>
+    );
+  }
+
+  return (
+    <article
+      className={`group relative flex border border-rule bg-surface-sunken transition-colors hover:border-rule-strong ${
+        closed ? "opacity-75" : ""
+      }`}
+    >
+      <IconPanel icon={icon} />
+      <div className="min-w-0 flex-1 p-5">
         <div className="mb-2 flex flex-wrap items-center gap-3">
           <JobStatusLabel status={vacancy.status} closingDate={vacancy.dateEn ?? vacancy.dateSi} />
           <CategoryBadge category={vacancy.category} />
+          {vacancy.real && (
+            <span className="font-ui inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-verified">
+              <Icon name="verified" className="text-[13px]" />
+              Verified against Gazette
+            </span>
+          )}
+          {vacancy._needsReview && (
+            <span className="font-ui text-[11px] uppercase tracking-wide text-ink-faint">
+              Pending review
+            </span>
+          )}
         </div>
+
         <div className="font-ui flex items-baseline justify-between gap-3 text-[12px] text-ink-faint">
           <span className="truncate">{vacancy.instEn}</span>
           {vacancy.page && <span className="shrink-0 font-mono">{vacancy.page}</span>}
         </div>
-        <h3 className="mt-1 font-display text-[26px] font-semibold leading-tight text-ink">
+
+        <h3 className="mt-0.5 font-display text-[20px] font-semibold leading-snug text-ink">
           <Link
             href={`/government-jobs/${vacancy.slug}`}
             className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
@@ -66,12 +164,12 @@ export function GovJobCard({
             {vacancy.titleEn}
           </Link>
         </h3>
-        <div aria-hidden="true" className="mt-3 h-0.5 w-14 bg-accent" />
         {vacancy.titleSi && (
-          <p lang="si" className="si-body mt-2 font-[family-name:var(--font-siserif)] text-[15px] text-ink-soft">
+          <p lang="si" className="si-body mt-0.5 font-[family-name:var(--font-siserif)] text-[14px] text-ink-soft">
             {vacancy.titleSi}
           </p>
         )}
+
         <FactGrid
           items={[
             { label: "Age limit", value: vacancy.age },
@@ -79,67 +177,9 @@ export function GovJobCard({
             { label: "Salary", value: vacancy.salary },
           ]}
         />
-        {vacancy.real && (
-          <span className="font-ui mt-3 inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-verified">
-            <Icon name="verified" className="text-[13px]" />
-            Verified against Gazette
-          </span>
-        )}
+
         {vacancy.citation && <p className="citation-box mt-3 inline-block">{vacancy.citation}</p>}
-      </article>
-    );
-  }
-
-  return (
-    <article
-      className={`group relative border border-rule bg-surface-sunken p-5 transition-colors hover:border-rule-strong ${
-        closed ? "opacity-75" : ""
-      }`}
-    >
-      <div className="mb-2 flex flex-wrap items-center gap-3">
-        <JobStatusLabel status={vacancy.status} closingDate={vacancy.dateEn ?? vacancy.dateSi} />
-        <CategoryBadge category={vacancy.category} />
-        {vacancy.real && (
-          <span className="font-ui inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-verified">
-            <Icon name="verified" className="text-[13px]" />
-            Verified against Gazette
-          </span>
-        )}
-        {vacancy._needsReview && (
-          <span className="font-ui text-[11px] uppercase tracking-wide text-ink-faint">
-            Pending review
-          </span>
-        )}
       </div>
-
-      <div className="font-ui flex items-baseline justify-between gap-3 text-[12px] text-ink-faint">
-        <span className="truncate">{vacancy.instEn}</span>
-        {vacancy.page && <span className="shrink-0 font-mono">{vacancy.page}</span>}
-      </div>
-
-      <h3 className="mt-0.5 font-display text-[20px] font-semibold leading-snug text-ink">
-        <Link
-          href={`/government-jobs/${vacancy.slug}`}
-          className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
-        >
-          {vacancy.titleEn}
-        </Link>
-      </h3>
-      {vacancy.titleSi && (
-        <p lang="si" className="si-body mt-0.5 font-[family-name:var(--font-siserif)] text-[14px] text-ink-soft">
-          {vacancy.titleSi}
-        </p>
-      )}
-
-      <FactGrid
-        items={[
-          { label: "Age limit", value: vacancy.age },
-          { label: "Vacancies", value: vacancy.quota },
-          { label: "Salary", value: vacancy.salary },
-        ]}
-      />
-
-      {vacancy.citation && <p className="citation-box mt-3 inline-block">{vacancy.citation}</p>}
     </article>
   );
 }
@@ -151,35 +191,38 @@ export function GovJobCard({
  */
 export function PrivateJobCard({ job }: { job: PrivateJob }) {
   return (
-    <article className="group relative border-b border-rule p-5 transition-colors hover:bg-surface-sunken">
-      <div className="mb-2 flex flex-wrap items-center gap-3">
-        <JobStatusLabel status={job.status} closingDate={job.closingDate} />
-        {job._needsReview && (
-          <span className="font-ui text-[11px] uppercase tracking-wide text-ink-faint">
-            Pending review
-          </span>
-        )}
+    <article className="group relative flex border-b border-rule transition-colors hover:bg-surface-sunken">
+      <IconPanel icon={iconForSector(job.sector)} />
+      <div className="min-w-0 flex-1 p-5">
+        <div className="mb-2 flex flex-wrap items-center gap-3">
+          <JobStatusLabel status={job.status} closingDate={job.closingDate} />
+          {job._needsReview && (
+            <span className="font-ui text-[11px] uppercase tracking-wide text-ink-faint">
+              Pending review
+            </span>
+          )}
+        </div>
+
+        <p className="font-ui text-[12px] text-ink-faint">{job.employerName}</p>
+
+        <h3 className="mt-0.5 font-display text-[20px] font-semibold leading-snug text-ink">
+          <Link
+            href={`/private-jobs/${job.slug}`}
+            className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
+          >
+            {job.titleEn}
+          </Link>
+        </h3>
+
+        <FactGrid
+          items={[
+            { label: "Location", value: job.location },
+            { label: "Type", value: job.employmentType },
+            { label: "Sector", value: job.sector },
+            { label: "Salary", value: job.salary },
+          ]}
+        />
       </div>
-
-      <p className="font-ui text-[12px] text-ink-faint">{job.employerName}</p>
-
-      <h3 className="mt-0.5 font-display text-[20px] font-semibold leading-snug text-ink">
-        <Link
-          href={`/private-jobs/${job.slug}`}
-          className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
-        >
-          {job.titleEn}
-        </Link>
-      </h3>
-
-      <FactGrid
-        items={[
-          { label: "Location", value: job.location },
-          { label: "Type", value: job.employmentType },
-          { label: "Sector", value: job.sector },
-          { label: "Salary", value: job.salary },
-        ]}
-      />
     </article>
   );
 }

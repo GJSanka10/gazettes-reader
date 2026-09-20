@@ -1,7 +1,8 @@
 import { Breadcrumb, EmptyState, ErrorState } from "@/components/Chrome";
-import { FilterBar } from "@/components/FilterBar";
+import { FeedControls, FilterBar } from "@/components/FilterBar";
 import { Pagination, PrivateJobCard } from "@/components/JobCards";
-import { daysUntil, facetCounts, getPrivateJobs } from "@/lib/jobs";
+import { Icon } from "@/components/Icon";
+import { daysUntil, facetCounts, getPrivateJobs, matchesAnyParam } from "@/lib/jobs";
 import type { PrivateJob, SearchParamsShape } from "@/lib/types";
 import Link from "next/link";
 
@@ -43,10 +44,10 @@ export default async function PrivateJobsPage({
 
   let results = all;
   if (sp.search) results = results.filter((j) => matches(j, sp.search!));
-  if (sp.sector) results = results.filter((j) => j.sector === sp.sector);
-  if (sp.institution) results = results.filter((j) => j.employerName === sp.institution);
-  if (sp.location) results = results.filter((j) => j.location === sp.location);
-  if (sp.employment) results = results.filter((j) => j.employmentType === sp.employment);
+  if (sp.sector) results = results.filter((j) => matchesAnyParam(j.sector, sp.sector));
+  if (sp.institution) results = results.filter((j) => matchesAnyParam(j.employerName, sp.institution));
+  if (sp.location) results = results.filter((j) => matchesAnyParam(j.location, sp.location));
+  if (sp.employment) results = results.filter((j) => matchesAnyParam(j.employmentType, sp.employment));
 
   const sort = sp.sort ?? "posted";
   results = [...results].sort((a, b) => {
@@ -87,60 +88,86 @@ export default async function PrivateJobsPage({
     sp.search || sp.sector || sp.institution || sp.location || sp.employment,
   );
 
+  const facets = [
+    { key: "sector", label: "Sector", options: facetCounts(all, (j) => j.sector), multi: true },
+    {
+      key: "institution",
+      label: "Company",
+      options: facetCounts(all, (j) => j.employerName),
+      multi: true,
+    },
+    {
+      key: "location",
+      label: "Location",
+      options: facetCounts(all, (j) => j.location),
+      multi: true,
+    },
+    {
+      key: "employment",
+      label: "Employment type",
+      options: facetCounts(all, (j) => j.employmentType),
+      multi: true,
+    },
+  ];
+
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-8">
       <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Private Sector Jobs" }]} />
 
-      <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
-        Private Sector Jobs
-      </h1>
-      <p className="mt-2 max-w-[62ch] text-[17px] leading-[27px] text-ink-soft">
-        Discover current job opportunities from companies and organisations across Sri Lanka.
-      </p>
-
-      <div className="mt-5 grid grid-cols-2 gap-2 border border-rule-strong bg-surface-sunken p-3 sm:max-w-xs">
-        <div className="border-r border-rule pr-2">
-          <div className="font-mono text-[20px] font-bold text-ink">{all.length}</div>
-          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">Listings</div>
-        </div>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-10">
         <div>
-          <div className="font-mono text-[20px] font-bold text-ink">{employerCount}</div>
-          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">Employers</div>
+          <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
+            Private Sector Jobs
+          </h1>
+          <p className="mt-2 max-w-[62ch] text-[17px] leading-[27px] text-ink-soft">
+            Discover current job opportunities from companies and organisations across Sri
+            Lanka.
+          </p>
+          <p className="mt-4 max-w-[62ch] border-l-2 border-rule-strong px-4 py-3 text-[14px] leading-relaxed text-ink-soft">
+            Collected from employers&rsquo; own career sites. Only {datedCount} of {all.length}{" "}
+            listings publish a closing date, so these are ordered by date posted rather than
+            deadline.
+          </p>
+        </div>
+
+        <div className="border border-rule-strong bg-surface-raised">
+          <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-4 py-2.5">
+            <span className="font-ui text-[13px] font-bold uppercase tracking-wide text-ink">
+              Employer Register
+            </span>
+            <Icon name="business_center" className="text-[18px] text-accent" />
+          </div>
+          <div className="grid grid-cols-2 gap-2 p-4">
+            <div className="border-r border-rule pr-2">
+              <div className="font-mono text-[22px] font-bold leading-none text-ink">{all.length}</div>
+              <div className="font-ui mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-faint">
+                Listings
+              </div>
+            </div>
+            <div>
+              <div className="font-mono text-[22px] font-bold leading-none text-ink">{employerCount}</div>
+              <div className="font-ui mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-faint">
+                Employers
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <p className="mt-4 max-w-[70ch] border-l-2 border-rule-strong px-4 py-3 text-[14px] leading-relaxed text-ink-soft">
-        Collected from employers&rsquo; own career sites. Only {datedCount} of {all.length}{" "}
-        listings publish a closing date — most private employers don&rsquo;t, so these are
-        ordered by date posted rather than deadline.
-      </p>
-
       <div className="mt-6 grid grid-cols-12 gap-6 lg:gap-8">
-        <FilterBar
-          placeholder="Search private-sector jobs..."
-          resultCount={results.length}
-          facets={[
-            { key: "sector", label: "Sector", options: facetCounts(all, (j) => j.sector) },
-            {
-              key: "institution",
-              label: "Company",
-              options: facetCounts(all, (j) => j.employerName),
-            },
-            { key: "location", label: "Location", options: facetCounts(all, (j) => j.location) },
-            {
-              key: "employment",
-              label: "Employment type",
-              options: facetCounts(all, (j) => j.employmentType),
-            },
-          ]}
-          sorts={[
-            { value: "posted", label: "Newest" },
-            { value: "closing", label: "Closing soon" },
-            { value: "employer", label: "Company (A–Z)" },
-          ]}
-        />
+        <FilterBar placeholder="Search private-sector jobs..." facets={facets} />
 
-        <div className="col-span-12 lg:col-span-8 xl:col-span-9">
+        <div className="col-span-12 space-y-4 lg:col-span-8 xl:col-span-9">
+          <FeedControls
+            facets={facets}
+            resultCount={results.length}
+            sorts={[
+              { value: "posted", label: "Newest" },
+              { value: "closing", label: "Closing soon" },
+              { value: "employer", label: "Company (A–Z)" },
+            ]}
+          />
+
           {pageItems.length === 0 ? (
             <EmptyState
               title="No matching jobs"

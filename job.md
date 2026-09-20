@@ -1024,6 +1024,50 @@ compiled `--ink`/`--stamp`/`--accent`/`--surface` value matching the spec exactl
 themes, all four fonts actually being served, real facet/stat counts, and no console
 warnings.
 
+### 11.10 Structure caught up to the reference — density, not just tokens
+
+*2026-09-20.* §11.8's tokens had been checked against the original "GazetteJobs.LK" HTML
+mockup from the start of this session, but the user then shared a *rendered screenshot* of
+that same mockup with "what I expected is this kind of UI" — making clear the gap wasn't
+color/type, it was structure and density: a two-column masthead with a real stat box, a
+sidebar with checkbox filters carrying real counts, active-filter chips and sort living
+above the list rather than buried in the sidebar, and cards with a left-column visual
+element instead of plain text rows. §11.8/§11.9 had matched the palette and largely
+matched individual card contents, but not this layout shape.
+
+**Rebuilt to match structure, still refusing to fabricate content:**
+- `FilterBar` split into two components: `FilterBar` (sidebar: search + facets only) and a
+  new `FeedControls` (chips + live result count + sort, sitting above the card list — the
+  reference's "Feed Controls & Active Meta Ribbon").
+- Facets with ≤6 real values now render as genuine multi-select checkboxes with real
+  counts and OR-semantics (comma-joined URL param, `matchesAnyParam` in `lib/jobs.ts`) —
+  not checkbox *styling* on single-select behavior, which would have been an accessibility
+  lie (checkbox role implies independent toggling). Category (gov), sector/company/location
+  /employment-type (private) all qualified on real distinct-value counts checked against
+  the data first.
+- Both listing pages gained a two-column masthead: heading + description on the left, a
+  bordered "Register" stat box on the right — real counts only (total posts, institutions,
+  `<7d close` for gov; listings, employers for private), plus a genuine link to
+  `documents.gov.lk/web/gazettes`, since there is no real single "current edition" PDF to
+  download the way the mockup's fake `24.8 MB` "Download Official PDF No. 2,403" implied.
+- `JobCards` gained an `IconPanel` — a left-column block with a category/sector-derived
+  Material icon (`iconForCategory`/`iconForSector`) — occupying the position a photo does
+  in the reference, without pretending to show a real photograph of a real building.
+
+**Deliberately not built, because nothing behind them is real:** stock photography,
+"Candidate Sign In" / avatar (no auth), an EN/SI/TA language switcher (i18n unwired — see
+§11.8, unchanged reasoning), a specific Gazette-edition PDF download with a file size and
+"SHA-256 Verified" claim, a "Prior Gazette Editions Available for Retrieval" archive
+browser (no structured historical-edition data model exists), a Telegram/email signup
+(no backend), and a grid/list view toggle (would need real behavior behind it or it's a
+dead control — skipped for scope, not principle; could come back as genuine functionality
+later).
+
+Verified: `tsc` clean, `next build` 56/56 pages, a freshly restarted dev server, and
+end-to-end multi-select filtering confirmed over curl — a single category returns 3
+results, that category OR a second returns 4 (correct OR union), each generates its own
+removable chip, and search/sort continue to work unchanged.
+
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
 

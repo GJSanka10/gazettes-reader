@@ -93,6 +93,14 @@ export function getPrivateJobBySlug(slug: string): PrivateJob | null {
   return getPrivateJobs()?.find((j) => j.slug === slug) ?? null;
 }
 
+/** For a multi-select facet: does `value` match any of the comma-joined
+ *  selections in the URL param? An empty/absent param matches everything. */
+export function matchesAnyParam(value: string | undefined | null, param: string | undefined): boolean {
+  if (!param) return true;
+  if (!value) return false;
+  return param.split(",").includes(value);
+}
+
 /** Distinct, sorted values for a facet — built from the data that actually
  *  exists rather than a hardcoded list (job.md §11.6). */
 export function facetValues<T>(items: T[], pick: (item: T) => string | undefined | null): string[] {
