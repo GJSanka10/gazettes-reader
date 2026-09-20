@@ -252,6 +252,29 @@ IndexRail as a left vertical rail was also dropped in favour of a horizontal fac
 above the feed, matching the reference's actual filter layout — filters and the discovery
 grid are now one unit rather than a persistent sidebar.
 
+**Third pivot, 2026-09-20 — "Official Paper," properly this time.** Installed the
+`frontend-design` skill (via `claude-code-templates`), which names the exact defaults our
+Material 3 pass had drifted into: middle-dot meta strings, tracked-caps eyebrow labels, a
+monospace-for-everything-small habit, `→`-suffixed links, the rounded-card-with-shadow
+kit. Rebuilt the palette and layout grounded in what the real Gazette PDF actually looks
+like (§11.3/§11.4 research): near-monochrome ink-on-paper, one serif family for display
+and body alike, notices as continuous statute entries with real bordered `<table>`s and a
+signature block per notice, rather than a card feed. Self-caught and fixed several of the
+same flagged tells during implementation (had reintroduced dot-joins and an eyebrow
+pattern out of habit) — worth remembering that naming a tell doesn't stop you reaching
+for it reflexively; a review pass after building is still necessary.
+
+Also installed `ui-ux-pro-max` (same tool). Its `--design-system` generator pulls from a
+generic 97-palette/57-font-pairing database — running it would have undone the
+source-grounded work above, so skipped deliberately. Its accessibility/interaction rule
+set is genuinely stack-agnostic and complementary, not in tension with a visual identity;
+ran it as an audit and fixed real findings: `--ink-faint` failed WCAG AA contrast in both
+themes (3.4:1 / 4.4:1 against a 4.5:1 minimum — fixed to ~5.2:1 / ~5.5:1), a paperclip
+emoji used as an icon (replaced with text, consistent with the icon-free typographic
+system already in place), several buttons missing `cursor-pointer` and adequate touch
+padding, body/qualification text under the 16px mobile-readability floor, and checkboxes
+with no `<label for>` association for screen readers.
+
 ---
 
 ## 3. Product: what makes it worth using
