@@ -93,38 +93,6 @@
      fit a 375px viewport; this just prevents a layout break if content grows. */
   .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-  /* Ledger row — VacancyLedgerRow, job.md §2.6/§4. A ruled account-book
-     line (one hairline per item), not a bordered data-table row — keeps
-     the distinction the app already makes between ledgers and rate tables. */
-  .ledger-row {
-    display: block;
-    padding: .625rem .25rem;
-    min-height: 44px; /* touch target, per the accessibility-audit precedent */
-    cursor: pointer;
-  }
-  .ledger-row:hover, .ledger-row:focus-visible {
-    background: var(--paper-raised);
-  }
-  .ledger-row-top { display: flex; align-items: baseline; gap: .5rem; }
-  .ledger-leader {
-    flex: 1 1 auto; min-width: .75rem;
-    border-bottom: 1px dotted var(--rule-strong);
-    transform: translateY(-.3em);
-    margin: 0 .25rem;
-  }
-  .ledger-meta {
-    display: flex; flex-wrap: wrap; align-items: baseline;
-    gap: .375rem 0; margin-top: .25rem;
-    font-size: .8125rem; color: var(--ink-soft);
-  }
-  .ledger-field { padding: 0 .625rem; border-left: 1px solid var(--rule); max-width: 100%; }
-  .ledger-field:first-child { padding-left: 0; border-left: 0; }
-  @media (max-width: 479px) {
-    .ledger-leader { display: none; }
-    .ledger-row-top { flex-wrap: wrap; }
-    .ledger-row-top > span:last-child { width: 100%; margin-top: .125rem; }
-  }
-
   /* Real bordered table for structured data, echoing the source's
      own "Post / Number of Vacancies" style tables — not pill badges. */
   .fact-table { border-collapse: collapse; width: 100%; }
@@ -301,7 +269,7 @@
     </span>
   </div>
 
-  <div id="post-feed" class="border-t border-rule"></div>
+  <div id="post-feed"></div>
 </div>
 
 <!-- ============ VIEW: DETAIL ============ -->
@@ -429,8 +397,6 @@
     };
   }
 
-  // Reserved per job.md §2.6 for other densities (Deadline Board / Issue Archive
-  // previews) — not called by the feed below, but not dead code to delete.
   function vacancyPost(v) {
     v = { ...v };
     const e = eligLabel[v.elig] || eligLabel.check;
@@ -518,60 +484,13 @@
     </article>`;
   }
 
-  function vacancyLedgerRow(v) {
-    v = { ...v };
-    const e = eligLabel[v.elig] || eligLabel.check;
-    const s = statusLabel[v.status] || statusLabel.open;
-    const closed = v.status === 'closed';
-    v.titleSi = v.titleSi || v.titleEn || '';
-    v.instSi = v.instSi || v.instEn || '';
-    v.category = v.category || '—';
-    v.salary = v.salary || '—';
-    v.serial = v.serial || '—';
-
-    return `
-    <div class="ledger-row border-b border-rule" role="button" tabindex="0"
-         onclick="showView('detail')"
-         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('detail')}">
-
-      <div class="ledger-row-top">
-        <span class="font-mono text-[11px] text-ink-faint shrink-0">
-          ${v.real ? `<span style="color:var(--stamp)" aria-hidden="true">✓ </span>` : ''}№ ${v.serial}
-          ${v._needsReview ? `<span class="border-l border-rule pl-1.5 ml-1.5"><span data-en>Pending review</span><span data-si>සමාලෝචනයට</span></span>` : ''}
-        </span>
-        <span class="sr-only">${v.real ? 'Real listing. ' : ''}${v._needsReview ? 'Pending review. ' : ''}</span>
-
-        <h3 class="font-serif text-base font-semibold leading-snug truncate min-w-0">
-          <span data-en>${v.titleEn}</span><span data-si class="font-siserif">${v.titleSi}</span>
-        </h3>
-
-        <span class="ledger-leader" aria-hidden="true"></span>
-
-        <span class="text-sm font-medium shrink-0 whitespace-nowrap" style="color:${s.color}">
-          <span data-en>${s.en}${!closed ? v.days + (v.status === 'open' ? ' left' : '') : ''}</span><span data-si>${s.si}${!closed ? (v.dateSi || '') : ''}</span>
-        </span>
-      </div>
-
-      <div class="ledger-meta">
-        <span class="ledger-field min-w-0 truncate">
-          <span data-en>${v.instEn}</span><span data-si class="font-siserif">${v.instSi}</span>
-        </span>
-        <span class="ledger-field font-mono text-[12px] tabular-nums">${v.salary}</span>
-        <span class="ledger-field" style="color:${v.elig === 'qualifies' ? 'var(--ink)' : 'var(--ink-faint)'}; font-style:${v.elig === 'qualifies' ? 'normal' : 'italic'}">
-          <span data-en>${e.en}</span><span data-si>${e.si}</span>
-        </span>
-        <span class="ledger-field hidden sm:inline font-mono text-[12px]">${v.category}</span>
-      </div>
-    </div>`;
-  }
-
   const feedEl = document.getElementById('post-feed');
   feedEl.innerHTML = `<p class="py-10 text-center text-ink-faint text-sm">Loading vacancies…</p>`;
   fetch('data/vacancies.json')
     .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(data => {
       vacancies = data.vacancies || [];
-      feedEl.innerHTML = vacancies.map(vacancyLedgerRow).join('');
+      feedEl.innerHTML = vacancies.map(vacancyPost).join('');
       document.getElementById('feed-count').textContent = vacancies.length;
     })
     .catch(err => {
