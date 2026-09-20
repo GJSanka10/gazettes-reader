@@ -125,6 +125,16 @@ index), return an empty array [].
 """
 
 
+def is_valid_title(title):
+    """Rejects missing/empty titles and also the literal string "none"/"null" -- the LLM
+    sometimes emits these as text instead of a real JSON null on pages that aren't
+    actually a vacancy notice (e.g. an exam timetable page), and a plain truthiness
+    check doesn't catch that since a non-empty string is still truthy."""
+    if not title or not str(title).strip():
+        return False
+    return str(title).strip().lower() not in ("none", "null", "n/a")
+
+
 def most_recent_friday():
     today = datetime.now(timezone.utc).date()
     offset = (today.weekday() - 4) % 7  # weekday(): Mon=0 ... Fri=4
@@ -210,7 +220,7 @@ def ingest_from_documents_gov_lk(data, pages_per_chunk=4, max_chunks=8):
             print(f"  ! LLM batch structuring failed on chunk {idx}: {e}", file=sys.stderr)
             continue
         for structured in entries:
-            if not structured.get("titleEn"):
+            if not is_valid_title(structured.get("titleEn")):
                 continue
             source_key = f"govlk-{date_str}-{structured['titleEn']}-{structured.get('instEn')}"
             if any(v.get("_sourceKey") == source_key for v in data["vacancies"] + added):
@@ -434,6 +444,10 @@ def main():
             structured = structure_with_llm(text)
         except Exception as e:
             print(f"  ! LLM structuring failed: {e}", file=sys.stderr)
+            continue
+
+        if not is_valid_title(structured.get("titleEn")):
+            print("  ! no real title extracted (likely not an actual vacancy notice) — skipping")
             continue
 
         status, days = compute_status(structured.get("closingDateISO"))
