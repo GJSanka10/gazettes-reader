@@ -171,7 +171,9 @@ def structure_batch_with_llm(text_chunk):
             "HTTP-Referer": "https://github.com/",
             "X-Title": "The Living Gazette - ingest",
         },
-        json={"model": OPENROUTER_MODEL, "messages": [{"role": "user", "content": prompt}], "max_tokens": 2048, "temperature": 0},
+        # See structure_with_llm()'s comment -- same reasoning-model token-budget issue,
+        # confirmed live via real GitHub Actions runs, not just the single-notice path.
+        json={"model": OPENROUTER_MODEL, "messages": [{"role": "user", "content": prompt}], "max_tokens": 4096, "temperature": 0},
         timeout=90,
     )
     if resp.status_code != 200:
@@ -352,7 +354,12 @@ def structure_with_llm(raw_text):
         json={
             "model": OPENROUTER_MODEL,
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 1024,
+            # nvidia/nemotron-3-ultra is a reasoning model -- it spends part of max_tokens
+            # on internal reasoning before writing the actual JSON, so a too-low budget
+            # here produces truncated/empty content (confirmed live 2026-09-19/20: real
+            # GitHub Actions runs failed with "Expecting value: line 1 column 1" and
+            # "Unterminated string" on several candidates with the previous 1024 limit).
+            "max_tokens": 4096,
             "temperature": 0,
         },
         timeout=60,
