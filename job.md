@@ -288,6 +288,21 @@ at 375px. Fixed: citation box now wraps naturally, and every fact-table row is a
 label/value pair, never more, plus an `overflow-x-auto` wrapper on all four tables as a
 safety net rather than the primary fix.
 
+**Fourth pivot, 2026-09-20 — compact `VacancyLedgerRow`, finally implemented.** The feed
+had shown only the full `VacancyPostCard` since the pivot 1 rewrite (§2.6) — meaning
+1-2 vacancies visible per screen at a time. User asked directly for a compact redesign
+showing more data at a glance; confirmed via a structured question this meant dense
+ledger rows, not just tighter card spacing. Implemented `vacancyLedgerRow(v)` in
+main.html: two lines per row (serial · title · dotted leader · closing status, then
+institution · salary · eligibility, with category degrading away below `sm:`/640px —
+deliberately keeping salary always-visible even on narrow screens, since it's a
+higher-leverage decision field than category and our real audience is mobile-first).
+`vacancyPost` (the full card) is untouched and still called from nowhere for now, kept
+per the two-density model for a future Deadline Board/Issue Archive context. Brought back
+the dotted-leader motif from the original Phase 0 "Official Paper" language, which had
+fallen out across the second and third pivots for no principled reason — ties the row
+back to the project's own documented design history rather than inventing a new device.
+
 ---
 
 ## 3. Product: what makes it worth using

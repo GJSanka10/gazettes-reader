@@ -6,7 +6,7 @@
 <title>The Living Gazette — Latest Vacancies</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -14,15 +14,18 @@
       extend: {
         colors: {
           paper: 'var(--paper)',
-          'paper-alt': 'var(--paper-alt)',
+          'paper-raised': 'var(--paper-raised)',
           ink: 'var(--ink)',
           'ink-soft': 'var(--ink-soft)',
+          'ink-faint': 'var(--ink-faint)',
           rule: 'var(--rule)',
-          link: 'var(--link)',
+          'rule-strong': 'var(--rule-strong)',
+          stamp: 'var(--stamp)',
         },
         fontFamily: {
-          sans: ['"Atkinson Hyperlegible"', 'system-ui', 'sans-serif'],
-          sisans: ['"Noto Sans Sinhala"', 'system-ui', 'sans-serif'],
+          serif: ['Newsreader', 'Georgia', 'serif'],
+          siserif: ['"Noto Serif Sinhala"', 'Georgia', 'serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
         },
       },
     },
@@ -30,265 +33,360 @@
 </script>
 <style>
   /* ============================================================
-     Design plan, third pass: "modern" meant a genuinely contemporary
-     civic-service product, not archive/statute pastiche. This is
-     built on the real, documented GOV.UK Design System palette and
-     component conventions — a well-regarded, widely studied public
-     service design system — rather than an invented aesthetic. Our
-     own content decisions (deadline-first, real citation, provenance)
-     stay; the visual and component language now follows GOV.UK's
-     actual patterns: summary lists, status tags, the yellow focus
-     outline. See job.md for the full writeup.
+     Design plan: the real Gazette is monochrome print — black ink
+     on paper, no colour except the government seal. Colour here is
+     reserved for one thing only: a stamped urgency mark, never a
+     UI accent. One serif family does display, body, and UI alike,
+     because that's what the source document does. See job.md for
+     the full design-plan writeup and self-critique.
      ============================================================ */
   :root {
-    --paper: #ffffff;
-    --paper-alt: #f3f2f1;
-    --ink: #0b0c0c;
-    --ink-soft: #505a5f;
-    --rule: #b1b4b6;
-    --link: #1d70b8;
-    --link-hover: #003078;
-    --urgent: #d4351c;      --urgent-wash: #f6d7d2;
-    --soon: #b5631d;        --soon-wash: #fbe3ce;
-    --open: #00703c;        --open-wash: #cce2d8;
-    --closed: #505a5f;      --closed-wash: #eeeeee;
-    --focus: #ffdd00;
+    --paper: #f5f2ea;
+    --paper-raised: #fbfaf6;
+    --ink: #1a1815;
+    --ink-soft: #4a4640;
+    --ink-faint: #6b6558; /* 5.2:1 on --paper — was #8a8375 at 3.4:1, failed WCAG AA */
+    --rule: #d8d2c0;
+    --rule-strong: #b8b09a;
+    --stamp: #a3291f;
+    --stamp-wash: #f3e6e3;
   }
   [data-theme="dark"] {
-    --paper: #0b0c0c;
-    --paper-alt: #1a1a1a;
-    --ink: #f3f2f1;
-    --ink-soft: #b1b4b6;
-    --rule: #454a4d;
-    --link: #6cabdd;
-    --link-hover: #9fc8e8;
-    --urgent: #ff8c78;      --urgent-wash: #3d1a12;
-    --soon: #e8a15c;        --soon-wash: #3a2a10;
-    --open: #4dbb85;        --open-wash: #0f2a1c;
-    --closed: #b1b4b6;      --closed-wash: #262626;
-    --focus: #ffdd00;
+    --paper: #17150f;
+    --paper-raised: #1f1c15;
+    --ink: #ece7db;
+    --ink-soft: #bdb6a4;
+    --ink-faint: #948c7a; /* 5.5:1 on --paper — was #837c6c at 4.4:1, failed WCAG AA */
+    --rule: #3a3527;
+    --rule-strong: #524b38;
+    --stamp: #d4685c;
+    --stamp-wash: #2c1a17;
   }
   * { transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
   html { scroll-behavior: smooth; }
-  body { background: var(--paper); }
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; scroll-behavior: auto !important; }
   }
-
-  /* The GOV.UK focus style, verbatim — thick yellow outline plus a
-     black inset so it reads on any background. Deliberately loud:
-     visible focus for keyboard users is not a place to be subtle. */
-  *:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 0;
-    box-shadow: 0 0 0 4px var(--ink);
-  }
-  [data-theme="dark"] *:focus-visible { box-shadow: 0 0 0 4px var(--paper); }
-
+  body { background: var(--paper); }
+  *:focus-visible { outline: 2px solid var(--stamp); outline-offset: 2px; }
   html[data-lang="en"] [data-si] { display: none !important; }
   html[data-lang="si"] [data-en] { display: none !important; }
   .view { display: none; }
   .view.active { display: block; }
-  [data-si].font-sisans, [data-si] .font-sisans { line-height: 1.6; }
 
-  /* Summary list — label + value rows separated by a hairline, GOV.UK's
-     own pattern for structured data. No vertical borders, no boxes. */
-  .summary-row { display: flex; justify-content: space-between; gap: 1rem; padding: .625rem 0; border-bottom: 1px solid var(--rule); }
-  .summary-row:last-child { border-bottom: none; }
-  .summary-row dt { color: var(--ink-soft); flex: 0 0 auto; }
-  .summary-row dd { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+  /* Sinhala needs its own leading at every scale, not just body copy. */
+  [data-si].font-siserif, [data-si] .font-siserif { line-height: 1.5; }
+  .si-body { line-height: 1.85 !important; }
 
-  /* Status tag — GOV.UK's tag component: bold, small, uppercase, a
-     tint of the functional colour. Used only for real status, not
-     decoration, which is exactly what it's designed for. */
-  .tag {
-    display: inline-block; font-weight: 700; font-size: .75rem; text-transform: uppercase;
-    letter-spacing: .03em; padding: .25rem .625rem; line-height: 1;
+  /* A citation is a small bordered box, not a dot-joined string —
+     matches how the source document's own reference blocks read. */
+  .citation-box {
+    border: 1px solid var(--rule-strong);
+    padding: .5rem .75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6875rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 100%;
+  }
+  /* Safety net, not the primary fix — the table markup itself should already
+     fit a 375px viewport; this just prevents a layout break if content grows. */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Ledger row — VacancyLedgerRow, job.md §2.6/§4. A ruled account-book
+     line (one hairline per item), not a bordered data-table row — keeps
+     the distinction the app already makes between ledgers and rate tables. */
+  .ledger-row {
+    display: block;
+    padding: .625rem .25rem;
+    min-height: 44px; /* touch target, per the accessibility-audit precedent */
+    cursor: pointer;
+  }
+  .ledger-row:hover, .ledger-row:focus-visible {
+    background: var(--paper-raised);
+  }
+  .ledger-row-top { display: flex; align-items: baseline; gap: .5rem; }
+  .ledger-leader {
+    flex: 1 1 auto; min-width: .75rem;
+    border-bottom: 1px dotted var(--rule-strong);
+    transform: translateY(-.3em);
+    margin: 0 .25rem;
+  }
+  .ledger-meta {
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    gap: .375rem 0; margin-top: .25rem;
+    font-size: .8125rem; color: var(--ink-soft);
+  }
+  .ledger-field { padding: 0 .625rem; border-left: 1px solid var(--rule); max-width: 100%; }
+  .ledger-field:first-child { padding-left: 0; border-left: 0; }
+  @media (max-width: 479px) {
+    .ledger-leader { display: none; }
+    .ledger-row-top { flex-wrap: wrap; }
+    .ledger-row-top > span:last-child { width: 100%; margin-top: .125rem; }
   }
 
-  button, a, [role="button"], .clickable { cursor: pointer; }
-  a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
-  a:hover { color: var(--link-hover); }
-
-  .btn {
-    display: inline-block; font-weight: 700; padding: .7rem 1.25rem; border: none;
-    box-shadow: 0 2px 0 rgba(0,0,0,.25); cursor: pointer;
+  /* Real bordered table for structured data, echoing the source's
+     own "Post / Number of Vacancies" style tables — not pill badges. */
+  .fact-table { border-collapse: collapse; width: 100%; }
+  .fact-table th, .fact-table td {
+    border: 1px solid var(--rule);
+    padding: .5rem .625rem;
+    text-align: left;
+    font-size: .8125rem;
   }
-  .btn:active { box-shadow: none; transform: translateY(2px); }
-  .btn-primary { background: var(--open); color: #fff; }
-  .btn-primary:hover { background: #005a30; }
-  .btn-secondary { background: var(--paper-alt); color: var(--ink); border: 1px solid var(--rule); box-shadow: 0 2px 0 var(--rule); }
-  .btn-secondary:hover { background: var(--rule); }
+  .fact-table th {
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: transparent;
+    font-size: .6875rem;
+    letter-spacing: .02em;
+  }
+  .fact-table td { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
 
-  ::selection { background: var(--focus); color: var(--ink); }
+  /* A field label, not a tracked-caps eyebrow — italic serif, same family
+     as everything else, differentiated by style rather than a decorative device. */
+  .label { font-style: italic; color: var(--ink-faint); font-size: .8125rem; }
+
+  /* Signature block — every real notice in the source ends with an
+     issuing officer's name, title and address, like a letter. */
+  .signature-block {
+    text-align: right;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: .8125rem;
+    line-height: 1.5;
+    max-width: 20rem;
+    margin-left: auto;
+  }
+
+  /* Stamp — the one place saturated colour appears, as an actual
+     rotated mark, not a UI accent painted across the interface. */
+  .stamp-mark {
+    position: absolute; top: 1rem; right: -2.25rem; transform: rotate(28deg);
+    border: 2.5px solid var(--stamp); color: var(--stamp);
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: .65rem;
+    letter-spacing: .12em; text-transform: uppercase; padding: .2rem 2.5rem;
+    opacity: .82; pointer-events: none;
+  }
+  .stamp-clip { position: relative; overflow: hidden; }
+
+  ::selection { background: var(--stamp-wash); color: var(--ink); }
+  .tick { accent-color: var(--stamp); }
 </style>
 </head>
-<body class="font-sans text-ink antialiased min-h-screen bg-paper" style="font-size: 17px;">
+<body class="font-serif text-ink antialiased min-h-screen bg-paper">
 
 <!-- ============ HEADER ============ -->
-<header class="w-full" style="background: var(--ink);">
-  <div class="max-w-[960px] mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-    <span class="text-white font-bold text-lg">
-      <span data-en>The Living Gazette</span><span data-si class="font-sisans">ජීවමාන ගැසට් පත්‍රය</span>
-    </span>
+<header class="w-full sticky top-0 z-50 bg-paper border-b border-rule">
+  <div class="max-w-[1180px] mx-auto px-4 md:px-8 py-2 flex items-center justify-between gap-3 text-xs">
+    <div class="flex items-center gap-3 flex-wrap font-mono text-[11px] text-ink-soft">
+      <span class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-stamp inline-block"></span>
+        <span data-en>Friday, 18 September 2026</span>
+        <span data-si class="font-siserif">2026 සැප්තැම්බර් 18</span>
+      </span>
+    </div>
     <div class="flex items-center gap-4">
-      <div class="flex items-center gap-1 text-sm">
-        <button onclick="setLang('en')" id="lang-en" class="text-white px-2 py-2 underline">EN</button>
-        <button onclick="setLang('si')" id="lang-si" class="text-white px-2 py-2 underline opacity-70">SI</button>
+      <div class="flex items-center gap-1 font-mono text-[11px]">
+        <button onclick="setLang('en')" id="lang-en" class="cursor-pointer hover:text-stamp px-2 py-2 min-w-[32px]">EN</button>
+        <span class="text-rule-strong" aria-hidden="true">/</span>
+        <button onclick="setLang('si')" id="lang-si" class="cursor-pointer hover:text-stamp px-2 py-2 min-w-[32px]">SI</button>
       </div>
-      <button onclick="toggleTheme()" class="text-white text-sm underline px-2 py-2" id="theme-btn">Dark</button>
+      <button onclick="toggleTheme()" class="cursor-pointer font-mono text-[11px] border border-rule px-3 py-2 hover:border-ink" id="theme-btn" aria-label="Toggle dark mode">Dark</button>
     </div>
   </div>
-</header>
-<div class="w-full" style="background: var(--paper-alt); border-bottom: 1px solid var(--rule);">
-  <div class="max-w-[960px] mx-auto px-4 md:px-6 py-2 text-sm text-ink-soft flex items-center gap-2">
-    <span class="w-2 h-2 rounded-full inline-block" style="background: var(--urgent);"></span>
-    <span data-en>Gazette No. 2,412 — published Friday, 18 September 2026</span>
-    <span data-si class="font-sisans">ගැසට් අංක 2,412 — 2026 සැප්තැම්බර් 18 නිකුත් කරන ලදී</span>
-  </div>
-</div>
 
-<main class="w-full flex-1 max-w-[960px] mx-auto px-4 md:px-6">
+  <div class="max-w-[1180px] mx-auto px-4 md:px-8">
+    <div class="h-16 flex items-center justify-between gap-6">
+      <div class="flex items-baseline gap-3">
+        <span class="text-xl md:text-2xl font-semibold tracking-tight">
+          <span data-en>The Living Gazette</span><span data-si class="font-siserif">ජීවමාන ගැසට් පත්‍රය</span>
+        </span>
+      </div>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <button onclick="showView('vacancies')" id="nav-vacancies" class="cursor-pointer border-b border-ink pb-0.5"><span data-en>Latest Vacancies</span><span data-si>නවතම පුරප්පාඩු</span></button>
+        <button class="cursor-pointer text-ink-faint hover:text-ink"><span data-en>Archive</span><span data-si>ලේඛනාගාරය</span></button>
+        <button class="cursor-pointer text-ink-faint hover:text-ink"><span data-en>Exams</span><span data-si>විභාග</span></button>
+      </nav>
+      <div class="flex items-center gap-2 shrink-0">
+        <div class="w-8 h-8 rounded-full border border-rule-strong flex items-center justify-center font-siserif text-xs">ශ්‍රී</div>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-ink"></div>
+</header>
+
+<main class="w-full flex-1 max-w-[1180px] mx-auto px-4 md:px-8">
 
 <!-- ============ VIEW: VACANCIES ============ -->
 <div id="view-vacancies" class="view active">
 
-  <section class="pt-8 pb-6">
-    <span class="tag" style="background: var(--paper-alt); color: var(--ink-soft);">
-      <span data-en>Part I : Section (IIA) — Advertising</span><span data-si>I කොටස : (IIA) වගන්තිය</span>
+  <!-- Masthead -->
+  <section class="pt-10 pb-6 border-b border-rule">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <div>
+        <span class="font-mono text-[11px] text-ink-faint uppercase tracking-[.08em]">
+          <span data-en>Part I : Section (IIA) — Advertising</span><span data-si>I කොටස : (IIA) වගන්තිය</span>
+        </span>
+        <h1 class="font-serif font-semibold leading-[1.1] tracking-tight mt-1" style="font-size: clamp(2rem, 4.4vw, 3.25rem)">
+          <span data-en>247 vacancies published this week</span>
+          <span data-si class="font-siserif" style="font-size: clamp(1.7rem, 4vw, 2.6rem)">මෙම සතියේ පුරප්පාඩු 247ක්</span>
+        </h1>
+      </div>
+      <div class="citation-box shrink-0">
+        <div><span data-en>Gazette No. 2,412</span><span data-si>ගැසට් අංක 2,412</span></div>
+        <div>12 Sep 2026</div>
+        <div>Part I : Sec (IIA)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deadline board — a real table, not tinted cards -->
+  <section class="py-6 border-b border-rule">
+    <div class="table-scroll">
+    <table class="fact-table max-w-xl">
+      <thead>
+        <tr>
+          <th><span data-en>Closing</span><span data-si>අවසන්</span></th>
+          <th class="text-right"><span data-en>Count</span><span data-si>ගණන</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="color:var(--stamp)"><span data-en>Within 48 hours</span><span data-si>පැය 48යි</span></td><td class="text-right" style="color:var(--stamp)">06</td></tr>
+        <tr><td><span data-en>This week</span><span data-si>මෙම සතියේ</span></td><td class="text-right">22</td></tr>
+        <tr><td><span data-en>This month</span><span data-si>මෙම මාසයේ</span></td><td class="text-right">61</td></tr>
+        <tr><td><span data-en>Open</span><span data-si>විවෘතයි</span></td><td class="text-right">158</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- Facets — plain text list, no pill buttons -->
+  <section class="py-5 border-b border-rule">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
+      <div>
+        <div class="label mb-2"><span data-en>Category</span><span data-si>වර්ගය</span></div>
+        <ul class="space-y-1">
+          <li><button class="cursor-pointer font-semibold border-b border-ink">Administrative &amp; Management</button></li>
+          <li><button class="cursor-pointer text-ink-soft hover:text-ink">Engineering &amp; Technical</button></li>
+          <li><button class="cursor-pointer text-ink-soft hover:text-ink">Security Services</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="label mb-2"><span data-en>Qualification</span><span data-si>සුදුසුකම</span></div>
+        <ul class="space-y-1">
+          <li><button class="cursor-pointer font-semibold border-b border-ink"><span data-en>Bachelor's Degree</span></button></li>
+          <li><button class="cursor-pointer text-ink-soft hover:text-ink">A/L</button></li>
+          <li><button class="cursor-pointer text-ink-soft hover:text-ink">O/L</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="label mb-2"><span data-en>District</span><span data-si>දිස්ත්‍රික්කය</span></div>
+        <ul class="space-y-1">
+          <li><button class="cursor-pointer font-semibold border-b border-ink">Colombo</button></li>
+          <li><button class="cursor-pointer text-ink-soft hover:text-ink">Kandy</button></li>
+          <li><button class="cursor-pointer text-ink-soft hover:text-ink">Galle</button></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feed header -->
+  <div class="pt-6 pb-2 flex items-baseline justify-between">
+    <span class="label">
+      <span id="feed-count">…</span> <span data-en>notices</span><span data-si>දැන්වීම්</span>
     </span>
-    <h1 class="font-bold leading-tight mt-3" style="font-size: clamp(1.875rem, 4vw, 3rem);">
-      <span data-en>247 vacancies published this week</span>
-      <span data-si class="font-sisans" style="font-size: clamp(1.6rem, 3.6vw, 2.4rem);">මෙම සතියේ පුරප්පාඩු 247ක්</span>
-    </h1>
-  </section>
-
-  <!-- Deadline board -->
-  <section class="pb-8">
-    <h2 class="font-bold text-lg mb-3"><span data-en>Deadlines</span><span data-si>අවසන් දින</span></h2>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="p-4" style="background: var(--urgent-wash);">
-        <div class="text-3xl font-bold" style="color: var(--urgent);">06</div>
-        <div class="text-sm mt-1"><span data-en>Within 48 hours</span><span data-si>පැය 48යි</span></div>
-      </div>
-      <div class="p-4" style="background: var(--soon-wash);">
-        <div class="text-3xl font-bold" style="color: var(--soon);">22</div>
-        <div class="text-sm mt-1"><span data-en>This week</span><span data-si>මෙම සතියේ</span></div>
-      </div>
-      <div class="p-4" style="background: var(--paper-alt);">
-        <div class="text-3xl font-bold text-ink">61</div>
-        <div class="text-sm mt-1"><span data-en>This month</span><span data-si>මෙම මාසයේ</span></div>
-      </div>
-      <div class="p-4" style="background: var(--paper-alt);">
-        <div class="text-3xl font-bold text-ink">158</div>
-        <div class="text-sm mt-1"><span data-en>Open</span><span data-si>විවෘතයි</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Facets -->
-  <section class="pb-6 border-t border-rule pt-6">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-base">
-      <div>
-        <h3 class="font-bold text-sm mb-2"><span data-en>Category</span><span data-si>වර්ගය</span></h3>
-        <ul class="space-y-1.5">
-          <li><button class="font-bold underline">Administrative &amp; Management</button></li>
-          <li><a href="#" class="block">Engineering &amp; Technical</a></li>
-          <li><a href="#" class="block">Security Services</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="font-bold text-sm mb-2"><span data-en>Qualification</span><span data-si>සුදුසුකම</span></h3>
-        <ul class="space-y-1.5">
-          <li><button class="font-bold underline"><span data-en>Bachelor's Degree</span></button></li>
-          <li><a href="#" class="block">A/L</a></li>
-          <li><a href="#" class="block">O/L</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="font-bold text-sm mb-2"><span data-en>District</span><span data-si>දිස්ත්‍රික්කය</span></h3>
-        <ul class="space-y-1.5">
-          <li><button class="font-bold underline">Colombo</button></li>
-          <li><a href="#" class="block">Kandy</a></li>
-          <li><a href="#" class="block">Galle</a></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <div class="pt-4 pb-2 flex items-baseline justify-between border-t border-rule">
-    <span class="text-sm text-ink-soft"><span id="feed-count">…</span> <span data-en>notices</span><span data-si>දැන්වීම්</span></span>
-    <span class="text-sm text-ink-soft"><span data-en>Sorted by closing date</span><span data-si>අවසන් දිනය අනුව</span></span>
+    <span class="text-sm">
+      <span data-en>Sorted by closing date</span><span data-si>අවසන් දිනය අනුව</span>
+    </span>
   </div>
 
-  <div id="post-feed"></div>
+  <div id="post-feed" class="border-t border-rule"></div>
 </div>
 
 <!-- ============ VIEW: DETAIL ============ -->
 <div id="view-detail" class="view py-8">
-  <button onclick="showView('vacancies')" class="text-sm underline mb-6"><span data-en>← Back to vacancies</span><span data-si>← ආපසු</span></button>
+  <button onclick="showView('vacancies')" class="cursor-pointer text-sm mb-6 border-b border-ink pb-0.5"><span data-en>← Back to vacancies</span><span data-si>← ආපසු</span></button>
 
   <article>
-    <span class="tag" style="background: var(--urgent-wash); color: var(--urgent);"><span data-en>Closes in 2 days</span><span data-si>දින 2කින් අවසන්</span></span>
-    <h1 class="font-bold leading-tight mt-3" style="font-size: clamp(1.75rem, 3.6vw, 2.5rem);">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap mb-1">
+      <span class="font-mono text-[11px] text-ink-faint">№ 0142</span>
+      <span style="color:var(--stamp)" class="text-sm font-medium"><span data-en>Closes in 2 days</span><span data-si>දින 2කින් අවසන්</span></span>
+    </div>
+    <h1 class="font-serif font-semibold leading-tight" style="font-size: clamp(1.9rem, 4vw, 2.75rem)">
       <span data-en>Development Officer</span>
-      <span data-si class="font-sisans" style="font-size: clamp(1.5rem, 3.2vw, 2.1rem);">සංවර්ධන නිලධාරී</span>
+      <span data-si class="font-siserif" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem)">සංවර්ධන නිලධාරී</span>
     </h1>
     <p class="text-lg text-ink-soft mt-1">
-      <span data-en>Department of Agriculture</span><span data-si class="font-sisans">කෘෂිකර්ම දෙපාර්තමේන්තුව</span>
+      <span data-en>Department of Agriculture</span><span data-si class="font-siserif">කෘෂිකර්ම දෙපාර්තමේන්තුව</span>
     </p>
+
+    <div class="citation-box inline-block mt-4">
+      <div>Gazette No. 2,412</div>
+      <div>12 September 2026</div>
+      <div>Part I : Sec (IIA), p. 1,842</div>
+      <a href="#" class="underline"><span data-en>View source</span><span data-si>මූලාශ්‍රය</span></a>
+    </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10 mt-8">
       <div>
-        <p class="max-w-[65ch] leading-[1.6]">
+        <p class="max-w-[65ch] leading-[1.7]">
           <span data-en>Applications are invited from suitably qualified citizens of Sri Lanka for recruitment to the post of Development Officer in the Department of Agriculture, on a permanent and pensionable basis, for stations island-wide.</span>
-          <span data-si class="font-sisans block max-w-[52ch]">කෘෂිකර්ම දෙපාර්තමේන්තුවේ සංවර්ධන නිලධාරී තනතුරට, දිවයින පුරා ස්ථාන සඳහා, ස්ථිර හා විශ්‍රාම වැටුප් සහිත පදනමින් සුදුසුකම් ලත් පුරවැසියන්ගෙන් අයදුම්පත් කැඳවනු ලැබේ.</span>
+          <span data-si class="font-siserif si-body block max-w-[52ch]">කෘෂිකර්ම දෙපාර්තමේන්තුවේ සංවර්ධන නිලධාරී තනතුරට, දිවයින පුරා ස්ථාන සඳහා, ස්ථිර හා විශ්‍රාම වැටුප් සහිත පදනමින් සුදුසුකම් ලත් පුරවැසියන්ගෙන් අයදුම්පත් කැඳවනු ලැබේ.</span>
         </p>
 
-        <dl class="mt-6 max-w-md">
-          <div class="summary-row"><dt><span data-en>Age</span><span data-si>වයස</span></dt><dd>22–30 yrs</dd></div>
-          <div class="summary-row"><dt><span data-en>Quota</span><span data-si>පුරප්පාඩු</span></dt><dd>41 posts</dd></div>
-          <div class="summary-row"><dt><span data-en>Salary</span><span data-si>වැටුප</span></dt><dd>Rs. 47,315–91,010</dd></div>
-          <div class="summary-row"><dt><span data-en>Gazette</span><span data-si>ගැසට්</span></dt><dd>No. 2,412, p. 1,842</dd></div>
-        </dl>
+        <div class="table-scroll">
+        <table class="fact-table mt-6 max-w-md">
+          <tbody>
+            <tr><th class="w-32"><span data-en>Age</span><span data-si>වයස</span></th><td>22–30 yrs</td></tr>
+            <tr><th><span data-en>Quota</span><span data-si>පුරප්පාඩු</span></th><td>41 posts</td></tr>
+            <tr><th><span data-en>Salary</span><span data-si>වැටුප</span></th><td>Rs. 47,315–91,010</td></tr>
+          </tbody>
+        </table>
+        </div>
 
         <div class="mt-6">
-          <h2 class="font-bold text-sm mb-2"><span data-en>Qualifications</span><span data-si>සුදුසුකම්</span></h2>
-          <p class="max-w-[60ch] leading-[1.6]">
+          <div class="label mb-1"><span data-en>Qualifications</span><span data-si>සුදුසුකම්</span></div>
+          <p class="text-base max-w-[60ch] leading-[1.7]">
             <span data-en>A Bachelor's degree from a recognised university. Age between 22 and 30 years as at the closing date. Fluency in two of the three official languages.</span>
-            <span data-si class="font-sisans block">පිළිගත් විශ්වවිද්‍යාලයක උපාධියක්. අවසන් දිනට වයස අවුරුදු 22 සිට 30 දක්වා. නිල භාෂා තුනෙන් දෙකක් හසුරුවීමේ හැකියාව.</span>
+            <span data-si class="font-siserif si-body block">පිළිගත් විශ්වවිද්‍යාලයක උපාධියක්. අවසන් දිනට වයස අවුරුදු 22 සිට 30 දක්වා. නිල භාෂා තුනෙන් දෙකක් හසුරුවීමේ හැකියාව.</span>
           </p>
         </div>
 
-        <p class="mt-8 pt-4 border-t border-rule text-sm text-ink-soft">
-          <span data-en>Issued by the Secretary, Department of Agriculture. Verified against the official Gazette record.</span>
-          <span data-si class="font-sisans">කෘෂිකර්ම දෙපාර්තමේන්තුවේ ලේකම් විසින් නිකුත් කරන ලදී.</span>
-        </p>
+        <div class="signature-block mt-10 pt-4 border-t border-rule">
+          <span data-en>By order,</span><span data-si>නියෝගයෙන්,</span><br />
+          <span data-en>Secretary, Department of Agriculture</span><span data-si class="font-siserif">ලේකම්, කෘෂිකර්ම දෙපාර්තමේන්තුව</span><br />
+          12 September 2026
+        </div>
       </div>
 
       <aside class="space-y-6">
-        <div class="p-5" style="background: var(--paper-alt);">
-          <h2 class="font-bold text-sm mb-3"><span data-en>Application Kit</span><span data-si>අයදුම් මාර්ගෝපදේශය</span></h2>
+        <div class="border border-rule p-5">
+          <div class="label mb-3"><span data-en>Application Kit</span><span data-si>අයදුම් මාර්ගෝපදේශය</span></div>
           <ul class="space-y-2 text-sm mb-4">
-            <li class="flex items-start gap-2"><input type="checkbox" id="kit-1" class="mt-1 cursor-pointer" /><label for="kit-1" class="cursor-pointer"><span data-en>Certified copies of educational certificates</span><span data-si class="font-sisans">අධ්‍යාපන සහතික පිටපත්</span></label></li>
-            <li class="flex items-start gap-2"><input type="checkbox" id="kit-2" class="mt-1 cursor-pointer" /><label for="kit-2" class="cursor-pointer"><span data-en>National Identity Card copy</span><span data-si class="font-sisans">ජාතික හැඳුනුම්පත් පිටපත</span></label></li>
-            <li class="flex items-start gap-2"><input type="checkbox" id="kit-3" class="mt-1 cursor-pointer" /><label for="kit-3" class="cursor-pointer"><span data-en>Registered post envelope</span><span data-si class="font-sisans">ලියාපදිංචි තැපැල් කවරයක්</span></label></li>
+            <li class="flex items-start gap-2"><input type="checkbox" id="kit-1" class="tick mt-1 cursor-pointer" /><label for="kit-1" class="cursor-pointer"><span data-en>Certified copies of educational certificates</span><span data-si class="font-siserif">අධ්‍යාපන සහතික පිටපත්</span></label></li>
+            <li class="flex items-start gap-2"><input type="checkbox" id="kit-2" class="tick mt-1 cursor-pointer" /><label for="kit-2" class="cursor-pointer"><span data-en>National Identity Card copy</span><span data-si class="font-siserif">ජාතික හැඳුනුම්පත් පිටපත</span></label></li>
+            <li class="flex items-start gap-2"><input type="checkbox" id="kit-3" class="tick mt-1 cursor-pointer" /><label for="kit-3" class="cursor-pointer"><span data-en>Registered post envelope</span><span data-si class="font-siserif">ලියාපදිංචි තැපැල් කවරයක්</span></label></li>
           </ul>
-          <dl class="mb-4">
-            <div class="summary-row"><dt><span data-en>Fee</span><span data-si>ගාස්තුව</span></dt><dd>Rs. 500.00</dd></div>
-            <div class="summary-row"><dt><span data-en>Registered post</span><span data-si>ලියාපදිංචි තැපෑල</span></dt><dd><span data-en>Required</span><span data-si>අවශ්‍යයි</span></dd></div>
-          </dl>
-          <button class="btn btn-primary w-full"><span data-en>Download Application Form</span><span data-si>අයදුම්පත බාගන්න</span></button>
+          <div class="text-sm space-y-1 pt-3 border-t border-rule mb-4">
+            <div class="flex justify-between"><span class="text-ink-soft"><span data-en>Fee</span><span data-si>ගාස්තුව</span></span><span class="font-mono">Rs. 500.00</span></div>
+            <div class="flex justify-between"><span class="text-ink-soft"><span data-en>Registered post</span><span data-si>ලියාපදිංචි තැපෑල</span></span><span>Required</span></div>
+          </div>
+          <button class="cursor-pointer w-full border border-ink py-2.5 text-sm hover:bg-ink hover:text-paper transition-colors"><span data-en>Download Application Form</span><span data-si>අයදුම්පත බාගන්න</span></button>
         </div>
 
-        <div class="p-5" style="background: var(--paper-alt);">
-          <h2 class="font-bold text-sm mb-3"><span data-en>Salary Scale</span><span data-si>වැටුප් පරිමාණය</span></h2>
-          <div class="text-sm text-ink-soft mb-2">MN-1-2016</div>
-          <dl>
-            <div class="summary-row"><dt><span data-en>Initial</span><span data-si>ආරම්භක</span></dt><dd>Rs. 47,315</dd></div>
-            <div class="summary-row"><dt><span data-en>Increment</span><span data-si>වර්ධක</span></dt><dd>Rs. 1,335 × 20</dd></div>
-            <div class="summary-row"><dt><span data-en>Maximum</span><span data-si>උපරිම</span></dt><dd>Rs. 91,010</dd></div>
-          </dl>
+        <div class="border border-rule p-5">
+          <div class="label mb-2"><span data-en>Salary Scale</span><span data-si>වැටුප් පරිමාණය</span></div>
+          <div class="font-mono text-xs text-ink-soft mb-2">MN-1-2016</div>
+          <div class="table-scroll">
+          <table class="fact-table">
+            <tbody>
+              <tr><td><span data-en>Initial</span><span data-si>ආරම්භක</span></td><td class="text-right">Rs. 47,315</td></tr>
+              <tr><td><span data-en>Increment</span><span data-si>වර්ධක</span></td><td class="text-right">Rs. 1,335 × 20</td></tr>
+              <tr><td><span data-en>Maximum</span><span data-si>උපරිම</span></td><td class="text-right">Rs. 91,010</td></tr>
+            </tbody>
+          </table>
+          </div>
         </div>
       </aside>
     </div>
@@ -297,37 +395,46 @@
 
 </main>
 
-<footer class="w-full mt-16 border-t border-rule">
-  <div class="max-w-[960px] mx-auto px-4 md:px-6 py-8 text-sm text-ink-soft">
-    <p class="max-w-[70ch] leading-[1.6]">
+<footer class="w-full border-t border-ink mt-16">
+  <div class="max-w-[1180px] mx-auto px-4 md:px-8 py-8 text-xs text-ink-soft">
+    <p class="max-w-[70ch] leading-[1.7]">
       The Living Gazette is extracted from official notifications published weekly by the Department of
       Government Printing. Unofficial public-interest digest — verify against the physical gazette text
       before submitting statutory applications.
     </p>
-    <p class="mt-3">© 2026 The Living Gazette (design spike)</p>
+    <p class="mt-3 font-mono text-[11px]">© 2026 The Living Gazette (design spike)</p>
   </div>
 </footer>
 
 <script>
   let vacancies = [];
 
-  const statusTag = {
-    urgent: { en: 'Closes in ', si: 'දින ', bg: 'var(--urgent-wash)', fg: 'var(--urgent)' },
-    soon: { en: 'Closes in ', si: 'දින ', bg: 'var(--soon-wash)', fg: 'var(--soon)' },
-    open: { en: 'Open, ', si: 'විවෘතයි, ', bg: 'var(--open-wash)', fg: 'var(--open)' },
-    closed: { en: 'Closed', si: 'වසා ඇත', bg: 'var(--closed-wash)', fg: 'var(--closed)' },
+  const statusLabel = {
+    urgent: { en: 'Closes in ', si: 'දින ', color: 'var(--stamp)' },
+    soon: { en: 'Closes in ', si: 'දින ', color: 'var(--ink)' },
+    open: { en: 'Open, ', si: 'විවෘතයි, ', color: 'var(--ink-soft)' },
+    closed: { en: 'Closed', si: 'වසා ඇත', color: 'var(--ink-faint)' },
   };
   const eligLabel = {
-    qualifies: { en: 'You qualify', si: 'සුදුසුයි' },
+    qualifies: { en: 'Qualifies', si: 'සුදුසුයි' },
     check: { en: 'Check eligibility', si: 'පරීක්ෂා කරන්න' },
     'not-eligible': { en: 'Not eligible', si: 'සුදුසුකම් නැත' },
     closed: { en: 'Closed', si: 'වසා ඇත' },
   };
 
+  function signatureFor(v) {
+    return {
+      en: `By order,<br>Secretary, ${v.instEn}<br>${v.dateEn || ''}`,
+      si: `නියෝගයෙන්,<br>ලේකම්, ${v.instEn}<br>${v.dateSi || ''}`,
+    };
+  }
+
+  // Reserved per job.md §2.6 for other densities (Deadline Board / Issue Archive
+  // previews) — not called by the feed below, but not dead code to delete.
   function vacancyPost(v) {
     v = { ...v };
     const e = eligLabel[v.elig] || eligLabel.check;
-    const s = statusTag[v.status] || statusTag.open;
+    const s = statusLabel[v.status] || statusLabel.open;
     const closed = v.status === 'closed';
     v.titleSi = v.titleSi || v.titleEn || '';
     v.instSi = v.instSi || v.instEn || '';
@@ -335,74 +442,140 @@
     v.qualSiText = v.qualSiText || '';
     v.age = v.age || '—'; v.quota = v.quota || '—'; v.salary = v.salary || '—';
     v.citation = v.citation || 'Gazette No. 2,412';
+    v.page = v.page || v.citation;
+    const sig = signatureFor(v);
 
     return `
-    <article class="py-6 border-b border-rule">
-      <div class="flex items-start justify-between gap-4 flex-wrap mb-2">
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="tag" style="background:${s.bg}; color:${s.fg}">
-            <span data-en>${s.en}${!closed ? v.days + (v.status === 'open' ? ' left' : '') : ''}</span><span data-si>${s.si}${!closed ? v.dateSi || '' : ''}</span>
-          </span>
-          ${v.real ? `<span class="tag" style="background: var(--open-wash); color: var(--open);"><span data-en>Real listing</span><span data-si>සැබෑ දැන්වීම</span></span>` : ''}
-          ${v._needsReview ? `<span class="tag" style="background: var(--soon-wash); color: var(--soon);"><span data-en>Pending review</span><span data-si>සමාලෝචනයට</span></span>` : ''}
+    <article class="stamp-clip py-7 border-b border-rule">
+      ${closed ? `<div class="stamp-mark"><span data-en>Closed</span><span data-si>වසා ඇත</span></div>` : ''}
+      ${v.real ? `<div class="font-mono text-[10px] uppercase tracking-[.08em] mb-1.5" style="color:var(--stamp)"><span data-en>✓ Real listing</span><span data-si>✓ සැබෑ දැන්වීම</span></div>` : ''}
+      ${v._needsReview ? `<div class="font-mono text-[10px] uppercase tracking-[.08em] mb-1.5 text-ink-faint"><span data-en>Pending review</span><span data-si>සමාලෝචනයට</span></div>` : ''}
+
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div class="min-w-0">
+          <div class="font-mono text-[11px] text-ink-faint mb-1">№ ${v.serial || '—'}</div>
+          <h2 class="cursor-pointer" onclick="showView('detail')">
+            <span data-en class="font-serif text-2xl font-semibold leading-snug">${v.titleEn}</span>
+            <span data-si class="font-siserif text-xl font-semibold leading-snug block">${v.titleSi}</span>
+          </h2>
+          <div class="text-sm text-ink-soft mt-0.5">
+            <span data-en>${v.instEn}</span><span data-si class="font-siserif">${v.instSi}</span>
+            ${v.tag ? `<span class="text-ink-faint">, ${v.tag}</span>` : ''}
+          </div>
         </div>
-        <span class="text-sm text-ink-soft">№ ${v.serial || '—'}</span>
+        <div class="text-right shrink-0">
+          <div style="color:${s.color}" class="text-sm font-medium">
+            <span data-en>${s.en}${!closed ? v.days + (v.status === 'open' ? ' left' : '') : ''}</span><span data-si>${s.si}${!closed ? v.dateSi || '' : ''}</span>
+          </div>
+          <div class="citation-box mt-1 text-left">${v.citation}</div>
+        </div>
       </div>
 
-      <h2 class="cursor-pointer" onclick="showView('detail')">
-        <span data-en class="font-bold text-2xl leading-snug hover:underline">${v.titleEn}</span>
-        <span data-si class="font-sisans text-xl font-bold leading-snug block hover:underline">${v.titleSi}</span>
-      </h2>
-      <div class="text-base text-ink-soft mt-0.5">
-        <span data-en>${v.instEn}</span><span data-si class="font-sisans">${v.instSi}</span>
-        ${v.tag ? `<span>, ${v.tag}</span>` : ''}
-      </div>
-
-      <p class="mt-3 max-w-[68ch] leading-[1.6]">
+      <p class="mt-4 max-w-[68ch] text-base leading-[1.7]">
         <span data-en>${v.descEn || ''}</span>
-        <span data-si class="font-sisans block max-w-[52ch]">${v.descSi}</span>
+        <span data-si class="font-siserif si-body block max-w-[52ch]">${v.descSi}</span>
       </p>
 
-      <dl class="mt-4 max-w-lg">
-        <div class="summary-row"><dt><span data-en>Category</span><span data-si>වර්ගය</span></dt><dd style="font-weight:400">${v.category || '—'}</dd></div>
-        <div class="summary-row"><dt><span data-en>Age</span><span data-si>වයස</span></dt><dd>${v.age}</dd></div>
-        <div class="summary-row"><dt><span data-en>Quota</span><span data-si>ප්‍රමාණය</span></dt><dd>${v.quota}</dd></div>
-        <div class="summary-row"><dt><span data-en>Salary</span><span data-si>වැටුප</span></dt><dd>${v.salary}</dd></div>
-        <div class="summary-row"><dt><span data-en>Citation</span><span data-si>මූලාශ්‍රය</span></dt><dd style="font-weight:400">${v.citation}</dd></div>
-      </dl>
+      <div class="table-scroll">
+      <table class="fact-table mt-4 max-w-lg">
+        <tbody>
+          <tr>
+            <th class="w-28"><span data-en>Category</span><span data-si>වර්ගය</span></th><td>${v.category || '—'}</td>
+          </tr>
+          <tr>
+            <th><span data-en>Age</span><span data-si>වයස</span></th><td>${v.age}</td>
+          </tr>
+          <tr>
+            <th><span data-en>Quota</span><span data-si>ප්‍රමාණය</span></th><td>${v.quota}</td>
+          </tr>
+          <tr>
+            <th><span data-en>Salary</span><span data-si>වැටුප</span></th><td>${v.salary}</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
 
       ${v.qualEn ? `
-      <div class="mt-3 max-w-[68ch]">
-        <h3 class="font-bold text-sm mb-1"><span data-en>Qualifications</span><span data-si>සුදුසුකම්</span></h3>
-        <p class="leading-[1.6]">
-          <span data-en>${v.qualEn}</span><span data-si class="font-sisans block max-w-[52ch]">${v.qualSiText}</span>
-        </p>
-      </div>` : ''}
+      <p class="mt-3 text-base max-w-[68ch] leading-[1.6]">
+        <span class="label block mb-1"><span data-en>Qualifications</span><span data-si>සුදුසුකම්</span></span>
+        <span data-en>${v.qualEn}</span><span data-si class="font-siserif si-body block max-w-[52ch]">${v.qualSiText}</span>
+      </p>` : ''}
 
-      <div class="flex items-center justify-between gap-4 flex-wrap mt-4">
-        <div class="flex items-center gap-5">
-          <button onclick="showView('detail')" class="btn btn-secondary text-sm"><span data-en>View post</span><span data-si>විස්තර</span></button>
-          <a href="${v.pdfUrl || '#'}" ${v.pdfUrl ? 'target="_blank" rel="noopener"' : ''} class="text-sm"><span data-en>Gazette PDF</span><span data-si>PDF</span></a>
-          <button class="text-sm underline" title="Clip to file"><span data-en>Clip</span><span data-si>සුරකින්න</span></button>
+      <div class="flex items-center justify-between gap-4 flex-wrap mt-5">
+        <div class="flex items-center gap-5 text-sm">
+          <button onclick="showView('detail')" class="cursor-pointer border-b border-ink py-2"><span data-en>View post</span><span data-si>විස්තර</span></button>
+          <a href="${v.pdfUrl || '#'}" ${v.pdfUrl ? 'target="_blank" rel="noopener"' : ''} class="text-ink-soft hover:text-ink border-b border-transparent hover:border-ink"><span data-en>Gazette PDF</span><span data-si>PDF</span></a>
+          <button class="cursor-pointer text-ink-soft hover:text-ink border-b border-transparent hover:border-ink py-2" title="Clip to file"><span data-en>Clip</span><span data-si>සුරකින්න</span></button>
         </div>
-        <div class="text-sm font-bold" style="color: ${v.elig === 'qualifies' ? 'var(--open)' : 'var(--ink-soft)'}">
+        <div class="text-sm" style="color: ${v.elig === 'qualifies' ? 'var(--ink)' : 'var(--ink-faint)'}">
           <span data-en>${e.en}</span><span data-si>${e.si}</span>
         </div>
+      </div>
+
+      <div class="signature-block mt-5">
+        <span data-en>${sig.en}</span><span data-si class="font-siserif">${sig.si}</span>
       </div>
     </article>`;
   }
 
+  function vacancyLedgerRow(v) {
+    v = { ...v };
+    const e = eligLabel[v.elig] || eligLabel.check;
+    const s = statusLabel[v.status] || statusLabel.open;
+    const closed = v.status === 'closed';
+    v.titleSi = v.titleSi || v.titleEn || '';
+    v.instSi = v.instSi || v.instEn || '';
+    v.category = v.category || '—';
+    v.salary = v.salary || '—';
+    v.serial = v.serial || '—';
+
+    return `
+    <div class="ledger-row border-b border-rule" role="button" tabindex="0"
+         onclick="showView('detail')"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('detail')}">
+
+      <div class="ledger-row-top">
+        <span class="font-mono text-[11px] text-ink-faint shrink-0">
+          ${v.real ? `<span style="color:var(--stamp)" aria-hidden="true">✓ </span>` : ''}№ ${v.serial}
+          ${v._needsReview ? `<span class="border-l border-rule pl-1.5 ml-1.5"><span data-en>Pending review</span><span data-si>සමාලෝචනයට</span></span>` : ''}
+        </span>
+        <span class="sr-only">${v.real ? 'Real listing. ' : ''}${v._needsReview ? 'Pending review. ' : ''}</span>
+
+        <h3 class="font-serif text-base font-semibold leading-snug truncate min-w-0">
+          <span data-en>${v.titleEn}</span><span data-si class="font-siserif">${v.titleSi}</span>
+        </h3>
+
+        <span class="ledger-leader" aria-hidden="true"></span>
+
+        <span class="text-sm font-medium shrink-0 whitespace-nowrap" style="color:${s.color}">
+          <span data-en>${s.en}${!closed ? v.days + (v.status === 'open' ? ' left' : '') : ''}</span><span data-si>${s.si}${!closed ? (v.dateSi || '') : ''}</span>
+        </span>
+      </div>
+
+      <div class="ledger-meta">
+        <span class="ledger-field min-w-0 truncate">
+          <span data-en>${v.instEn}</span><span data-si class="font-siserif">${v.instSi}</span>
+        </span>
+        <span class="ledger-field font-mono text-[12px] tabular-nums">${v.salary}</span>
+        <span class="ledger-field" style="color:${v.elig === 'qualifies' ? 'var(--ink)' : 'var(--ink-faint)'}; font-style:${v.elig === 'qualifies' ? 'normal' : 'italic'}">
+          <span data-en>${e.en}</span><span data-si>${e.si}</span>
+        </span>
+        <span class="ledger-field hidden sm:inline font-mono text-[12px]">${v.category}</span>
+      </div>
+    </div>`;
+  }
+
   const feedEl = document.getElementById('post-feed');
-  feedEl.innerHTML = `<p class="py-10 text-center text-ink-soft text-sm">Loading vacancies…</p>`;
+  feedEl.innerHTML = `<p class="py-10 text-center text-ink-faint text-sm">Loading vacancies…</p>`;
   fetch('data/vacancies.json')
     .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(data => {
       vacancies = data.vacancies || [];
-      feedEl.innerHTML = vacancies.map(vacancyPost).join('');
+      feedEl.innerHTML = vacancies.map(vacancyLedgerRow).join('');
       document.getElementById('feed-count').textContent = vacancies.length;
     })
     .catch(err => {
-      feedEl.innerHTML = `<div class="py-6 border border-rule text-sm p-4">
+      feedEl.innerHTML = `<div class="py-6 border border-rule text-sm">
         Could not load <code>data/vacancies.json</code> (${err.message}). If you opened this file directly
         (file://), fetch() is blocked by the browser — serve the folder over HTTP instead, e.g.
         <code>npx serve .</code> or <code>python -m http.server</code>, then open it via http://localhost.
@@ -419,8 +592,8 @@
   function setLang(l) {
     document.documentElement.lang = l;
     document.documentElement.setAttribute('data-lang', l);
-    document.getElementById('lang-en').style.opacity = l === 'en' ? '1' : '.7';
-    document.getElementById('lang-si').style.opacity = l === 'si' ? '1' : '.7';
+    document.getElementById('lang-en').style.opacity = l === 'en' ? '1' : '.5';
+    document.getElementById('lang-si').style.opacity = l === 'si' ? '1' : '.5';
   }
   setLang('en');
 
