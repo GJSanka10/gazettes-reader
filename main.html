@@ -87,8 +87,11 @@
     font-size: .6875rem;
     line-height: 1.5;
     color: var(--ink-soft);
-    white-space: nowrap;
+    max-width: 100%;
   }
+  /* Safety net, not the primary fix — the table markup itself should already
+     fit a 375px viewport; this just prevents a layout break if content grows. */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
   /* Real bordered table for structured data, echoing the source's
      own "Post / Number of Vacancies" style tables — not pill badges. */
@@ -208,6 +211,7 @@
 
   <!-- Deadline board — a real table, not tinted cards -->
   <section class="py-6 border-b border-rule">
+    <div class="table-scroll">
     <table class="fact-table max-w-xl">
       <thead>
         <tr>
@@ -222,6 +226,7 @@
         <tr><td><span data-en>Open</span><span data-si>විවෘතයි</span></td><td class="text-right">158</td></tr>
       </tbody>
     </table>
+    </div>
   </section>
 
   <!-- Facets — plain text list, no pill buttons -->
@@ -298,6 +303,7 @@
           <span data-si class="font-siserif si-body block max-w-[52ch]">කෘෂිකර්ම දෙපාර්තමේන්තුවේ සංවර්ධන නිලධාරී තනතුරට, දිවයින පුරා ස්ථාන සඳහා, ස්ථිර හා විශ්‍රාම වැටුප් සහිත පදනමින් සුදුසුකම් ලත් පුරවැසියන්ගෙන් අයදුම්පත් කැඳවනු ලැබේ.</span>
         </p>
 
+        <div class="table-scroll">
         <table class="fact-table mt-6 max-w-md">
           <tbody>
             <tr><th class="w-32"><span data-en>Age</span><span data-si>වයස</span></th><td>22–30 yrs</td></tr>
@@ -305,6 +311,7 @@
             <tr><th><span data-en>Salary</span><span data-si>වැටුප</span></th><td>Rs. 47,315–91,010</td></tr>
           </tbody>
         </table>
+        </div>
 
         <div class="mt-6">
           <div class="label mb-1"><span data-en>Qualifications</span><span data-si>සුදුසුකම්</span></div>
@@ -339,6 +346,7 @@
         <div class="border border-rule p-5">
           <div class="label mb-2"><span data-en>Salary Scale</span><span data-si>වැටුප් පරිමාණය</span></div>
           <div class="font-mono text-xs text-ink-soft mb-2">MN-1-2016</div>
+          <div class="table-scroll">
           <table class="fact-table">
             <tbody>
               <tr><td><span data-en>Initial</span><span data-si>ආරම්භක</span></td><td class="text-right">Rs. 47,315</td></tr>
@@ -346,6 +354,7 @@
               <tr><td><span data-en>Maximum</span><span data-si>උපරිම</span></td><td class="text-right">Rs. 91,010</td></tr>
             </tbody>
           </table>
+          </div>
         </div>
       </aside>
     </div>
@@ -433,20 +442,24 @@
         <span data-si class="font-siserif si-body block max-w-[52ch]">${v.descSi}</span>
       </p>
 
+      <div class="table-scroll">
       <table class="fact-table mt-4 max-w-lg">
         <tbody>
           <tr>
-            <th><span data-en>Category</span><span data-si>වර්ගය</span></th><td colspan="3">${v.category || '—'}</td>
+            <th class="w-28"><span data-en>Category</span><span data-si>වර්ගය</span></th><td>${v.category || '—'}</td>
           </tr>
           <tr>
             <th><span data-en>Age</span><span data-si>වයස</span></th><td>${v.age}</td>
+          </tr>
+          <tr>
             <th><span data-en>Quota</span><span data-si>ප්‍රමාණය</span></th><td>${v.quota}</td>
           </tr>
           <tr>
-            <th><span data-en>Salary</span><span data-si>වැටුප</span></th><td colspan="3">${v.salary}</td>
+            <th><span data-en>Salary</span><span data-si>වැටුප</span></th><td>${v.salary}</td>
           </tr>
         </tbody>
       </table>
+      </div>
 
       ${v.qualEn ? `
       <p class="mt-3 text-base max-w-[68ch] leading-[1.6]">
