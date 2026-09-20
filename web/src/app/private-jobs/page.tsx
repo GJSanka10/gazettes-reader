@@ -91,21 +91,21 @@ export default async function PrivateJobsPage({
     <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-8">
       <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Private Sector Jobs" }]} />
 
-      <h1 className="font-display text-[30px] font-semibold leading-tight tracking-tight text-ink md:text-[36px]">
+      <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
         Private Sector Jobs
       </h1>
-      <p className="mt-2 max-w-[62ch] text-[16px] leading-relaxed text-ink-soft">
+      <p className="mt-2 max-w-[62ch] text-[17px] leading-[27px] text-ink-soft">
         Discover current job opportunities from companies and organisations across Sri Lanka.
       </p>
 
-      <div className="mt-5 grid grid-cols-2 gap-2 border border-rule bg-surface-raised p-3 sm:max-w-xs">
+      <div className="mt-5 grid grid-cols-2 gap-2 border border-rule-strong bg-surface-sunken p-3 sm:max-w-xs">
         <div className="border-r border-rule pr-2">
           <div className="font-mono text-[20px] font-bold text-ink">{all.length}</div>
-          <div className="text-[10px] uppercase tracking-wide text-ink-faint">Listings</div>
+          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">Listings</div>
         </div>
         <div>
           <div className="font-mono text-[20px] font-bold text-ink">{employerCount}</div>
-          <div className="text-[10px] uppercase tracking-wide text-ink-faint">Employers</div>
+          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">Employers</div>
         </div>
       </div>
 
@@ -149,7 +149,7 @@ export default async function PrivateJobsPage({
                 hasFilters ? (
                   <Link
                     href="/private-jobs"
-                    className="inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-4 text-[14px] font-bold text-ink"
+                    className="font-ui inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-6 text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-sunken"
                   >
                     Clear filters
                   </Link>
@@ -158,7 +158,7 @@ export default async function PrivateJobsPage({
             />
           ) : (
             <>
-              <div className="border-t border-rule bg-surface-raised">
+              <div className="border-t border-rule">
                 {pageItems.map((j) => (
                   <PrivateJobCard key={j.slug} job={j} />
                 ))}

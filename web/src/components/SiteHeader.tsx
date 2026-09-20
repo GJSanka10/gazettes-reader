@@ -31,7 +31,7 @@ export function SiteHeader({
   const linkClass = (href: string) => {
     const active = pathname.startsWith(href);
     return [
-      "inline-flex min-h-[44px] items-center px-1 text-[14px] font-semibold uppercase tracking-wide",
+      "font-ui inline-flex min-h-[44px] items-center px-1 text-[14px] font-semibold uppercase tracking-wide",
       active
         ? "border-b-2 border-ink text-ink"
         : "border-b-2 border-transparent text-ink-soft hover:text-ink",
@@ -44,7 +44,7 @@ export function SiteHeader({
     <header className="sticky top-0 z-40 bg-surface-raised">
       {/* State ribbon: static trilingual identification, not a language switcher —
           i18n routing isn't wired yet, so no control here should imply it is. */}
-      <div className="bg-ink px-4 py-1.5 text-surface-raised md:px-8">
+      <div className="font-ui bg-ink px-4 py-1.5 text-surface-raised md:px-8">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[11px] uppercase tracking-wider">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="font-semibold">Democratic Socialist Republic of Sri Lanka</span>
@@ -67,13 +67,13 @@ export function SiteHeader({
         </div>
       </div>
 
-      <div className="border-b border-rule-strong">
+      <div>
         <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-4 py-3 md:px-8">
           <Link href="/" className="flex flex-col leading-none">
-            <span className="font-display text-[20px] font-semibold tracking-tight text-ink">
+            <span className="font-display text-[22px] font-semibold tracking-tight text-ink">
               The Living Gazette
             </span>
-            <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-faint">
+            <span className="font-ui mt-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-faint">
               Government &amp; Private Vacancy Register
             </span>
           </Link>
@@ -104,7 +104,7 @@ export function SiteHeader({
         </div>
 
         {open && (
-          <nav id="mobile-nav" aria-label="Main" className="border-t border-rule md:hidden">
+          <nav id="mobile-nav" aria-label="Main" className="font-ui border-t border-rule md:hidden">
             <ul className="mx-auto max-w-[1200px] px-4 py-2">
               {NAV.map((item) => (
                 <li key={item.href}>
@@ -123,15 +123,21 @@ export function SiteHeader({
         )}
       </div>
 
+      {/* Dual-line editorial border: the masthead/section-divider pattern. */}
+      <div aria-hidden="true" className="masthead-rule" />
+
       {/* Real urgency ticker: only rendered when a real vacancy is genuinely
-          closing within 7 days (see getMostUrgentGovVacancy). No invented copy. */}
+          closing within 7 days (see getMostUrgentGovVacancy). Crimson only —
+          this design system reserves crimson strictly for deadlines/urgency
+          and gold strictly for prestige/official marks, never the reverse. */}
       {urgentVacancy && days !== null && (
-        <div className="border-b border-rule bg-accent-wash px-4 py-2 md:px-8">
+        <div className="font-ui border-b border-rule bg-stamp-wash px-4 py-2 md:px-8">
           <div className="mx-auto flex max-w-[1200px] items-center gap-2 text-[13px]">
-            <span className="inline-flex shrink-0 items-center gap-1 border border-accent px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-accent">
+            <span className="inline-flex shrink-0 items-center gap-1.5 border border-stamp px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-stamp">
+              <span aria-hidden="true" className="h-1.5 w-1.5 bg-stamp" />
               {days <= 1 ? "Closing today" : `Closes in ${days}d`}
             </span>
-            <p className="min-w-0 flex-1 truncate text-ink">{urgentVacancy.titleEn}</p>
+            <p className="min-w-0 flex-1 truncate font-display text-ink">{urgentVacancy.titleEn}</p>
             <Link
               href={`/government-jobs/${urgentVacancy.slug}`}
               className="inline-flex shrink-0 cursor-pointer items-center gap-0.5 text-[13px] font-bold text-ink underline underline-offset-2"
@@ -147,8 +153,8 @@ export function SiteHeader({
 
 export function SiteFooter() {
   return (
-    <footer className="mt-16 border-t border-rule-strong bg-surface-raised">
-      <div className="mx-auto max-w-[1200px] px-4 py-8 text-[13px] leading-relaxed text-ink-soft md:px-8">
+    <footer className="mt-16 border-t-2 border-ink bg-surface-raised">
+      <div className="font-ui mx-auto max-w-[1200px] px-4 py-8 text-[13px] leading-relaxed text-ink-soft md:px-8">
         <p className="max-w-[70ch]">
           The Living Gazette is an independent digest. Government vacancies are summarised from
           notices published by the Department of Government Printing; private-sector listings are

@@ -10,7 +10,7 @@ export default function AboutPage() {
     <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-8">
       <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "About" }]} />
 
-      <h1 className="font-display text-[30px] font-semibold tracking-tight text-ink md:text-[36px]">
+      <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
         About this site
       </h1>
 

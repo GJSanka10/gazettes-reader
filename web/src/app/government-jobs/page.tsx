@@ -117,25 +117,26 @@ export default async function GovernmentJobsPage({
     <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-8">
       <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Government Gazette Jobs" }]} />
 
-      <h1 className="font-display text-[30px] font-semibold leading-tight tracking-tight text-ink md:text-[36px]">
+      <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
         Government Gazette Jobs
       </h1>
-      <p className="mt-2 max-w-[62ch] text-[16px] leading-relaxed text-ink-soft">
+      <p className="mt-2 max-w-[62ch] text-[17px] leading-[27px] text-ink-soft">
         Find the latest government vacancies published through official Gazette notifications.
       </p>
 
-      <div className="mt-5 grid grid-cols-3 gap-2 border border-rule bg-surface-raised p-3 sm:max-w-md">
+      <div className="mt-5 grid grid-cols-3 gap-2 border border-rule-strong bg-surface-sunken p-3 sm:max-w-md">
         <div className="border-r border-rule pr-2">
           <div className="font-mono text-[20px] font-bold text-ink">{all.length}</div>
-          <div className="text-[10px] uppercase tracking-wide text-ink-faint">Total posts</div>
+          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">Total posts</div>
         </div>
         <div className="border-r border-rule pr-2">
           <div className="font-mono text-[20px] font-bold text-ink">{institutionCount}</div>
-          <div className="text-[10px] uppercase tracking-wide text-ink-faint">Institutions</div>
+          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">Institutions</div>
         </div>
         <div>
-          <div className="font-mono text-[20px] font-bold text-accent">{closingSoonCount}</div>
-          <div className="text-[10px] uppercase tracking-wide text-ink-faint">&lt;7d close</div>
+          {/* Crimson: this is an urgency stat (closing soon), not a prestige one. */}
+          <div className="font-mono text-[20px] font-bold text-stamp">{closingSoonCount}</div>
+          <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">&lt;7d close</div>
         </div>
       </div>
 
@@ -180,7 +181,7 @@ export default async function GovernmentJobsPage({
                 hasFilters ? (
                   <Link
                     href="/government-jobs"
-                    className="inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-4 text-[14px] font-bold text-ink"
+                    className="font-ui inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-6 text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-sunken"
                   >
                     Clear filters
                   </Link>
@@ -189,7 +190,7 @@ export default async function GovernmentJobsPage({
             />
           ) : (
             <>
-              <div className="border-t border-rule bg-surface-raised">
+              <div className="space-y-3">
                 {pageItems.map((v, i) => (
                   <GovJobCard key={v.slug} vacancy={v} featured={isFeatured && i === 0} />
                 ))}

@@ -112,7 +112,7 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder={placeholder}
-          className="min-h-[44px] w-full border border-rule-strong bg-surface pl-9 pr-9 text-[14px] text-ink placeholder:text-ink-faint"
+          className="min-h-[44px] w-full border border-ink bg-surface pl-9 pr-9 text-[14px] text-ink placeholder:text-ink-faint focus:border-2"
         />
         {draft && (
           <button
@@ -171,7 +171,7 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
           {facet.label}
         </span>
         <select
-          className="min-h-[44px] w-full cursor-pointer border border-rule bg-surface px-2.5 text-[13px] text-ink"
+          className="min-h-[44px] w-full cursor-pointer border border-ink bg-surface px-2.5 text-[13px] text-ink focus:border-2"
           value={current}
           onChange={(e) => setFacet(facet.key, e.target.value)}
         >
@@ -190,7 +190,7 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
     <label className="block border-t border-rule pt-3">
       <span className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">Sort by</span>
       <select
-        className="min-h-[44px] w-full cursor-pointer border border-rule bg-surface px-2.5 text-[13px] text-ink"
+        className="min-h-[44px] w-full cursor-pointer border border-ink bg-surface px-2.5 text-[13px] text-ink focus:border-2"
         value={params.get("sort") ?? sorts[0]?.value ?? ""}
         onChange={(e) => setFacet("sort", e.target.value)}
       >
@@ -214,12 +214,12 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
   return (
     <>
       {/* Mobile: a compact trigger bar above the results, not a sidebar. */}
-      <div className="col-span-12 flex items-center gap-3 border border-rule bg-surface-raised p-3 lg:hidden">
+      <div className="font-ui col-span-12 flex items-center gap-3 border border-rule-strong bg-surface-raised p-3 lg:hidden">
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
           aria-expanded={drawerOpen}
-          className="inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 border border-rule-strong px-3 text-[13px] font-bold text-ink"
+          className="inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 border border-ink px-3 text-[13px] font-bold text-ink"
         >
           <Icon name="tune" className="text-[18px]" />
           Filters{activeChips.length ? ` (${activeChips.length})` : ""}
@@ -230,11 +230,11 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
       </div>
 
       {/* Desktop sidebar ledger. */}
-      <aside className="col-span-12 hidden lg:col-span-4 lg:block xl:col-span-3">
+      <aside className="font-ui col-span-12 hidden lg:col-span-4 lg:block xl:col-span-3">
         <div className="lg:sticky lg:top-24">
           <div className="border border-rule-strong bg-surface-raised">
-            <div className="flex items-center justify-between border-b border-rule-strong bg-surface-sunken px-4 py-2.5">
-              <span className="inline-flex items-center gap-1.5 font-display text-[15px] font-semibold text-ink">
+            <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-4 py-2.5">
+              <span className="inline-flex items-center gap-1.5 text-[14px] font-bold uppercase tracking-wide text-ink">
                 <Icon name="tune" className="text-[18px] text-ink-faint" />
                 Filter register
               </span>
@@ -287,15 +287,15 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
             role="dialog"
             aria-modal="true"
             aria-label="Filters"
-            className="absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto border-t border-rule-strong bg-surface-raised p-5"
+            className="font-ui absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto border-t-2 border-ink bg-surface-raised p-5"
           >
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-bold text-ink">Filter register</h2>
+              <h2 className="text-[14px] font-bold uppercase tracking-wide text-ink">Filter register</h2>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close filters"
-                className="flex h-11 w-11 cursor-pointer items-center justify-center border border-rule text-ink"
+                className="flex h-11 w-11 cursor-pointer items-center justify-center border border-ink text-ink"
               >
                 <Icon name="close" className="text-[20px]" />
               </button>
@@ -308,14 +308,14 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
                   clearAll();
                   setDrawerOpen(false);
                 }}
-                className="min-h-[44px] flex-1 cursor-pointer border border-rule-strong text-[14px] text-ink"
+                className="min-h-[44px] flex-1 cursor-pointer border border-ink text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-sunken"
               >
                 Clear
               </button>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                className="min-h-[44px] flex-1 cursor-pointer bg-ink text-[14px] font-bold text-surface-raised"
+                className="min-h-[44px] flex-1 cursor-pointer bg-ink text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#163a5f]"
               >
                 Apply filters
               </button>

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Newsreader, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Newsreader, Hanken_Grotesk, IBM_Plex_Mono, Noto_Serif_Sinhala } from "next/font/google";
 import "./globals.css";
 import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
 import { formatUpdatedAt, getGovUpdatedAt, getMostUrgentGovVacancy } from "@/lib/jobs";
 
+// Newsreader carries headlines AND body prose (globals.css). Weight 400 is
+// load-bearing here, not just 500/600 — it's the body-text weight.
 const newsreader = Newsreader({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -11,10 +13,10 @@ const newsreader = Newsreader({
   display: "swap",
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
+const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-body-loaded",
+  variable: "--font-ui-loaded",
   display: "swap",
 });
 
@@ -22,6 +24,16 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-mono-loaded",
+  display: "swap",
+});
+
+// Previously referenced by name in globals.css but never actually fetched
+// anywhere — real Sinhala vacancy titles were silently falling back to
+// Georgia. Fixed here rather than left for the next redesign to trip over.
+const notoSerifSinhala = Noto_Serif_Sinhala({
+  subsets: ["sinhala"],
+  weight: ["400", "600"],
+  variable: "--font-siserif-loaded",
   display: "swap",
 });
 
@@ -58,7 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${newsreader.variable} ${plusJakarta.variable} ${plexMono.variable} flex min-h-screen flex-col`}
+        className={`${newsreader.variable} ${hankenGrotesk.variable} ${plexMono.variable} ${notoSerifSinhala.variable} flex min-h-screen flex-col`}
       >
         <a
           href="#main"

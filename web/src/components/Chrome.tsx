@@ -4,7 +4,7 @@ import { Icon } from "./Icon";
 /** Spec §56: breadcrumbs are clickable except the current page. */
 export function Breadcrumb({ trail }: { trail: { label: string; href?: string }[] }) {
   return (
-    <nav aria-label="Breadcrumb" className="mb-4">
+    <nav aria-label="Breadcrumb" className="font-ui mb-4">
       <ol className="flex flex-wrap items-center gap-2 text-[13px] text-ink-soft">
         {trail.map((crumb, i) => (
           <li key={crumb.label} className="flex items-center gap-2">

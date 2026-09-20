@@ -972,6 +972,58 @@ server (an orphaned dev process from before the fix was still answering port 300
 to be killed to get a trustworthy check — stale processes had previously produced spurious
 "missing key" React warnings that did not correspond to any actual missing key in source).
 
+### 11.9 "Gazette Ledger" swapped again — "Lanka Broadsheet Editorial"
+
+*2026-09-20.* A third design-system doc arrived: a full YAML-frontmattered spec ("Lanka
+Broadsheet Editorial") — Imperial Navy / Antique Ceylon Gold / Urgent Terracotta Crimson,
+Newsreader carrying both headlines *and* body prose, Hanken Grotesk reserved for
+structural UI only, zero radius, zero shadow, hairline separation over card boxes. The
+doc's own YAML color block (an unedited M3 tonal export) disagreed with its own prose —
+e.g. `primary: '#000f22'` in YAML vs. "Imperial Navy `#0A2540`" in prose, same for
+secondary and tertiary. The prose won every conflict; it names roles and gives rationale,
+the YAML was only used to fill gaps (like a third neutral text tier) the prose left open.
+
+**A stop worth recording:** mid-rewrite of `JobCards.tsx`, a permission denial arrived —
+"the user doesn't want to take this action right now, stop and wait." Work stopped
+immediately, nothing further was touched, and a background-task notification that arrived
+seconds later (labelled, explicitly, as not-user-input) was correctly *not* treated as
+permission to resume. Resumption only happened once the user typed a real "go".
+
+**What changed:** same token names again (`ink`, `rule`, `stamp`, `accent`, `verified`,
+...), new values and two real semantic corrections this swap exposed in the *previous*
+one — under strict color-role discipline, crimson is deadlines/urgency only and gold is
+prestige/official-marks only, never interchangeable. The §11.8 header ticker had used gold;
+that was wrong under this system's rules and is now crimson. `--verified` now points at
+the gold family rather than carrying its own invented green — "verified against source"
+reads as an official seal, which gold already means, rather than adding a fourth chromatic
+role the spec never asked for. Newsreader now carries body copy too (not just headlines) —
+a real font-family flip via the `--font-body` token, not a per-element change, because
+nothing in the app had ever applied an explicit sans class to body text. Government
+vacancy cards became the spec's "Public Tender / Gazette Card" (filled `surface-sunken`,
+bordered, spaced) while private-sector cards stayed on the plain hairline pattern — they
+aren't gazette notices and don't earn that treatment, a deliberate divergence in how the
+two sections read. The "most urgent" listing gets the spec's "Lead Story" treatment
+(bigger headline, thin gold rule under it) instead of a navy box; the crimson Closing Date
+Tag now does the actual urgency-signalling, so the old redundant "Most urgent" navy pill
+was removed outright rather than kept alongside it. Added a `.masthead-rule` CSS pattern
+(2px rule / 3px gap / 1px rule, one element) for the header's dual-line editorial border.
+
+**A latent bug caught and fixed while re-touching fonts, unrelated to the redesign
+itself:** `--font-siserif` had referenced `"Noto Serif Sinhala"` by name since §11.7, but
+nothing in `layout.tsx` ever fetched that font — no `next/font` loader, no `<link>`. Real
+Sinhala vacancy titles had been silently rendering in the Georgia fallback the entire time
+this was live. Fixed by adding a `Noto_Serif_Sinhala` loader alongside the others. (Also
+checked, empirically rather than assumed, whether the *other* font tokens had the same
+problem — they didn't: next/font/google keeps the literal Google Fonts family name for the
+self-hosted `@font-face`, confirmed by fetching the compiled CSS directly, so a plain
+`"Newsreader", Georgia, serif` value does correctly pick up the optimized local font.)
+
+Verified: `tsc` clean, `next build` 56/56 pages, and a fully restarted dev server (again —
+a stray process from the *previous* restart was still squatting on port 3000) shows every
+compiled `--ink`/`--stamp`/`--accent`/`--surface` value matching the spec exactly in both
+themes, all four fonts actually being served, real facet/stat counts, and no console
+warnings.
+
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
 

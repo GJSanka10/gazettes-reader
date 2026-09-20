@@ -48,10 +48,10 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
             <JobStatusLabel status={j.status} closingDate={j.closingDate} />
           </div>
 
-          <h1 className="font-display text-[30px] font-semibold leading-tight tracking-tight text-ink md:text-[36px]">
+          <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
             {j.titleEn}
           </h1>
-          <p className="mt-2 text-[17px] text-ink-soft">{j.employerName}</p>
+          <p className="font-ui mt-2 text-[15px] text-ink-soft">{j.employerName}</p>
 
           {j.descEn && <Section title="About this role">{j.descEn}</Section>}
 
@@ -93,18 +93,18 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
         </article>
 
         <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
-          <div className="border border-rule-strong bg-surface-raised p-5">
-            <h2 className="font-display text-[17px] font-semibold text-ink">Apply</h2>
-            <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">
+          <div className="border border-rule-strong bg-surface-sunken p-5">
+            <h2 className="font-ui text-[13px] font-bold uppercase tracking-wide text-ink">Apply</h2>
+            <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">
               Applications are handled by the employer, not by this site.
             </p>
-            <div className="mt-4 space-y-2">
+            <div className="font-ui mt-4 space-y-2">
               {j.applyUrl && j.applyUrl !== "#" && (
                 <a
                   href={j.applyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-[14px] font-bold text-surface-raised"
+                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#163a5f]"
                 >
                   <Icon name="open_in_new" className="text-[15px]" />
                   Apply on employer site
@@ -115,19 +115,19 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
                   href={j.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 border border-rule-strong px-4 text-[14px] text-ink"
+                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 border border-ink px-4 text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-raised"
                 >
                   <Icon name="open_in_new" className="text-[15px]" />
                   View original posting
                 </a>
               )}
             </div>
-            <p className="mt-3 text-[12px] text-ink-faint">Opens in a new tab on an external site.</p>
+            <p className="font-ui mt-3 text-[12px] text-ink-faint">Opens in a new tab on an external site.</p>
           </div>
 
           <Link
             href="/private-jobs"
-            className="inline-flex min-h-[44px] w-full cursor-pointer items-center justify-center border border-rule px-4 text-[14px] text-ink"
+            className="font-ui inline-flex min-h-[44px] w-full cursor-pointer items-center justify-center border border-ink px-4 text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-sunken"
           >
             Back to all private jobs
           </Link>

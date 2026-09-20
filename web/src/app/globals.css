@@ -1,12 +1,17 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   Full swap to a Material-3-inspired "Gazette Ledger" system (per explicit
-   user direction — see job.md). Same civic-ledger spirit as the previous
-   "Register" system (cream paper, dark ink, hairline rules, a red accent
-   reserved for urgency), but a deep navy ink, an added amber accent for
-   secondary emphasis, and Newsreader/Plus Jakarta Sans in place of
-   Fraunces/Atkinson Hyperlegible.
+   "Lanka Broadsheet Editorial" — a classical broadsheet/gazette system:
+   Imperial Navy primary, Antique Ceylon Gold secondary (prestige/official
+   marks only), Urgent Terracotta Crimson tertiary (deadlines/urgency only —
+   never used for anything else). Zero corner radius, zero shadow: separation
+   comes from hairline rules and tone, never floating cards.
+
+   Source: a pasted design-system doc with a YAML color block (an
+   auto-generated M3 tonal export) that disagreed with its own hand-written
+   prose section (e.g. primary #000f22 in YAML vs. Imperial Navy #0A2540 in
+   prose). The prose values won wherever they conflicted — they carry actual
+   naming/rationale; the YAML only filled gaps the prose left open.
 
    NOTE: no custom key here is named after a Tailwind scale keyword
    (base, sm, lg, ...). job.md documents a silent, invisible bug caused
@@ -15,37 +20,37 @@
    ========================================================================= */
 
 :root {
-  --surface: #faf9f6;
-  --surface-raised: #ffffff;
-  --surface-sunken: #efeeeb;
-  --ink: #0f2038;            /* deep navy — doubles as body text and as bg-ink for dark chrome */
-  --ink-soft: #44474d;
-  --ink-faint: #5f6268;      /* AA on --surface */
-  --rule: #d6d5cf;
-  --rule-strong: #9a9a94;
-  --stamp: #ba1a1a;          /* urgency only */
-  --stamp-wash: #ffdad6;
-  --verified: #1f5c3f;       /* verified/open only */
-  --verified-wash: #dbe8e0;
-  --accent: #8c4f10;         /* amber ink — secondary emphasis, never urgency */
-  --accent-wash: #fbe3c6;
+  --surface: #faf9f5;         /* Crisp Editorial Vellum — level 0 canvas */
+  --surface-raised: #ffffff;  /* level 2 — elevated/active surfaces */
+  --surface-sunken: #f4f3ee;  /* Wove Archive Tint — level 1, panels & tender cards */
+  --ink: #0a2540;             /* Imperial Navy — text and primary chrome */
+  --ink-soft: #475569;        /* Charcoal Secondary — datelines, bylines */
+  --ink-faint: #74777e;       /* least prominent, still AA on --surface */
+  --rule: #e2dfd2;            /* Press Rule hairline */
+  --rule-strong: #0a2540;     /* structural framing = ink itself, per spec's masthead/modal rule */
+  --stamp: #c53030;           /* Urgent Terracotta Crimson — deadlines/urgency ONLY */
+  --stamp-wash: #fdf2f2;
+  --accent: #7f5600;          /* Antique Ceylon Gold ink — prestige/official marks ONLY */
+  --accent-wash: #ffddae;
+  --verified: #7f5600;        /* "verified against source" reads as an official seal: gold, not a bespoke green */
+  --verified-wash: #ffddae;
 }
 
 [data-theme="dark"] {
-  --surface: #14181f;
-  --surface-raised: #1c212b;
-  --surface-sunken: #0f131a;
-  --ink: #e7e6e0;
-  --ink-soft: #b8bcc4;
-  --ink-faint: #8b8f97;
-  --rule: #333844;
-  --rule-strong: #474d5c;
+  --surface: #0f1a26;
+  --surface-raised: #17242f;
+  --surface-sunken: #0b141d;
+  --ink: #eef1f5;
+  --ink-soft: #b7c2cf;
+  --ink-faint: #8b95a1;
+  --rule: #2a3644;
+  --rule-strong: #e8ecf1;
   --stamp: #ff8a80;
-  --stamp-wash: #3a1815;
-  --verified: #7fd4a8;
-  --verified-wash: #163326;
-  --accent: #ffb870;
-  --accent-wash: #3a2711;
+  --stamp-wash: #3a1414;
+  --accent: #f0c987;
+  --accent-wash: #3a2c12;
+  --verified: #f0c987;
+  --verified-wash: #3a2c12;
 }
 
 @theme inline {
@@ -59,13 +64,19 @@
   --color-rule-strong: var(--rule-strong);
   --color-stamp: var(--stamp);
   --color-stamp-wash: var(--stamp-wash);
-  --color-verified: var(--verified);
-  --color-verified-wash: var(--verified-wash);
   --color-accent: var(--accent);
   --color-accent-wash: var(--accent-wash);
+  --color-verified: var(--verified);
+  --color-verified-wash: var(--verified-wash);
 
+  /* Newsreader carries both headlines AND body prose in this system — an
+     editorial broadsheet reads its own copy in the same serif voice. Hanken
+     Grotesk is reserved strictly for structural UI / system metadata: nav,
+     buttons, labels, badges, form chrome, datelines, captions — never body
+     copy (see .font-ui below). */
   --font-display: "Newsreader", Georgia, serif;
-  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body: "Newsreader", Georgia, serif;
+  --font-ui: "Hanken Grotesk", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-siserif: "Noto Serif Sinhala", Georgia, serif;
 }
@@ -97,10 +108,6 @@ body {
   }
 }
 
-/* Material Symbols, loaded via <link> in layout.tsx (next/font/google does not
-   expose the FILL/GRAD/opsz variable axes this family needs). Used sparingly,
-   as a supporting glyph next to text that already carries the meaning —
-   never as the sole carrier of information (spec §55). */
 .material-symbols-outlined {
   font-family: "Material Symbols Outlined";
   font-weight: normal;
@@ -116,6 +123,16 @@ body {
   font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
   vertical-align: -0.15em;
+}
+
+/* "Dual-line editorial border": a 2px rule, 3px of whitespace, a 1px rule —
+   the masthead/section-divider pattern from the spec, as one element so it
+   never needs three stacked divs wherever it's used. */
+.masthead-rule {
+  height: 6px;
+  background:
+    linear-gradient(var(--rule-strong), var(--rule-strong)) top / 100% 2px no-repeat,
+    linear-gradient(var(--rule-strong), var(--rule-strong)) bottom / 100% 1px no-repeat;
 }
 
 /* A citation is a small bordered block, not a dot-joined string. */
@@ -144,6 +161,7 @@ body {
   vertical-align: top;
 }
 .fact-table th {
+  font-family: var(--font-ui);
   font-weight: 600;
   color: var(--ink-soft);
   font-size: 0.6875rem;
