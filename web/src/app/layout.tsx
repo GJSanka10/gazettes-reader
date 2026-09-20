@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Newsreader, Hanken_Grotesk, IBM_Plex_Mono, Noto_Serif_Sinhala } from "next/font/google";
+import { Newsreader, Plus_Jakarta_Sans, IBM_Plex_Mono, Noto_Serif_Sinhala } from "next/font/google";
 import "./globals.css";
 import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
 import { formatUpdatedAt, getGovUpdatedAt, getMostUrgentGovVacancy } from "@/lib/jobs";
 
-// Newsreader carries headlines AND body prose (globals.css). Weight 400 is
-// load-bearing here, not just 500/600 — it's the body-text weight.
+// Newsreader: headlines only, matching the mockup's own type split.
 const newsreader = Newsreader({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -13,7 +12,10 @@ const newsreader = Newsreader({
   display: "swap",
 });
 
-const hankenGrotesk = Hanken_Grotesk({
+// Plus Jakarta Sans carries everything else — body, labels, captions, nav —
+// exactly as the mockup's own Tailwind config assigns it. Loaded once and
+// referenced by both --font-body and --font-ui in globals.css.
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-ui-loaded",
@@ -70,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${newsreader.variable} ${hankenGrotesk.variable} ${plexMono.variable} ${notoSerifSinhala.variable} flex min-h-screen flex-col`}
+        className={`${newsreader.variable} ${plusJakarta.variable} ${plexMono.variable} ${notoSerifSinhala.variable} flex min-h-screen flex-col`}
       >
         <a
           href="#main"

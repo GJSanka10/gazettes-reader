@@ -1068,6 +1068,52 @@ end-to-end multi-select filtering confirmed over curl — a single category retu
 results, that category OR a second returns 4 (correct OR union), each generates its own
 removable chip, and search/sort continue to work unchanged.
 
+### 11.11 Colors and type reverted to the original mockup's exact values
+
+*2026-09-20.* After §11.10 fixed structure/density, the user asked directly: "can we use
+same colours as well and design also?" — pointing at the *original* GazetteJobs.LK mockup
+from the very start of this session, not the "Lanka Broadsheet Editorial" doc from §11.9.
+§11.8 had already approximated that mockup's palette once, but through its own
+interpretation (e.g. `ink` was set to `primary-container` #0f2038, a background role in the
+mockup, when the mockup actually uses `primary` #000818 as its literal *text* color almost
+everywhere — `text-primary` on headings, labels, the logo). This pass pulled hex values
+directly from the mockup's own Tailwind config instead of re-deriving them:
+
+`ink` → `#000818` (M3 `primary` — both text and solid-fill chrome, matching how the mockup
+itself reuses `primary` for both), `ink-soft` → `#44474d` (`on-surface-variant`), `ink-faint`
+→ `#75777e` (`outline`), `rule` → `#e3e2e0` (`surface-container-highest`, the mockup's actual
+dominant hairline — used for borders far more than `outline-variant`), `stamp`/`stamp-wash`
+→ `#ba1a1a`/`#ffdad6` (`error`/`error-container`, exact), `accent` → `#8c4f10` (`secondary`,
+already exact in §11.8), `accent-wash` → `#fdad67` (`secondary-container` — a **solid badge
+fill** in the mockup's own markup, not a pale wash as §11.8/§11.9 both treated it).
+
+Fonts reverted to the mockup's actual split: Newsreader for headline-tier classes only,
+Plus Jakarta Sans for everything else (body, labels, captions, nav) — not §11.9's
+"Newsreader carries body copy too." Hanken Grotesk dropped entirely; `--font-ui` now points
+at the same Plus Jakarta Sans font object as `--font-body` rather than loading a second
+family, since the mockup doesn't distinguish a separate "structural UI" typeface from body
+text the way the Broadsheet Editorial doc did.
+
+Badge treatment followed the same correction: the urgent "Closes in Nd" badge is now a
+solid crimson fill with white text (`bg-stamp text-white`), matching the mockup's literal
+`bg-error text-on-primary` badges, replacing the hairline-border style from §11.9. The
+3–14-day tier now renders in gold monospace (`text-accent`), matching the mockup's
+`text-secondary` treatment for moderately-urgent closing dates — previously plain gray.
+`CategoryBadge` became a solid gold-fill tag instead of a hairline-border label, for the
+same reason.
+
+Border radius was checked and left alone: the mockup's Tailwind config defines a `DEFAULT`
+radius of `0.25rem`, but that's identical to Tailwind's own built-in default, and the
+mockup's actual markup barely uses non-zero rounding anywhere except `rounded-full` on true
+circles (the live-status dot, the avatar) — so the already-sharp existing markup already
+matches its real usage; no theme change was needed there.
+
+Verified: `tsc` clean, `next build` 56/56 pages, a fully restarted dev server, exact hex
+values (`--ink: #000818`, `--stamp: #ba1a1a`, `--accent: #8c4f10`, `--accent-wash:
+#fdad67`, `--rule: #e3e2e0`, in both themes) confirmed directly in the compiled CSS output
+rather than assumed from the source, Plus Jakarta Sans confirmed as the actually-served
+font family, and all routes 200 with no console warnings.
+
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
 

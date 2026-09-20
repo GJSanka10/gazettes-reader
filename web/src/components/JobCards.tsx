@@ -52,12 +52,12 @@ function FactGrid({ items }: { items: { label: string; value?: string | null }[]
   );
 }
 
-/** Category Badge: gold text, uppercase, tracked, hairline top/bottom rules —
- *  never a filled pill. Gold is reserved for prestige/official marks. */
+/** Category Badge: a solid gold-fill tag, matching the mockup's badge
+ *  style. Gold is reserved for prestige/official marks. */
 function CategoryBadge({ category }: { category?: string | null }) {
   if (!category) return null;
   return (
-    <span className="font-ui inline-block border-y border-accent-wash px-0.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-accent">
+    <span className="font-ui inline-block bg-accent-wash px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-accent">
       {category}
     </span>
   );

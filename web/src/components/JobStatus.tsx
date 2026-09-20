@@ -21,7 +21,7 @@ export function JobStatusLabel({
   if (status === "closed") {
     return (
       <span
-        className={`font-ui inline-flex items-center gap-1 border border-rule-strong px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-ink-soft ${className}`}
+        className={`font-ui inline-flex items-center gap-1 bg-surface-sunken px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-ink-soft ${className}`}
       >
         <Icon name="lock" className="text-[13px]" />
         Closed
@@ -38,19 +38,23 @@ export function JobStatusLabel({
   if (days <= 2) {
     return (
       <span
-        className={`font-ui inline-flex items-center gap-1.5 border border-stamp bg-stamp-wash px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-stamp ${className}`}
+        className={`font-ui inline-flex items-center gap-1.5 bg-stamp px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white ${className}`}
       >
-        <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 bg-stamp" />
+        <Icon name="schedule" className="text-[13px]" />
         {days <= 0 ? "Closes today" : days === 1 ? "Closes in 1 day" : `Closes in ${days} days`}
       </span>
     );
   }
 
-  return (
-    <span className={`font-ui text-[13px] text-ink-soft ${className}`}>
-      {days <= 14 ? `Closes in ${days} days` : "Open"}
-    </span>
-  );
+  if (days <= 14) {
+    return (
+      <span className={`font-mono text-[13px] font-semibold text-accent ${className}`}>
+        Closes in {days} days
+      </span>
+    );
+  }
+
+  return <span className={`font-ui text-[13px] text-ink-soft ${className}`}>Open</span>;
 }
 
 /** Spec §21: the platform's own summary must be visually distinct from the

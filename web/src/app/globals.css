@@ -1,17 +1,12 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   "Lanka Broadsheet Editorial" — a classical broadsheet/gazette system:
-   Imperial Navy primary, Antique Ceylon Gold secondary (prestige/official
-   marks only), Urgent Terracotta Crimson tertiary (deadlines/urgency only —
-   never used for anything else). Zero corner radius, zero shadow: separation
-   comes from hairline rules and tone, never floating cards.
-
-   Source: a pasted design-system doc with a YAML color block (an
-   auto-generated M3 tonal export) that disagreed with its own hand-written
-   prose section (e.g. primary #000f22 in YAML vs. Imperial Navy #0A2540 in
-   prose). The prose values won wherever they conflicted — they carry actual
-   naming/rationale; the YAML only filled gaps the prose left open.
+   Ported directly from the user's original "GazetteJobs.LK" M3 mockup's own
+   Tailwind config — exact hex values, not a reinterpretation. Where a
+   semantic role in this app doesn't map to a literal M3 token, the closest
+   real usage in that mockup's own markup was followed (e.g. body/label/
+   caption text there is Plus Jakarta Sans, headlines are Newsreader; nav/
+   button active-states use `primary` #000818 as a solid fill).
 
    NOTE: no custom key here is named after a Tailwind scale keyword
    (base, sm, lg, ...). job.md documents a silent, invisible bug caused
@@ -20,37 +15,37 @@
    ========================================================================= */
 
 :root {
-  --surface: #faf9f5;         /* Crisp Editorial Vellum — level 0 canvas */
-  --surface-raised: #ffffff;  /* level 2 — elevated/active surfaces */
-  --surface-sunken: #f4f3ee;  /* Wove Archive Tint — level 1, panels & tender cards */
-  --ink: #0a2540;             /* Imperial Navy — text and primary chrome */
-  --ink-soft: #475569;        /* Charcoal Secondary — datelines, bylines */
-  --ink-faint: #74777e;       /* least prominent, still AA on --surface */
-  --rule: #e2dfd2;            /* Press Rule hairline */
-  --rule-strong: #0a2540;     /* structural framing = ink itself, per spec's masthead/modal rule */
-  --stamp: #c53030;           /* Urgent Terracotta Crimson — deadlines/urgency ONLY */
-  --stamp-wash: #fdf2f2;
-  --accent: #7f5600;          /* Antique Ceylon Gold ink — prestige/official marks ONLY */
-  --accent-wash: #ffddae;
-  --verified: #7f5600;        /* "verified against source" reads as an official seal: gold, not a bespoke green */
-  --verified-wash: #ffddae;
+  --surface: #faf9f6;         /* M3 surface/background */
+  --surface-raised: #ffffff;  /* M3 surface-container-lowest */
+  --surface-sunken: #f4f3f0;  /* M3 surface-container-low */
+  --ink: #000818;             /* M3 primary — body text AND solid-fill chrome (nav, buttons) */
+  --ink-soft: #44474d;        /* M3 on-surface-variant */
+  --ink-faint: #75777e;       /* M3 outline */
+  --rule: #e3e2e0;            /* M3 surface-container-highest — the mockup's dominant hairline */
+  --rule-strong: #000818;     /* M3 primary, used for its own strong 2px framing */
+  --stamp: #ba1a1a;           /* M3 error — deadlines/urgency ONLY */
+  --stamp-wash: #ffdad6;      /* M3 error-container */
+  --accent: #8c4f10;          /* M3 secondary — prestige/official marks ONLY */
+  --accent-wash: #fdad67;     /* M3 secondary-container — a solid badge fill in the mockup, not a pale wash */
+  --verified: #8c4f10;        /* "verified against source" reads as an official seal: gold, not a bespoke green */
+  --verified-wash: #fdad67;
 }
 
 [data-theme="dark"] {
-  --surface: #0f1a26;
-  --surface-raised: #17242f;
-  --surface-sunken: #0b141d;
-  --ink: #eef1f5;
-  --ink-soft: #b7c2cf;
-  --ink-faint: #8b95a1;
-  --rule: #2a3644;
-  --rule-strong: #e8ecf1;
-  --stamp: #ff8a80;
+  --surface: #101315;
+  --surface-raised: #1a1c1e;
+  --surface-sunken: #0a0c0e;
+  --ink: #d5e3ff;             /* M3 primary-fixed family, inverted for dark */
+  --ink-soft: #c5c6ce;
+  --ink-faint: #8f9196;
+  --rule: #33363a;
+  --rule-strong: #b7c7e7;
+  --stamp: #ffb4ab;
   --stamp-wash: #3a1414;
-  --accent: #f0c987;
-  --accent-wash: #3a2c12;
-  --verified: #f0c987;
-  --verified-wash: #3a2c12;
+  --accent: #ffb77b;
+  --accent-wash: #6d3a00;
+  --verified: #ffb77b;
+  --verified-wash: #6d3a00;
 }
 
 @theme inline {
@@ -69,14 +64,14 @@
   --color-verified: var(--verified);
   --color-verified-wash: var(--verified-wash);
 
-  /* Newsreader carries both headlines AND body prose in this system — an
-     editorial broadsheet reads its own copy in the same serif voice. Hanken
-     Grotesk is reserved strictly for structural UI / system metadata: nav,
-     buttons, labels, badges, form chrome, datelines, captions — never body
-     copy (see .font-ui below). */
+  /* Matches the mockup's own type split exactly: Newsreader is reserved for
+     headline-tier classes only (display-lg, headline-xl/lg/md/sm); every
+     body/label/caption class there is Plus Jakarta Sans. --font-ui exists
+     as a separate token only so existing `font-ui` utility usages keep
+     working — its value is the same font as --font-body here. */
   --font-display: "Newsreader", Georgia, serif;
-  --font-body: "Newsreader", Georgia, serif;
-  --font-ui: "Hanken Grotesk", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-siserif: "Noto Serif Sinhala", Georgia, serif;
 }
