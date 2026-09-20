@@ -1,8 +1,11 @@
 name: Private-sector vacancy ingest
 
 on:
-  workflow_dispatch: {} # manual "Run workflow" button only, for now -- no cron until
-                        # this pipeline has run cleanly a few times by hand
+  schedule:
+    # 06:30 UTC Tuesday -- deliberately offset from the Gazette's Friday cron
+    # (.github/workflows/ingest.yml) so the two pipelines' PRs never land the same day.
+    - cron: "30 6 * * 2"
+  workflow_dispatch: {} # manual "Run workflow" button, for testing without waiting a week
 
 permissions:
   contents: write

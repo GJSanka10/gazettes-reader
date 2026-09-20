@@ -15,6 +15,36 @@
     "notes": "Verified 2026-09-20: Workday's CXS API is a plain public JSON REST API, no auth, no HTML scraping. POST {url}/jobs with {appliedFacets:{}, searchText:'Sri Lanka'} returns jobPostings[] with externalPath; GET {url}{externalPath} returns full detail (jobPostingInfo.title/location/startDate/timeType/jobDescription, hiringOrganization.name). Real employer entity name: 'LSEG Business Services Colombo (Private) Limited'. Some listings have jobPostingEndDateAsText ('End Date: September 30, 2026') for a real closing date, most don't (open-ended). This exact API shape generalizes to ANY company on <tenant>.wdN.myworkdayjobs.com -- worth checking other multinationals with a Sri Lanka office the same way."
   },
   {
+    "id": "jll-workday",
+    "name": "JLL (Jones Lang LaSalle) Sri Lanka",
+    "url": "https://jll.wd1.myworkdayjobs.com/wday/cxs/jll/jllcareers",
+    "method": "workday-api",
+    "sourceType": "company-direct",
+    "sector": "other",
+    "legalRisk": "low",
+    "crawlFrequency": "weekly",
+    "active": true,
+    "lastChecked": "2026-09-20",
+    "lastSuccessfulCrawl": null,
+    "consecutiveFailures": 0,
+    "notes": "Verified 2026-09-20 via the same Workday CXS API pattern as lseg-workday. searchText:'Sri Lanka' returned 7 results, 6 genuinely Colombo-based (1 was Hyderabad, TS -- correctly filtered out by the location check, not by the search itself). Real-estate/facilities-management multinational; sector set to 'other' since it doesn't fit banking/healthcare/technology/hospitality cleanly."
+  },
+  {
+    "id": "zebra-workday",
+    "name": "Zebra Technologies Sri Lanka",
+    "url": "https://zebra.wd501.myworkdayjobs.com/wday/cxs/zebra/Zebra_careers",
+    "method": "workday-api",
+    "sourceType": "company-direct",
+    "sector": "technology",
+    "legalRisk": "low",
+    "crawlFrequency": "weekly",
+    "active": true,
+    "lastChecked": "2026-09-20",
+    "lastSuccessfulCrawl": null,
+    "consecutiveFailures": 0,
+    "notes": "Verified 2026-09-20 via the same Workday CXS API pattern. searchText:'Sri Lanka' returned 8 results, all genuinely Colombo-based (barcode/enterprise-hardware multinational with a real Colombo engineering office)."
+  },
+  {
     "id": "ifs-smartrecruiters",
     "name": "IFS",
     "url": "https://careers.smartrecruiters.com/IFS1",
