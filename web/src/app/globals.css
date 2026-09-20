@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   "The Register" — ported from main.html (see job.md §11.6).
+   Modeled on the case-file/ledger culture of Sri Lankan government offices:
+   manila folders, fountain-pen ink, rubber date-stamps. One accent means
+   urgency (a closing date), a second distinct accent means verified/open.
+   Never decorative.
+
+   NOTE: no custom key here is named after a Tailwind scale keyword
+   (base, sm, lg, ...). job.md §11.6 documents a silent, invisible bug caused
+   by a custom colour named `base` colliding with the built-in `text-base`
+   font-size utility. Do not reintroduce that class of name.
+   ========================================================================= */
+
+:root {
+  --surface: #ede6d6;
+  --surface-raised: #f5f0e4;
+  --surface-sunken: #e3dac6;
+  --ink: #1c2b3a;
+  --ink-soft: #48576a;
+  --ink-faint: #6b6f47;      /* 5.9:1 on --surface */
+  --rule: #c7b896;
+  --rule-strong: #a99b72;
+  --stamp: #b23a2e;          /* rubber date-stamp red — urgency only */
+  --stamp-wash: #f1ddd8;
+  --verified: #2f5d50;       /* approval ink-stamp green — verified/open only */
+  --verified-wash: #dde8e2;
+}
+
+[data-theme="dark"] {
+  --surface: #1b2430;
+  --surface-raised: #222d3b;
+  --surface-sunken: #151d27;
+  --ink: #e8e1d0;
+  --ink-soft: #b7af9a;
+  --ink-faint: #968e75;      /* 4.79:1 on dark --surface */
+  --rule: #33404f;
+  --rule-strong: #46566a;
+  --stamp: #e0796c;
+  --stamp-wash: #3a211d;
+  --verified: #6fbba6;
+  --verified-wash: #1e3129;
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-stamp: var(--stamp);
+  --color-stamp-wash: var(--stamp-wash);
+  --color-verified: var(--verified);
+  --color-verified-wash: var(--verified-wash);
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-siserif: "Noto Serif Sinhala", Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* Spec §60: never remove focus indicators without replacing them. */
+*:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 2px;
+}
+
+/* Spec §72 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* A citation is a small bordered block, not a dot-joined string. */
+.citation-box {
+  border: 1px solid var(--rule-strong);
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 100%;
+}
+
+/* Real bordered table for structured data, echoing the source document's own
+   "Post / Number of Vacancies" tables — not pill badges. */
+.fact-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.fact-table th,
+.fact-table td {
+  border: 1px solid var(--rule);
+  padding: 0.5rem 0.625rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  vertical-align: top;
+}
+.fact-table th {
+  font-weight: 600;
+  color: var(--ink-soft);
+  font-size: 0.6875rem;
+  width: 8.5rem;
+}
+.fact-table td {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Sinhala needs its own leading at every scale, not just body copy. */
+.si-body {
+  line-height: 1.85;
+}
+
+/* Skeleton shimmer (spec §18, §41) */
+@keyframes register-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.skeleton {
+  background: var(--rule);
+  border-radius: 2px;
+  animation: register-pulse 1.6s ease-in-out infinite;
+}
+
+::selection {
+  background: var(--stamp-wash);
+  color: var(--ink);
+}

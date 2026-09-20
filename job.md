@@ -879,11 +879,53 @@ In priority order, given §11.5 and §11.6's findings:
    the ATS-platform-search strategy from §11.5). More sectors (banking/healthcare) have
    zero real sources yet — the Private Sector view's "All industries" default currently
    only ever shows Technology and Other because that's all that exists.
-4. **The actual Next.js build (Phase 1, §8)** — still not started at all. `main.html`,
-   however good it now looks, remains a single static file with no routing, no real
-   per-vacancy detail pages wired to actual data (the Detail view is still the one
-   hardcoded example), and no i18n framework — everything from Phase 1 onward in §8 is
-   still greenfield. This is still the single biggest piece of remaining work by far.
+4. **The actual Next.js build (Phase 1, §8)** — 🟡 **started 2026-09-20, see §11.7.**
+   Scaffolded in `web/` with routing, real per-vacancy detail pages wired to both data
+   files, and URL-driven filter state. Still greenfield from Phase 1's list: i18n
+   framework (`next-intl`), Storybook, shadcn, and dark mode.
+
+### 11.7 Next.js app scaffolded — the two-page portal spec
+
+*2026-09-20.* A detailed 75-section UI/UX spec arrived for a **two-category job portal**
+(Government Gazette + Private Sector as genuinely separate pages, not one mixed feed),
+and the call was made to build it as a real Next.js app rather than extend `main.html`
+further — the spec's requirements for real URLs, shareable filtered searches, and
+browser back/forward (§57–58) can't honestly be met by a single static file.
+
+**Three conflicts between the new spec and decisions already recorded here, surfaced
+rather than silently resolved:**
+- The spec recommends **Inter** and a **"professional blue"** primary. §11.6 records both
+  a GOV.UK-style and a "civic blue portal" direction already tried and set aside, and
+  `ui-ux-pro-max`'s generic government trust-blue palette explicitly rejected. Resolved:
+  **"The Register" wins** — the manila/ink/stamp-red palette and Fraunces + Atkinson
+  Hyperlegible port over intact, while the spec's *structure* (two routes, states,
+  pagination, a11y rules) is followed closely. Atkinson Hyperlegible in particular has a
+  real accessibility rationale that Inter doesn't.
+- The spec asks for a **"Closing Soon" sort on private jobs** (§37). Every one of the 37
+  real private postings has `closingDate: null` — ATS platforms mostly don't publish
+  them. Resolved by explicit decision: include the sort, **nulls last**, and state the
+  ratio in the page's own intro text ("only N of 37 listings publish a closing date")
+  rather than quietly presenting a sort that looks broken.
+- Private-sector jobs were listed **out of scope in §10**. Already resolved by §11.5's
+  separate-pipeline approach; the portal now surfaces that pipeline's real output.
+
+**A real process failure worth recording:** this session started from stale context and
+wrote a fabricated `data/private-jobs.json` full of invented companies, not knowing
+`data/private-vacancies.json` already held 37 real postings from §11.5's pipeline. Caught
+only by reading job.md's own §11.5 before building on it, and deleted. Two lessons: with
+concurrent sessions on one working tree, **read the plan file before trusting in-context
+state**, and the near-miss is exactly the failure mode §11.4 warned about — fabricated
+data that looks plausible sitting next to real data.
+
+**What's in `web/`:** Next 16 + React 19 + Tailwind v4 (CSS-first `@theme`, tokens ported
+from `main.html`). Routes `/`, `/government-jobs`, `/government-jobs/[slug]`,
+`/private-jobs`, `/private-jobs/[slug]`, `/about`. Both listing pages are server
+components reading `searchParams`, so filter/search/sort/page state lives in the URL and
+is shareable and back/forward-safe. Shared components: `SiteHeader`, `FilterBar` (client,
+debounced search, removable chips, mobile drawer), `JobCards`, `Pagination`, `Breadcrumb`,
+`EmptyState`, `ErrorState`, `JobListSkeleton`, `JobStatusLabel`. Data is read at the repo
+root via `fs` so there's one source of truth shared with both ingest pipelines — noted in
+`lib/jobs.ts` that a real deploy will need a copy step, rather than pre-solving it.
 
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
