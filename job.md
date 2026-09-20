@@ -775,6 +775,83 @@ logic was also rebuilt as a local n8n workflow (Docker, `localhost:5678`) purely
 tool-learning exercise, not saved anywhere in this repo. Worth knowing if it ever comes up
 again, but it has no bearing on `scripts/ingest.py`, which remains the real pipeline.
 
+### 11.6 Two real bugs fixed, and `main.html` got a considered redesign + a real Private Sector view
+
+*2026-09-20.* Continuing straight from §11.5's private-ingest work, this pass covered two
+unrelated threads: fixing real correctness bugs found by actually running things on the
+live GitHub repo, and a from-scratch visual redesign of `main.html` (which had already
+churned through three directions today across two concurrent sessions — Material 3,
+GOV.UK Design System, and a monochrome print palette — none settled).
+
+**Two real `scripts/ingest.py` bugs found by triggering `ingest.yml` on GitHub Actions for
+the first time ever (per §11.5's open item):**
+- `max_tokens` (1024 for the single-notice path, 2048 for the batch path) was too low for
+  `nvidia/nemotron-3-ultra`, a reasoning model that spends part of its token budget on
+  internal reasoning before writing output — several real candidates failed with
+  `Expecting value: line 1 column 1` / `Unterminated string` JSON-parse errors (truncated
+  output). Raised both to 4096. (A first attempt at this fix was accidentally reverted by
+  a concurrent session's unrelated commit sweeping up an uncommitted change via a broad
+  `git add` — re-applied afterward. Running two sessions against the same working tree at
+  once is real, not hypothetical, and cost a redo here.)
+- The discovery-pass loop had **no title-validity check at all**, and the batch pass only
+  checked truthiness — neither caught the LLM returning the literal string `"None"`
+  instead of a real JSON `null` on a page that wasn't an actual vacancy notice (a GIT
+  exam-timetable page got added as a fake listing, confidence 0.2, title `"None"`, which
+  passed the truthiness check since a non-empty string is still truthy). Added
+  `is_valid_title()`, used in both passes.
+- Also found, separately, that GitHub's own PR-permission default
+  ("Allow GitHub Actions to create and approve pull requests") is off on a fresh repo —
+  affects any workflow using `peter-evans/create-pull-request`, not just the private one
+  already documented in §11.5.
+
+**`main.html` redesign, done properly this time with real design skills rather than
+another ad-hoc pivot:** installed and used `frontend-design`, `ui-ux-pro-max`, and
+`senior-frontend` (via `npx claude-code-templates@latest --skill <name>`, now in
+`.claude/skills/`). Landed on **"The Register"** — modeled on the actual case-file/ledger
+culture of Sri Lankan government offices (manila folders, fountain-pen ink, rubber
+date-stamps), deliberately not another "old newspaper" or "civic blue portal" look, both
+already tried and set aside today. Checked `ui-ux-pro-max`'s own database against this
+brief and rejected its top match (a generic "Government/Public Service" trust-blue
+palette, essentially the same genre as the already-rejected GOV.UK direction) — worth
+noting for future design passes on this project: the tool's database leans SaaS/marketing
+and doesn't have a strong "civic document register" pattern, so it's a useful cross-check,
+not a source of truth, for a brief this specific. Palette (manila `#EDE6D6`, ink `#1C2B3A`,
+stamp-red `#B23A2E` for urgency only, verified-green `#2F5D50` for confirmed-real only) —
+contrast-checked by hand, all pairs clear WCAG AA. Type: Fraunces (display) + Atkinson
+Hyperlegible (body, genuinely justified by the accessibility need for a broad
+non-designer audience) + IBM Plex Mono (citations/dates only) + the existing Noto Serif
+Sinhala. Layout: an index-tab rail (folder-tab metaphor) replacing the old flat facet
+list.
+
+**A real, severe bug was caught only because a screenshot was actually taken, not
+assumed:** the redesign shipped once already with **most body text invisible** —
+descriptions, qualifications, all of it — because the custom Tailwind color named `base`
+collided with Tailwind's own built-in `text-base` utility (font-size: 1rem). Since color
+and font-size are different CSS properties, both rules applied simultaneously: every
+`text-base` class in the file (used purely for font-size, copied from the original file)
+silently also recolored that text to match the page background — zero contrast, text
+present in the DOM but camouflaged. This is exactly what the user meant by "lot of
+details are missing." Root-caused by actually screenshotting via Playwright pointed at
+the machine's existing installed Chrome (`executablePath` set directly to
+`chrome.exe`) rather than downloading Playwright's own browser, which timed out
+repeatedly on this network — worth remembering as the fast path if this comes up again.
+Fixed by renaming the color key to `surface`. **Lesson for any future Tailwind CDN
+config on this project: never name a custom color/spacing/etc. key the same as one of
+Tailwind's own scale keywords (`base`, `sm`, `lg`, ...) — the collision is silent, applies
+cleanly with no console error, and is invisible unless you actually look at a render.**
+
+**New "Private Sector" view added to `main.html`** (a real step toward the private-ingest
+plan's Phase 4 frontend merge, not the full merge yet): a second top-level nav tab,
+separate from "Government Gazette," fetching `data/private-vacancies.json` independently.
+Organised by **industry, not date** — a deliberate, user-specified distinction: a Gazette
+notice has a real, meaningful closing date; most private postings have none at all (per
+§11.5's Workday API findings), so forcing a date-sort there would be dishonest. Industry
+tabs are built dynamically from whatever `sector` values are actually present in the data
+(currently Technology, Other) rather than a hardcoded list, and actually filter the feed
+client-side on click — not decorative. The Gazette feed was also fixed to explicitly sort
+by urgency-then-closing-date in JS, rather than relying on whatever order the source JSON
+happened to be in.
+
 ---
 
 ## 12. Definition of done for v1
@@ -788,22 +865,25 @@ page. And the page looks like it was typeset, not assembled.
 
 ### Immediate next step
 
-*Updated 2026-09-19 — the Phase 0 spike below is long done; this section had gone stale.*
+*Updated 2026-09-20 — §11.5's list is mostly done; this section had gone stale again.*
 
-In priority order, given today's findings (§11.5):
+In priority order, given §11.5 and §11.6's findings:
 
-1. **Verify `ingest.yml` actually works on the now-live repo** — trigger it via
-   `workflow_dispatch` and confirm it opens a real PR, the same way the private-sector
-   pipeline's run was just proven. Never actually confirmed on GitHub Actions before today.
-2. **Private-ingest Phase 2** — find 2-3 more companies with a Sri Lanka presence on
-   SmartRecruiters/Greenhouse/Lever/Workday (platform-based search, not one-off company
-   guessing, per §11.5's finding); consider turning on a cron for `private-ingest.yml`.
-3. **Frontend merge** (private-ingest plan's Phase 4) — show government and private-sector
-   listings together on the real site, once there's enough private-sector volume to be
-   worth it. Not started.
-4. **The actual Next.js build** — `main.html` is still the Phase 0 static spike (masthead,
-   ledger, one detail view). Routing, real detail pages, and trilingual rendering per §5–§7
-   haven't been started at all yet; this remains the biggest untouched piece of work.
+1. **`ingest.yml` verified working** ✅ (§11.5) — two real bugs found in the process and
+   fixed (§11.6): `max_tokens` truncation, and a missing title-validity check.
+2. **`main.html` redesign done** ✅ (§11.6) — "The Register" design system, a real
+   Private-Sector view organised by industry, and the invisible-body-text bug fixed.
+   Still open: the "professional/premium" bar is subjective and iterative — check with
+   whoever's judging it before assuming this is the final visual pass.
+3. **Private-ingest Phase 2** — still only 4 sources (IFS, LSEG, JLL, Zebra, all found via
+   the ATS-platform-search strategy from §11.5). More sectors (banking/healthcare) have
+   zero real sources yet — the Private Sector view's "All industries" default currently
+   only ever shows Technology and Other because that's all that exists.
+4. **The actual Next.js build (Phase 1, §8)** — still not started at all. `main.html`,
+   however good it now looks, remains a single static file with no routing, no real
+   per-vacancy detail pages wired to actual data (the Detail view is still the one
+   hardcoded example), and no i18n framework — everything from Phase 1 onward in §8 is
+   still greenfield. This is still the single biggest piece of remaining work by far.
 
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>

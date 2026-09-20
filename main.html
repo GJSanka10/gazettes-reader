@@ -6,26 +6,28 @@
 <title>The Living Gazette — Latest Vacancies</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=Noto+Serif+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
         colors: {
-          paper: 'var(--paper)',
-          'paper-raised': 'var(--paper-raised)',
+          surface: 'var(--base)',
+          'surface-raised': 'var(--base-raised)',
           ink: 'var(--ink)',
           'ink-soft': 'var(--ink-soft)',
           'ink-faint': 'var(--ink-faint)',
           rule: 'var(--rule)',
           'rule-strong': 'var(--rule-strong)',
           stamp: 'var(--stamp)',
+          verified: 'var(--verified)',
         },
         fontFamily: {
-          serif: ['Newsreader', 'Georgia', 'serif'],
+          display: ['Fraunces', 'Georgia', 'serif'],
+          body: ['"Atkinson Hyperlegible"', 'system-ui', 'sans-serif'],
           siserif: ['"Noto Serif Sinhala"', 'Georgia', 'serif'],
-          mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
         },
       },
     },
@@ -33,41 +35,47 @@
 </script>
 <style>
   /* ============================================================
-     Design plan: the real Gazette is monochrome print — black ink
-     on paper, no colour except the government seal. Colour here is
-     reserved for one thing only: a stamped urgency mark, never a
-     UI accent. One serif family does display, body, and UI alike,
-     because that's what the source document does. See job.md for
-     the full design-plan writeup and self-critique.
+     Design plan: "The Register" — modeled on the actual case-file
+     and ledger culture of Sri Lankan government offices (manila
+     folders, fountain-pen ink, rubber date-stamps), not a generic
+     "old newspaper" archive or a "civic portal" blue template —
+     both already tried and set aside earlier today. One accent
+     colour means urgency (a closing date), a second, distinct
+     accent means verified/open — never decorative. See job.md
+     for the full design-plan writeup and self-critique.
      ============================================================ */
   :root {
-    --paper: #f5f2ea;
-    --paper-raised: #fbfaf6;
-    --ink: #1a1815;
-    --ink-soft: #4a4640;
-    --ink-faint: #6b6558; /* 5.2:1 on --paper — was #8a8375 at 3.4:1, failed WCAG AA */
-    --rule: #d8d2c0;
-    --rule-strong: #b8b09a;
-    --stamp: #a3291f;
-    --stamp-wash: #f3e6e3;
+    --base: #ede6d6;
+    --base-raised: #f5f0e4;
+    --ink: #1c2b3a;
+    --ink-soft: #48576a;
+    --ink-faint: #6b6f47; /* 5.9:1 on --base */
+    --rule: #c7b896;
+    --rule-strong: #a99b72;
+    --stamp: #b23a2e;      /* rubber date-stamp red — urgency only */
+    --stamp-wash: #f1ddd8;
+    --verified: #2f5d50;   /* approval ink-stamp green — verified/open only */
+    --verified-wash: #dde8e2;
   }
   [data-theme="dark"] {
-    --paper: #17150f;
-    --paper-raised: #1f1c15;
-    --ink: #ece7db;
-    --ink-soft: #bdb6a4;
-    --ink-faint: #948c7a; /* 5.5:1 on --paper — was #837c6c at 4.4:1, failed WCAG AA */
-    --rule: #3a3527;
-    --rule-strong: #524b38;
-    --stamp: #d4685c;
-    --stamp-wash: #2c1a17;
+    --base: #1b2430;
+    --base-raised: #222d3b;
+    --ink: #e8e1d0;
+    --ink-soft: #b7af9a;
+    --ink-faint: #968e75; /* 4.79:1 on dark --base */
+    --rule: #33404f;
+    --rule-strong: #46566a;
+    --stamp: #e0796c;
+    --stamp-wash: #3a211d;
+    --verified: #6fbba6;
+    --verified-wash: #1e3129;
   }
   * { transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
   html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; scroll-behavior: auto !important; }
   }
-  body { background: var(--paper); }
+  body { background: var(--base); }
   *:focus-visible { outline: 2px solid var(--stamp); outline-offset: 2px; }
   html[data-lang="en"] [data-si] { display: none !important; }
   html[data-lang="si"] [data-en] { display: none !important; }
@@ -83,7 +91,7 @@
   .citation-box {
     border: 1px solid var(--rule-strong);
     padding: .5rem .75rem;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'IBM Plex Mono', monospace;
     font-size: .6875rem;
     line-height: 1.5;
     color: var(--ink-soft);
@@ -103,16 +111,17 @@
     font-size: .8125rem;
   }
   .fact-table th {
-    font-weight: 500;
+    font-weight: 600;
     color: var(--ink-soft);
     background: transparent;
     font-size: .6875rem;
-    letter-spacing: .02em;
+    letter-spacing: .01em;
+    font-family: 'Atkinson Hyperlegible', sans-serif;
   }
-  .fact-table td { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+  .fact-table td { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
 
-  /* A field label, not a tracked-caps eyebrow — italic serif, same family
-     as everything else, differentiated by style rather than a decorative device. */
+  /* A field label, not a tracked-caps eyebrow — italic, differentiated by
+     style rather than a decorative device. */
   .label { font-style: italic; color: var(--ink-faint); font-size: .8125rem; }
 
   /* Signature block — every real notice in the source ends with an
@@ -127,25 +136,62 @@
     margin-left: auto;
   }
 
-  /* Stamp — the one place saturated colour appears, as an actual
-     rotated mark, not a UI accent painted across the interface. */
+  /* Stamp — the one place saturated red appears, as an actual
+     rotated mark, not a UI accent painted across the interface.
+     Reserved for urgency (closing/closed), never decoration. */
   .stamp-mark {
     position: absolute; top: 1rem; right: -2.25rem; transform: rotate(28deg);
     border: 2.5px solid var(--stamp); color: var(--stamp);
-    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: .65rem;
-    letter-spacing: .12em; text-transform: uppercase; padding: .2rem 2.5rem;
-    opacity: .82; pointer-events: none;
+    font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: .65rem;
+    letter-spacing: .1em; padding: .2rem 2.5rem;
+    opacity: .85; pointer-events: none;
   }
   .stamp-clip { position: relative; overflow: hidden; }
+
+  /* Verified mark — the other saturated colour, reserved for a
+     confirmed-real listing. Distinct hue from urgency on purpose:
+     red asks for action, green states a fact. */
+  .verified-mark {
+    display: inline-flex; align-items: center; gap: .3rem;
+    color: var(--verified); font-family: 'IBM Plex Mono', monospace;
+    font-size: .6875rem; letter-spacing: .02em;
+  }
+  .verified-mark svg { width: .75rem; height: .75rem; flex-shrink: 0; }
+
+  /* Index rail — folder-tab metaphor: each tab is a small label
+     stepped slightly right of the last, like a staggered card
+     index. The active tab is pulled flush left, as if drawn forward. */
+  .index-tab {
+    display: block; width: 100%; text-align: left;
+    padding: .55rem .75rem .55rem 1rem;
+    border-left: 3px solid transparent;
+    font-size: .875rem; color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .index-tab:hover { color: var(--ink); background: var(--base-raised); }
+  .index-tab.is-active {
+    border-left-color: var(--stamp); color: var(--ink); font-weight: 600;
+    background: var(--base-raised);
+  }
+  .index-group-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: .6875rem;
+    letter-spacing: .06em; color: var(--ink-faint);
+    padding: 0 .75rem .4rem 1rem; margin-top: 1.25rem;
+  }
+  .index-group-label:first-child { margin-top: 0; }
+
+  .nav-link { color: var(--ink-faint); padding-bottom: .125rem; border-bottom: 1px solid transparent; }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.is-active { color: var(--ink); border-bottom-color: var(--ink); font-weight: 600; }
 
   ::selection { background: var(--stamp-wash); color: var(--ink); }
   .tick { accent-color: var(--stamp); }
 </style>
 </head>
-<body class="font-serif text-ink antialiased min-h-screen bg-paper">
+<body class="font-body text-ink antialiased min-h-screen bg-surface">
 
 <!-- ============ HEADER ============ -->
-<header class="w-full sticky top-0 z-50 bg-paper border-b border-rule">
+<header class="w-full sticky top-0 z-50 bg-surface border-b border-rule">
   <div class="max-w-[1180px] mx-auto px-4 md:px-8 py-2 flex items-center justify-between gap-3 text-xs">
     <div class="flex items-center gap-3 flex-wrap font-mono text-[11px] text-ink-soft">
       <span class="flex items-center gap-1.5">
@@ -167,14 +213,14 @@
   <div class="max-w-[1180px] mx-auto px-4 md:px-8">
     <div class="h-16 flex items-center justify-between gap-6">
       <div class="flex items-baseline gap-3">
-        <span class="text-xl md:text-2xl font-semibold tracking-tight">
+        <span class="text-xl md:text-2xl font-display font-semibold tracking-tight">
           <span data-en>The Living Gazette</span><span data-si class="font-siserif">ජීවමාන ගැසට් පත්‍රය</span>
         </span>
       </div>
       <nav class="hidden md:flex items-center gap-6 text-sm">
-        <button onclick="showView('vacancies')" id="nav-vacancies" class="cursor-pointer border-b border-ink pb-0.5"><span data-en>Latest Vacancies</span><span data-si>නවතම පුරප්පාඩු</span></button>
+        <button onclick="showView('vacancies')" id="nav-vacancies" class="nav-link cursor-pointer is-active"><span data-en>Government Gazette</span><span data-si>රාජ්‍ය ගැසට්</span></button>
+        <button onclick="showView('private')" id="nav-private" class="nav-link cursor-pointer"><span data-en>Private Sector</span><span data-si>පෞද්ගලික අංශය</span></button>
         <button class="cursor-pointer text-ink-faint hover:text-ink"><span data-en>Archive</span><span data-si>ලේඛනාගාරය</span></button>
-        <button class="cursor-pointer text-ink-faint hover:text-ink"><span data-en>Exams</span><span data-si>විභාග</span></button>
       </nav>
       <div class="flex items-center gap-2 shrink-0">
         <div class="w-8 h-8 rounded-full border border-rule-strong flex items-center justify-center font-siserif text-xs">ශ්‍රී</div>
@@ -193,10 +239,10 @@
   <section class="pt-10 pb-6 border-b border-rule">
     <div class="flex items-baseline justify-between gap-4 flex-wrap">
       <div>
-        <span class="font-mono text-[11px] text-ink-faint uppercase tracking-[.08em]">
+        <span class="font-mono text-[11px] text-ink-faint tracking-[.06em]">
           <span data-en>Part I : Section (IIA) — Advertising</span><span data-si>I කොටස : (IIA) වගන්තිය</span>
         </span>
-        <h1 class="font-serif font-semibold leading-[1.1] tracking-tight mt-1" style="font-size: clamp(2rem, 4.4vw, 3.25rem)">
+        <h1 class="font-display font-semibold leading-[1.1] tracking-tight mt-1" style="font-size: clamp(2rem, 4.4vw, 3.25rem)">
           <span data-en>247 vacancies published this week</span>
           <span data-si class="font-siserif" style="font-size: clamp(1.7rem, 4vw, 2.6rem)">මෙම සතියේ පුරප්පාඩු 247ක්</span>
         </h1>
@@ -209,67 +255,96 @@
     </div>
   </section>
 
-  <!-- Deadline board — a real table, not tinted cards -->
-  <section class="py-6 border-b border-rule">
-    <div class="table-scroll">
-    <table class="fact-table max-w-xl">
-      <thead>
-        <tr>
-          <th><span data-en>Closing</span><span data-si>අවසන්</span></th>
-          <th class="text-right"><span data-en>Count</span><span data-si>ගණන</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td style="color:var(--stamp)"><span data-en>Within 48 hours</span><span data-si>පැය 48යි</span></td><td class="text-right" style="color:var(--stamp)">06</td></tr>
-        <tr><td><span data-en>This week</span><span data-si>මෙම සතියේ</span></td><td class="text-right">22</td></tr>
-        <tr><td><span data-en>This month</span><span data-si>මෙම මාසයේ</span></td><td class="text-right">61</td></tr>
-        <tr><td><span data-en>Open</span><span data-si>විවෘතයි</span></td><td class="text-right">158</td></tr>
-      </tbody>
-    </table>
-    </div>
-  </section>
+  <!-- Two-column register: index tabs (left) + deadlines & feed (right) -->
+  <div class="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 lg:gap-10 pt-6">
 
-  <!-- Facets — plain text list, no pill buttons -->
-  <section class="py-5 border-b border-rule">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
-      <div>
-        <div class="label mb-2"><span data-en>Category</span><span data-si>වර්ගය</span></div>
-        <ul class="space-y-1">
-          <li><button class="cursor-pointer font-semibold border-b border-ink">Administrative &amp; Management</button></li>
-          <li><button class="cursor-pointer text-ink-soft hover:text-ink">Engineering &amp; Technical</button></li>
-          <li><button class="cursor-pointer text-ink-soft hover:text-ink">Security Services</button></li>
-        </ul>
-      </div>
-      <div>
-        <div class="label mb-2"><span data-en>Qualification</span><span data-si>සුදුසුකම</span></div>
-        <ul class="space-y-1">
-          <li><button class="cursor-pointer font-semibold border-b border-ink"><span data-en>Bachelor's Degree</span></button></li>
-          <li><button class="cursor-pointer text-ink-soft hover:text-ink">A/L</button></li>
-          <li><button class="cursor-pointer text-ink-soft hover:text-ink">O/L</button></li>
-        </ul>
-      </div>
-      <div>
-        <div class="label mb-2"><span data-en>District</span><span data-si>දිස්ත්‍රික්කය</span></div>
-        <ul class="space-y-1">
-          <li><button class="cursor-pointer font-semibold border-b border-ink">Colombo</button></li>
-          <li><button class="cursor-pointer text-ink-soft hover:text-ink">Kandy</button></li>
-          <li><button class="cursor-pointer text-ink-soft hover:text-ink">Galle</button></li>
-        </ul>
-      </div>
-    </div>
-  </section>
+    <!-- Index rail — folder-tab metaphor, sticky on desktop -->
+    <aside class="lg:sticky lg:top-24 lg:self-start overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0">
+      <nav class="flex lg:block gap-1 lg:gap-0 whitespace-nowrap lg:whitespace-normal border-b lg:border-b-0 border-rule pb-2 lg:pb-0">
+        <div class="hidden lg:block index-group-label"><span data-en>Category</span><span data-si>වර්ගය</span></div>
+        <button class="index-tab is-active">Administrative &amp; Management</button>
+        <button class="index-tab">Engineering &amp; Technical</button>
+        <button class="index-tab">Security Services</button>
 
-  <!-- Feed header -->
-  <div class="pt-6 pb-2 flex items-baseline justify-between">
-    <span class="label">
-      <span id="feed-count">…</span> <span data-en>notices</span><span data-si>දැන්වීම්</span>
-    </span>
-    <span class="text-sm">
-      <span data-en>Sorted by closing date</span><span data-si>අවසන් දිනය අනුව</span>
-    </span>
+        <div class="hidden lg:block index-group-label"><span data-en>Qualification</span><span data-si>සුදුසුකම</span></div>
+        <button class="index-tab"><span data-en>Bachelor's Degree</span><span data-si>උපාධිය</span></button>
+        <button class="index-tab">A/L</button>
+        <button class="index-tab">O/L</button>
+
+        <div class="hidden lg:block index-group-label"><span data-en>District</span><span data-si>දිස්ත්‍රික්කය</span></div>
+        <button class="index-tab">Colombo</button>
+        <button class="index-tab">Kandy</button>
+        <button class="index-tab">Galle</button>
+      </nav>
+    </aside>
+
+    <div class="min-w-0">
+      <!-- Deadline board — a real table, not tinted cards -->
+      <div class="table-scroll pb-6 border-b border-rule">
+        <table class="fact-table max-w-xl">
+          <thead>
+            <tr>
+              <th><span data-en>Closing</span><span data-si>අවසන්</span></th>
+              <th class="text-right"><span data-en>Count</span><span data-si>ගණන</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="color:var(--stamp)"><span data-en>Within 48 hours</span><span data-si>පැය 48යි</span></td><td class="text-right" style="color:var(--stamp)">06</td></tr>
+            <tr><td><span data-en>This week</span><span data-si>මෙම සතියේ</span></td><td class="text-right">22</td></tr>
+            <tr><td><span data-en>This month</span><span data-si>මෙම මාසයේ</span></td><td class="text-right">61</td></tr>
+            <tr><td><span data-en>Open</span><span data-si>විවෘතයි</span></td><td class="text-right">158</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Feed header -->
+      <div class="pt-6 pb-2 flex items-baseline justify-between">
+        <span class="label">
+          <span id="feed-count">…</span> <span data-en>notices</span><span data-si>දැන්වීම්</span>
+        </span>
+        <span class="text-sm">
+          <span data-en>Sorted by closing date</span><span data-si>අවසන් දිනය අනුව</span>
+        </span>
+      </div>
+
+      <div id="post-feed"></div>
+    </div>
   </div>
+</div>
 
-  <div id="post-feed"></div>
+<!-- ============ VIEW: PRIVATE SECTOR ============ -->
+<div id="view-private" class="view">
+
+  <section class="pt-10 pb-6 border-b border-rule">
+    <span class="font-mono text-[11px] text-ink-faint tracking-[.06em]">
+      <span data-en>Company career pages &amp; job platforms</span><span data-si>සමාගම් රැකියා අඩවි</span>
+    </span>
+    <h1 class="font-display font-semibold leading-[1.1] tracking-tight mt-1" style="font-size: clamp(2rem, 4.4vw, 3.25rem)">
+      <span data-en>Private-sector openings</span>
+      <span data-si class="font-siserif" style="font-size: clamp(1.7rem, 4vw, 2.6rem)">පෞද්ගලික අංශයේ පුරප්පාඩු</span>
+    </h1>
+    <p class="text-ink-soft mt-2 max-w-[60ch] leading-[1.6] text-sm">
+      <span data-en>Unlike a Gazette notice, most private postings have no fixed closing date — so these are organised by industry, not by deadline. Pulled directly from each employer's own careers page.</span>
+      <span data-si class="font-siserif si-body block">ගැසට් නිවේදනයකට වඩා වෙනස්ව, බොහෝ පෞද්ගලික පුරප්පාඩුවලට නිශ්චිත අවසන් දිනයක් නැත — එබැවින් මේවා අවසන් දිනය අනුව නොව, කර්මාන්තය අනුව සකසා ඇත.</span>
+    </p>
+  </section>
+
+  <div class="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 lg:gap-10 pt-6">
+    <aside class="lg:sticky lg:top-24 lg:self-start overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0">
+      <nav id="sector-tabs" class="flex lg:block gap-1 lg:gap-0 whitespace-nowrap lg:whitespace-normal border-b lg:border-b-0 border-rule pb-2 lg:pb-0">
+        <div class="hidden lg:block index-group-label"><span data-en>Industry</span><span data-si>කර්මාන්තය</span></div>
+        <button class="index-tab is-active" data-sector="all"><span data-en>All industries</span><span data-si>සියල්ල</span></button>
+      </nav>
+    </aside>
+
+    <div class="min-w-0">
+      <div class="pt-0 lg:pt-0 pb-2 flex items-baseline justify-between">
+        <span class="label"><span id="private-feed-count">…</span> <span data-en>openings</span><span data-si>පුරප්පාඩු</span></span>
+        <span class="text-sm"><span data-en>Grouped by industry</span><span data-si>කර්මාන්තය අනුව</span></span>
+      </div>
+      <div id="private-feed"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ============ VIEW: DETAIL ============ -->
@@ -281,7 +356,7 @@
       <span class="font-mono text-[11px] text-ink-faint">№ 0142</span>
       <span style="color:var(--stamp)" class="text-sm font-medium"><span data-en>Closes in 2 days</span><span data-si>දින 2කින් අවසන්</span></span>
     </div>
-    <h1 class="font-serif font-semibold leading-tight" style="font-size: clamp(1.9rem, 4vw, 2.75rem)">
+    <h1 class="font-display font-semibold leading-tight" style="font-size: clamp(1.9rem, 4vw, 2.75rem)">
       <span data-en>Development Officer</span>
       <span data-si class="font-siserif" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem)">සංවර්ධන නිලධාරී</span>
     </h1>
@@ -340,7 +415,7 @@
             <div class="flex justify-between"><span class="text-ink-soft"><span data-en>Fee</span><span data-si>ගාස්තුව</span></span><span class="font-mono">Rs. 500.00</span></div>
             <div class="flex justify-between"><span class="text-ink-soft"><span data-en>Registered post</span><span data-si>ලියාපදිංචි තැපෑල</span></span><span>Required</span></div>
           </div>
-          <button class="cursor-pointer w-full border border-ink py-2.5 text-sm hover:bg-ink hover:text-paper transition-colors"><span data-en>Download Application Form</span><span data-si>අයදුම්පත බාගන්න</span></button>
+          <button class="cursor-pointer w-full border border-ink py-2.5 text-sm hover:bg-ink hover:text-surface transition-colors"><span data-en>Download Application Form</span><span data-si>අයදුම්පත බාගන්න</span></button>
         </div>
 
         <div class="border border-rule p-5">
@@ -414,14 +489,14 @@
     return `
     <article class="stamp-clip py-7 border-b border-rule">
       ${closed ? `<div class="stamp-mark"><span data-en>Closed</span><span data-si>වසා ඇත</span></div>` : ''}
-      ${v.real ? `<div class="font-mono text-[10px] uppercase tracking-[.08em] mb-1.5" style="color:var(--stamp)"><span data-en>✓ Real listing</span><span data-si>✓ සැබෑ දැන්වීම</span></div>` : ''}
-      ${v._needsReview ? `<div class="font-mono text-[10px] uppercase tracking-[.08em] mb-1.5 text-ink-faint"><span data-en>Pending review</span><span data-si>සමාලෝචනයට</span></div>` : ''}
+      ${v.real ? `<div class="verified-mark mb-1.5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 111.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg><span data-en>Real listing</span><span data-si>සැබෑ දැන්වීම</span></div>` : ''}
+      ${v._needsReview ? `<div class="font-mono text-[10px] tracking-[.06em] mb-1.5 text-ink-faint"><span data-en>Pending review</span><span data-si>සමාලෝචනයට</span></div>` : ''}
 
       <div class="flex items-start justify-between gap-4 flex-wrap">
         <div class="min-w-0">
           <div class="font-mono text-[11px] text-ink-faint mb-1">№ ${v.serial || '—'}</div>
           <h2 class="cursor-pointer" onclick="showView('detail')">
-            <span data-en class="font-serif text-2xl font-semibold leading-snug">${v.titleEn}</span>
+            <span data-en class="font-display text-2xl font-semibold leading-snug">${v.titleEn}</span>
             <span data-si class="font-siserif text-xl font-semibold leading-snug block">${v.titleSi}</span>
           </h2>
           <div class="text-sm text-ink-soft mt-0.5">
@@ -484,12 +559,26 @@
     </article>`;
   }
 
+  // Gazette notices have a real, meaningful closing date, so this feed is explicitly
+  // ordered by urgency-then-date rather than relying on whatever order the source
+  // JSON happens to be in.
+  const statusOrder = { urgent: 0, soon: 1, open: 2, closed: 3 };
+  function sortByClosingDate(list) {
+    return [...list].sort((a, b) => {
+      const sa = statusOrder[a.status] ?? 2, sb = statusOrder[b.status] ?? 2;
+      if (sa !== sb) return sa - sb;
+      const da = a.dateEn ? new Date(a.dateEn).getTime() : Infinity;
+      const db = b.dateEn ? new Date(b.dateEn).getTime() : Infinity;
+      return da - db;
+    });
+  }
+
   const feedEl = document.getElementById('post-feed');
   feedEl.innerHTML = `<p class="py-10 text-center text-ink-faint text-sm">Loading vacancies…</p>`;
   fetch('data/vacancies.json')
     .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(data => {
-      vacancies = data.vacancies || [];
+      vacancies = sortByClosingDate(data.vacancies || []);
       feedEl.innerHTML = vacancies.map(vacancyPost).join('');
       document.getElementById('feed-count').textContent = vacancies.length;
     })
@@ -501,9 +590,93 @@
       </div>`;
     });
 
+  // Private-sector jobs have no equivalent "gazette issue date" and most have no
+  // fixed closing date at all -- so this feed's primary organising axis is industry
+  // (sector), not date, with tabs built dynamically from whatever sectors are
+  // actually present in the data rather than a hardcoded list.
+  let privateVacancies = [];
+  let activeSector = 'all';
+
+  const sectorLabels = {
+    banking: { en: 'Banking & Finance', si: 'බැංකු සහ මූල්‍ය' },
+    technology: { en: 'Technology', si: 'තාක්ෂණය' },
+    healthcare: { en: 'Healthcare', si: 'සෞඛ්‍ය' },
+    hospitality: { en: 'Hospitality', si: 'ආගන්තුක සත්කාරය' },
+    other: { en: 'Other', si: 'වෙනත්' },
+  };
+  function sectorLabel(sector) { return sectorLabels[sector] || { en: sector, si: sector }; }
+
+  function privatePost(v) {
+    const hasClose = !!v.closingDate;
+    const desc = v.descEn || '';
+    const truncated = desc.length > 380 ? desc.slice(0, 380) + '…' : desc;
+    return `
+    <article class="py-7 border-b border-rule">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div class="min-w-0">
+          <div class="font-mono text-[11px] text-ink-faint mb-1">${(v.sector || 'other').toUpperCase()}</div>
+          <h2 class="font-display text-2xl font-semibold leading-snug">${v.titleEn}</h2>
+          <div class="text-sm text-ink-soft mt-0.5">${v.employerName || ''}${v.location ? ' · ' + v.location : ''}</div>
+        </div>
+        <div class="text-right shrink-0">
+          <div class="text-sm font-medium" style="color: ${hasClose ? 'var(--stamp)' : 'var(--ink-faint)'}">
+            <span data-en>${hasClose ? 'Closes ' + v.closingDate : 'No fixed deadline'}</span>
+            <span data-si>${hasClose ? 'අවසන් ' + v.closingDate : 'නිශ්චිත දිනයක් නැත'}</span>
+          </div>
+          ${v.employmentType ? `<div class="citation-box mt-1 text-left">${v.employmentType}</div>` : ''}
+        </div>
+      </div>
+      <p class="mt-4 max-w-[68ch] text-base leading-[1.7]">${truncated}</p>
+      <div class="flex items-center gap-5 text-sm mt-5">
+        <a href="${v.applyUrl || v.sourceUrl || '#'}" target="_blank" rel="noopener" class="cursor-pointer border-b border-ink py-2"><span data-en>View &amp; apply →</span><span data-si>අයදුම් කරන්න →</span></a>
+        ${v._needsReview ? `<span class="font-mono text-[10px] text-ink-faint"><span data-en>Pending review</span><span data-si>සමාලෝචනයට</span></span>` : ''}
+      </div>
+    </article>`;
+  }
+
+  function renderPrivateFeed() {
+    const list = activeSector === 'all' ? privateVacancies : privateVacancies.filter(v => (v.sector || 'other') === activeSector);
+    document.getElementById('private-feed').innerHTML = list.map(privatePost).join('')
+      || `<p class="py-10 text-center text-ink-faint text-sm">No openings in this industry right now.</p>`;
+    document.getElementById('private-feed-count').textContent = list.length;
+  }
+
+  const privateFeedEl = document.getElementById('private-feed');
+  privateFeedEl.innerHTML = `<p class="py-10 text-center text-ink-faint text-sm">Loading…</p>`;
+  fetch('data/private-vacancies.json')
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(data => {
+      privateVacancies = data.vacancies || [];
+      const sectors = [...new Set(privateVacancies.map(v => v.sector || 'other'))];
+      const tabsNav = document.getElementById('sector-tabs');
+      sectors.forEach(sector => {
+        const label = sectorLabel(sector);
+        const btn = document.createElement('button');
+        btn.className = 'index-tab';
+        btn.dataset.sector = sector;
+        btn.innerHTML = `<span data-en>${label.en}</span><span data-si>${label.si}</span>`;
+        tabsNav.appendChild(btn);
+      });
+      tabsNav.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabsNav.querySelectorAll('button').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          activeSector = btn.dataset.sector;
+          renderPrivateFeed();
+        });
+      });
+      renderPrivateFeed();
+    })
+    .catch(err => {
+      privateFeedEl.innerHTML = `<div class="py-6 border border-rule text-sm">Could not load data/private-vacancies.json (${err.message}).</div>`;
+    });
+
   function showView(name) {
     document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
     document.getElementById('view-' + name).classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('is-active'));
+    const navBtn = document.getElementById('nav-' + name);
+    if (navBtn) navBtn.classList.add('is-active');
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
   showView('vacancies');
@@ -522,6 +695,13 @@
     html.setAttribute('data-theme', dark ? 'light' : 'dark');
     document.getElementById('theme-btn').textContent = dark ? 'Dark' : 'Light';
   }
+
+  document.querySelectorAll('.index-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.index-tab').forEach(t => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+    });
+  });
 </script>
 </body>
 </html>
