@@ -1,5 +1,6 @@
 import type { JobStatus as Status } from "@/lib/types";
 import { daysUntil } from "@/lib/jobs";
+import { Icon } from "./Icon";
 
 /** Spec §20 + §23: never communicate status by colour alone — every state
  *  carries a word. Badges are used sparingly; only urgency and closure earn one. */
@@ -17,8 +18,9 @@ export function JobStatusLabel({
   if (status === "closed") {
     return (
       <span
-        className={`inline-flex items-center border border-rule-strong px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-ink-soft ${className}`}
+        className={`inline-flex items-center gap-1 border border-rule-strong px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-ink-soft ${className}`}
       >
+        <Icon name="lock" className="text-[13px]" />
         Closed
       </span>
     );
@@ -31,8 +33,9 @@ export function JobStatusLabel({
   if (days <= 2) {
     return (
       <span
-        className={`inline-flex items-center border border-stamp px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-stamp ${className}`}
+        className={`inline-flex items-center gap-1 border border-stamp px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-stamp ${className}`}
       >
+        <Icon name="schedule" className="text-[13px]" />
         {days <= 0 ? "Closes today" : days === 1 ? "Closes in 1 day" : `Closes in ${days} days`}
       </span>
     );
@@ -56,7 +59,8 @@ export function SourceBadge({ verified }: { verified?: boolean }) {
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wide text-verified">
+    <span className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wide text-verified">
+      <Icon name="verified" className="text-[13px]" />
       Verified against source
     </span>
   );

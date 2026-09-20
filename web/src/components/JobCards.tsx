@@ -1,34 +1,55 @@
 import Link from "next/link";
 import type { GovVacancy, PrivateJob } from "@/lib/types";
 import { JobStatusLabel } from "./JobStatus";
+import { Icon } from "./Icon";
 
-function MetaItem({ label, value }: { label: string; value?: string | null }) {
-  if (!value) return null;
+function FactGrid({ items }: { items: { label: string; value?: string | null }[] }) {
+  const cells = items.filter((i) => i.value);
+  if (cells.length === 0) return null;
   return (
-    <span className="text-[13px] text-ink-soft">
-      <span className="text-ink-faint">{label}: </span>
-      {value}
-    </span>
+    <div className="mt-3 grid grid-cols-2 gap-2 border border-rule bg-surface-sunken p-2.5 sm:grid-cols-4">
+      {cells.map((c) => (
+        <div key={c.label}>
+          <span className="block text-[10px] font-semibold uppercase tracking-wide text-ink-faint">
+            {c.label}
+          </span>
+          <span className="text-[13px] font-semibold text-ink">{c.value}</span>
+        </div>
+      ))}
+    </div>
   );
 }
 
 /**
  * Spec §7 — government cards prioritise: title, institution, education,
- * location, closing date, gazette date. Formal/institutional register (§12):
- * squared corners, hairline rules, no shadow, serif title.
+ * location, closing date, gazette date. `featured` is only ever true for a
+ * genuinely urgent real listing (see getMostUrgentGovVacancy-style logic in
+ * the listing page) — never a decorative "lead story" slot.
  */
-export function GovJobCard({ vacancy }: { vacancy: GovVacancy }) {
+export function GovJobCard({
+  vacancy,
+  featured = false,
+}: {
+  vacancy: GovVacancy;
+  featured?: boolean;
+}) {
   const closed = vacancy.status === "closed";
   return (
     <article
-      className={`group relative border-b border-rule p-5 transition-colors hover:bg-surface-raised ${
+      className={`group relative border-b border-rule p-5 transition-colors hover:bg-surface-sunken ${
         closed ? "opacity-75" : ""
-      }`}
+      } ${featured ? "border-2 border-ink bg-surface-raised" : ""}`}
     >
       <div className="mb-2 flex flex-wrap items-center gap-3">
+        {featured && (
+          <span className="inline-flex items-center bg-ink px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-surface-raised">
+            Most urgent
+          </span>
+        )}
         <JobStatusLabel status={vacancy.status} closingDate={vacancy.dateEn ?? vacancy.dateSi} />
         {vacancy.real && (
-          <span className="font-mono text-[11px] uppercase tracking-wide text-verified">
+          <span className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wide text-verified">
+            <Icon name="verified" className="text-[13px]" />
             Verified against Gazette
           </span>
         )}
@@ -39,7 +60,12 @@ export function GovJobCard({ vacancy }: { vacancy: GovVacancy }) {
         )}
       </div>
 
-      <h3 className="font-display text-[20px] font-semibold leading-snug text-ink">
+      <div className="flex items-baseline justify-between gap-3 text-[12px] text-ink-faint">
+        <span className="truncate">{vacancy.instEn}</span>
+        {vacancy.page && <span className="shrink-0 font-mono">{vacancy.page}</span>}
+      </div>
+
+      <h3 className="mt-0.5 font-display text-[20px] font-semibold leading-snug text-ink">
         <Link
           href={`/government-jobs/${vacancy.slug}`}
           className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
@@ -47,14 +73,20 @@ export function GovJobCard({ vacancy }: { vacancy: GovVacancy }) {
           {vacancy.titleEn}
         </Link>
       </h3>
-      <p className="mt-0.5 text-[15px] text-ink-soft">{vacancy.instEn}</p>
+      {vacancy.titleSi && (
+        <p lang="si" className="si-body mt-0.5 font-[family-name:var(--font-siserif)] text-[14px] text-ink-soft">
+          {vacancy.titleSi}
+        </p>
+      )}
 
-      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
-        <MetaItem label="Category" value={vacancy.category} />
-        <MetaItem label="Age" value={vacancy.age} />
-        <MetaItem label="Posts" value={vacancy.quota} />
-        <MetaItem label="Closing" value={vacancy.dateEn} />
-      </div>
+      <FactGrid
+        items={[
+          { label: "Category", value: vacancy.category },
+          { label: "Age limit", value: vacancy.age },
+          { label: "Vacancies", value: vacancy.quota },
+          { label: "Salary", value: vacancy.salary },
+        ]}
+      />
 
       {vacancy.citation && (
         <p className="mt-3 font-mono text-[11px] text-ink-faint">{vacancy.citation}</p>
@@ -70,7 +102,7 @@ export function GovJobCard({ vacancy }: { vacancy: GovVacancy }) {
  */
 export function PrivateJobCard({ job }: { job: PrivateJob }) {
   return (
-    <article className="group relative border-b border-rule p-5 transition-colors hover:bg-surface-raised">
+    <article className="group relative border-b border-rule p-5 transition-colors hover:bg-surface-sunken">
       <div className="mb-2 flex flex-wrap items-center gap-3">
         <JobStatusLabel status={job.status} closingDate={job.closingDate} />
         {job._needsReview && (
@@ -80,7 +112,9 @@ export function PrivateJobCard({ job }: { job: PrivateJob }) {
         )}
       </div>
 
-      <h3 className="font-display text-[20px] font-semibold leading-snug text-ink">
+      <p className="text-[12px] text-ink-faint">{job.employerName}</p>
+
+      <h3 className="mt-0.5 font-display text-[20px] font-semibold leading-snug text-ink">
         <Link
           href={`/private-jobs/${job.slug}`}
           className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
@@ -88,14 +122,15 @@ export function PrivateJobCard({ job }: { job: PrivateJob }) {
           {job.titleEn}
         </Link>
       </h3>
-      <p className="mt-0.5 text-[15px] text-ink-soft">{job.employerName}</p>
 
-      <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
-        <MetaItem label="Location" value={job.location} />
-        <MetaItem label="Type" value={job.employmentType} />
-        <MetaItem label="Sector" value={job.sector} />
-        <MetaItem label="Salary" value={job.salary ?? undefined} />
-      </div>
+      <FactGrid
+        items={[
+          { label: "Location", value: job.location },
+          { label: "Type", value: job.employmentType },
+          { label: "Sector", value: job.sector },
+          { label: "Salary", value: job.salary },
+        ]}
+      />
     </article>
   );
 }
@@ -123,12 +158,12 @@ export function Pagination({
   return (
     <nav aria-label="Pagination" className="mt-6 flex items-center justify-between gap-3">
       {page > 1 ? (
-        <Link href={makeHref(page - 1)} className={`${boxClass} cursor-pointer border-rule-strong text-ink`}>
-          ← Previous
+        <Link href={makeHref(page - 1)} className={`${boxClass} cursor-pointer gap-1 border-rule-strong text-ink`}>
+          <Icon name="arrow_back" className="text-[16px]" /> Previous
         </Link>
       ) : (
-        <span aria-disabled="true" className={`${boxClass} border-rule text-ink-faint`}>
-          ← Previous
+        <span aria-disabled="true" className={`${boxClass} gap-1 border-rule text-ink-faint`}>
+          <Icon name="arrow_back" className="text-[16px]" /> Previous
         </span>
       )}
 
@@ -157,12 +192,12 @@ export function Pagination({
       </span>
 
       {page < totalPages ? (
-        <Link href={makeHref(page + 1)} className={`${boxClass} cursor-pointer border-rule-strong text-ink`}>
-          Next →
+        <Link href={makeHref(page + 1)} className={`${boxClass} cursor-pointer gap-1 border-rule-strong text-ink`}>
+          Next <Icon name="arrow_forward" className="text-[16px]" />
         </Link>
       ) : (
-        <span aria-disabled="true" className={`${boxClass} border-rule text-ink-faint`}>
-          Next →
+        <span aria-disabled="true" className={`${boxClass} gap-1 border-rule text-ink-faint`}>
+          Next <Icon name="arrow_forward" className="text-[16px]" />
         </span>
       )}
     </nav>

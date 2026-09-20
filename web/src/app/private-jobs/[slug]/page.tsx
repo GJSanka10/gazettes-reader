@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Breadcrumb } from "@/components/Chrome";
 import { JobStatusLabel } from "@/components/JobStatus";
+import { Icon } from "@/components/Icon";
 import { getPrivateJobBySlug, getPrivateJobs } from "@/lib/jobs";
 
 export function generateStaticParams() {
@@ -103,9 +104,10 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
                   href={j.applyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center bg-ink px-4 text-[14px] font-bold text-surface-raised"
+                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-[14px] font-bold text-surface-raised"
                 >
-                  Apply on employer site ↗
+                  <Icon name="open_in_new" className="text-[15px]" />
+                  Apply on employer site
                 </a>
               )}
               {j.sourceUrl && (
@@ -113,9 +115,10 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
                   href={j.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center border border-rule-strong px-4 text-[14px] text-ink"
+                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 border border-rule-strong px-4 text-[14px] text-ink"
                 >
-                  View original posting ↗
+                  <Icon name="open_in_new" className="text-[15px]" />
+                  View original posting
                 </a>
               )}
             </div>

@@ -2,19 +2,24 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Icon } from "./Icon";
+
+export interface FacetOption {
+  value: string;
+  /** Real count within the current unfiltered set — never invented. */
+  count: number;
+}
 
 export interface FacetConfig {
   /** query-param key */
   key: string;
   label: string;
-  options: string[];
+  options: FacetOption[];
 }
 
 export interface SortOption {
   value: string;
   label: string;
-  /** Shown but not selectable, with a reason. */
-  disabledReason?: string;
 }
 
 interface Props {
@@ -23,6 +28,12 @@ interface Props {
   sorts: SortOption[];
   resultCount: number;
 }
+
+/** Facets with few options render as a ledger of single-select pills with
+ *  real counts; facets with many render as a bordered <select> instead —
+ *  the same split the reference design uses between its "Urgency" pills and
+ *  its "Ministry" dropdown. */
+const PILL_THRESHOLD = 6;
 
 export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
   const router = useRouter();
@@ -33,7 +44,6 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const firstRender = useRef(true);
 
-  // Keep the box in sync when the URL changes from elsewhere (back button, chips).
   useEffect(() => {
     setDraft(params.get("search") ?? "");
   }, [params]);
@@ -42,7 +52,6 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
     (mutate: (next: URLSearchParams) => void) => {
       const next = new URLSearchParams(params.toString());
       mutate(next);
-      // Any filter/search change invalidates the current page number.
       next.delete("page");
       const qs = next.toString();
       router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
@@ -85,124 +94,190 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
       else next.delete(key);
     });
 
-  const clearAll = () =>
-    router.push(pathname, { scroll: false });
+  const clearAll = () => router.push(pathname, { scroll: false });
 
-  const selectClass =
-    "min-h-[44px] w-full cursor-pointer border border-rule bg-surface-raised px-3 text-[14px] text-ink";
+  const searchField = (idPrefix: string) => (
+    <div>
+      <label htmlFor={`${idPrefix}-job-search`} className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">
+        Search register
+      </label>
+      <div className="relative">
+        <Icon
+          name="search"
+          className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[18px] text-ink-faint"
+        />
+        <input
+          id={`${idPrefix}-job-search`}
+          type="search"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder={placeholder}
+          className="min-h-[44px] w-full border border-rule-strong bg-surface pl-9 pr-9 text-[14px] text-ink placeholder:text-ink-faint"
+        />
+        {draft && (
+          <button
+            type="button"
+            onClick={() => setDraft("")}
+            aria-label="Clear search"
+            className="absolute right-0 top-0 flex h-[44px] w-9 cursor-pointer items-center justify-center text-ink-soft hover:text-ink"
+          >
+            <Icon name="close" className="text-[16px]" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
 
-  const facetSelects = facets.map((facet) => (
-    <label key={facet.key} className="block">
-      <span className="mb-1 block text-[13px] font-bold text-ink-soft">{facet.label}</span>
+  const facetField = (facet: FacetConfig) => {
+    const current = params.get(facet.key) ?? "";
+    if (facet.options.length === 0) return null;
+
+    if (facet.options.length <= PILL_THRESHOLD) {
+      return (
+        <div key={facet.key} className="border-t border-rule pt-3">
+          <span className="mb-2 block text-[11px] font-bold uppercase tracking-wide text-ink">
+            {facet.label}
+          </span>
+          <div className="flex flex-col gap-1">
+            {facet.options.map((opt) => {
+              const active = current === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setFacet(facet.key, active ? "" : opt.value)}
+                  className={`flex min-h-[36px] cursor-pointer items-center justify-between gap-2 border px-2 text-left text-[13px] transition-colors ${
+                    active
+                      ? "border-ink bg-ink text-surface-raised"
+                      : "border-transparent text-ink hover:border-rule-strong"
+                  }`}
+                >
+                  <span className="truncate">{opt.value}</span>
+                  <span className={`font-mono text-[11px] ${active ? "text-surface-raised/80" : "text-ink-faint"}`}>
+                    {opt.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <label key={facet.key} className="block border-t border-rule pt-3">
+        <span className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">
+          {facet.label}
+        </span>
+        <select
+          className="min-h-[44px] w-full cursor-pointer border border-rule bg-surface px-2.5 text-[13px] text-ink"
+          value={current}
+          onChange={(e) => setFacet(facet.key, e.target.value)}
+        >
+          <option value="">All ({facet.options.reduce((n, o) => n + o.count, 0)})</option>
+          {facet.options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.value} ({opt.count})
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  };
+
+  const sortField = (
+    <label className="block border-t border-rule pt-3">
+      <span className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">Sort by</span>
       <select
-        className={selectClass}
-        value={params.get(facet.key) ?? ""}
-        onChange={(e) => setFacet(facet.key, e.target.value)}
+        className="min-h-[44px] w-full cursor-pointer border border-rule bg-surface px-2.5 text-[13px] text-ink"
+        value={params.get("sort") ?? sorts[0]?.value ?? ""}
+        onChange={(e) => setFacet("sort", e.target.value)}
       >
-        <option value="">All</option>
-        {facet.options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
+        {sorts.map((s) => (
+          <option key={s.value} value={s.value}>
+            {s.label}
           </option>
         ))}
       </select>
     </label>
-  ));
+  );
+
+  const panelBody = (idPrefix: string) => (
+    <div className="space-y-3">
+      {searchField(idPrefix)}
+      {facets.map(facetField)}
+      {sortField}
+    </div>
+  );
 
   return (
-    <section aria-label="Search and filters" className="border border-rule bg-surface-raised p-4">
-      <div className="flex gap-3">
-        <div className="relative flex-1">
-          <label htmlFor="job-search" className="sr-only">
-            {placeholder}
-          </label>
-          <input
-            id="job-search"
-            type="search"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            placeholder={placeholder}
-            className="min-h-[44px] w-full border border-rule-strong bg-surface px-3 pr-10 text-[15px] text-ink placeholder:text-ink-faint"
-          />
-          {draft && (
-            <button
-              type="button"
-              onClick={() => setDraft("")}
-              aria-label="Clear search"
-              className="absolute right-0 top-0 flex h-[44px] w-10 cursor-pointer items-center justify-center text-ink-soft hover:text-ink"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-          )}
-        </div>
-
+    <>
+      {/* Mobile: a compact trigger bar above the results, not a sidebar. */}
+      <div className="col-span-12 flex items-center gap-3 border border-rule bg-surface-raised p-3 lg:hidden">
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
           aria-expanded={drawerOpen}
-          className="min-h-[44px] cursor-pointer whitespace-nowrap border border-rule-strong px-4 text-[14px] font-bold text-ink md:hidden"
+          className="inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 border border-rule-strong px-3 text-[13px] font-bold text-ink"
         >
+          <Icon name="tune" className="text-[18px]" />
           Filters{activeChips.length ? ` (${activeChips.length})` : ""}
         </button>
+        <p aria-live="polite" className="text-[13px] text-ink-soft">
+          <strong className="font-mono text-ink">{resultCount}</strong> {resultCount === 1 ? "result" : "results"}
+        </p>
       </div>
 
-      {/* Desktop facets */}
-      <div className="mt-4 hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-4">
-        {facetSelects}
-        <label className="block">
-          <span className="mb-1 block text-[13px] font-bold text-ink-soft">Sort by</span>
-          <select
-            className={selectClass}
-            value={params.get("sort") ?? sorts[0]?.value ?? ""}
-            onChange={(e) => setFacet("sort", e.target.value)}
-          >
-            {sorts.map((s) => (
-              <option key={s.value} value={s.value} disabled={Boolean(s.disabledReason)}>
-                {s.label}
-                {s.disabledReason ? ` — ${s.disabledReason}` : ""}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+      {/* Desktop sidebar ledger. */}
+      <aside className="col-span-12 hidden lg:col-span-4 lg:block xl:col-span-3">
+        <div className="lg:sticky lg:top-24">
+          <div className="border border-rule-strong bg-surface-raised">
+            <div className="flex items-center justify-between border-b border-rule-strong bg-surface-sunken px-4 py-2.5">
+              <span className="inline-flex items-center gap-1.5 font-display text-[15px] font-semibold text-ink">
+                <Icon name="tune" className="text-[18px] text-ink-faint" />
+                Filter register
+              </span>
+              {activeChips.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="cursor-pointer text-[12px] font-bold uppercase tracking-wide text-accent hover:underline"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
+            <div className="p-4">{panelBody("desktop")}</div>
+          </div>
 
-      {activeChips.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-rule pt-3">
-          <span className="text-[13px] font-bold text-ink-soft">Active:</span>
-          {activeChips.map((chip) => (
-            <button
-              key={chip.key}
-              type="button"
-              onClick={() => setFacet(chip.key, "")}
-              className="inline-flex min-h-[32px] cursor-pointer items-center gap-2 border border-rule-strong bg-surface px-2.5 text-[13px] text-ink hover:border-ink"
-              aria-label={`Remove filter ${chip.label}: ${chip.value}`}
-            >
-              <span>
-                {chip.label}: {chip.value}
-              </span>
-              <span aria-hidden="true" className="text-ink-soft">
-                ×
-              </span>
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={clearAll}
-            className="ml-auto min-h-[32px] cursor-pointer text-[13px] underline underline-offset-2 hover:text-ink"
-          >
-            Clear filters
-          </button>
+          <p aria-live="polite" className="mt-3 px-1 text-[13px] text-ink-soft">
+            <strong className="font-mono text-ink">{resultCount}</strong>{" "}
+            {resultCount === 1 ? "result" : "results"}
+          </p>
+
+          {activeChips.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1.5 px-1">
+              {activeChips.map((chip) => (
+                <button
+                  key={chip.key}
+                  type="button"
+                  onClick={() => setFacet(chip.key, "")}
+                  className="inline-flex min-h-[28px] cursor-pointer items-center gap-1.5 border border-rule-strong bg-surface px-2 text-[12px] text-ink hover:border-ink"
+                  aria-label={`Remove filter ${chip.label}: ${chip.value}`}
+                >
+                  {chip.label}: {chip.value}
+                  <Icon name="close" className="text-[13px] text-ink-soft" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-
-      <p aria-live="polite" className="mt-4 text-[14px] text-ink-soft">
-        <strong className="font-mono text-ink">{resultCount}</strong>{" "}
-        {resultCount === 1 ? "job" : "jobs"} found
-      </p>
+      </aside>
 
       {/* Mobile drawer (spec §36, §54) */}
       {drawerOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden">
           <div
             className="absolute inset-0 bg-ink/50"
             onClick={() => setDrawerOpen(false)}
@@ -215,17 +290,17 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
             className="absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto border-t border-rule-strong bg-surface-raised p-5"
           >
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-bold text-ink">Filters</h2>
+              <h2 className="font-display text-lg font-bold text-ink">Filter register</h2>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close filters"
                 className="flex h-11 w-11 cursor-pointer items-center justify-center border border-rule text-ink"
               >
-                <span aria-hidden="true">×</span>
+                <Icon name="close" className="text-[20px]" />
               </button>
             </div>
-            <div className="space-y-4">{facetSelects}</div>
+            {panelBody("mobile")}
             <div className="mt-6 flex gap-3 border-t border-rule pt-4">
               <button
                 type="button"
@@ -248,6 +323,6 @@ export function FilterBar({ placeholder, facets, sorts, resultCount }: Props) {
           </div>
         </div>
       )}
-    </section>
+    </>
   );
 }

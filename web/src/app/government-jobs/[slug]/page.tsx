@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Breadcrumb } from "@/components/Chrome";
 import { JobStatusLabel } from "@/components/JobStatus";
+import { Icon } from "@/components/Icon";
 import { getGovVacancies, getGovVacancyBySlug } from "@/lib/jobs";
 
 export function generateStaticParams() {
@@ -46,7 +47,8 @@ export default async function GovJobDetail({ params }: { params: Promise<{ slug:
           <div className="mb-3 flex flex-wrap items-center gap-3">
             <JobStatusLabel status={v.status} closingDate={v.dateEn ?? v.dateSi} />
             {v.real && (
-              <span className="font-mono text-[11px] uppercase tracking-wide text-verified">
+              <span className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wide text-verified">
+                <Icon name="verified" className="text-[13px]" />
                 Verified against Gazette
               </span>
             )}
@@ -125,9 +127,10 @@ export default async function GovJobDetail({ params }: { params: Promise<{ slug:
                       href={v.pdfUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex min-h-[44px] w-full cursor-pointer items-center justify-center bg-ink px-4 text-center text-[14px] font-bold text-surface-raised"
+                      className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-center text-[14px] font-bold text-surface-raised"
                     >
-                      View official Gazette PDF ↗
+                      <Icon name="picture_as_pdf" className="text-[16px]" />
+                      View official Gazette PDF
                     </a>
                   )}
                   {v.sourceUrl && (
@@ -135,9 +138,10 @@ export default async function GovJobDetail({ params }: { params: Promise<{ slug:
                       href={v.sourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex min-h-[44px] w-full cursor-pointer items-center justify-center border border-rule-strong px-4 text-center text-[14px] text-ink"
+                      className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 border border-rule-strong px-4 text-center text-[14px] text-ink"
                     >
-                      View source page ↗
+                      <Icon name="open_in_new" className="text-[15px]" />
+                      View source page
                     </a>
                   )}
                 </div>

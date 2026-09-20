@@ -1,7 +1,7 @@
 import { Breadcrumb, EmptyState, ErrorState } from "@/components/Chrome";
 import { FilterBar } from "@/components/FilterBar";
 import { GovJobCard, Pagination } from "@/components/JobCards";
-import { daysUntil, facetValues, getGovVacancies } from "@/lib/jobs";
+import { daysUntil, facetCounts, getGovVacancies } from "@/lib/jobs";
 import type { GovVacancy, SearchParamsShape } from "@/lib/types";
 import Link from "next/link";
 
@@ -90,6 +90,29 @@ export default async function GovernmentJobsPage({
 
   const hasFilters = Boolean(sp.search || sp.category || sp.institution || sp.closing);
 
+  // Real ledger stats — never invented (job.md). Computed from the actual
+  // dataset, not the filtered/paginated result set.
+  const institutionCount = new Set(all.map((v) => v.instEn).filter(Boolean)).size;
+  const closingSoonCount = all.filter((v) => {
+    const d = daysUntil(v.dateEn ?? v.dateSi);
+    return d !== null && d >= 0 && d <= 7;
+  }).length;
+
+  const closingCounts = [7, 14, 30].map((limit) => ({
+    value: String(limit),
+    count: all.filter((v) => {
+      const d = daysUntil(v.dateEn ?? v.dateSi);
+      return d !== null && d >= 0 && d <= limit;
+    }).length,
+  }));
+
+  // The "Most urgent" lead treatment only ever applies to a genuinely urgent
+  // real listing at the top of the default, unfiltered, first page.
+  const showFeatured =
+    !hasFilters && safePage === 1 && sort === "closing" && pageItems.length > 0;
+  const featuredDays = showFeatured ? daysUntil(pageItems[0].dateEn ?? pageItems[0].dateSi) : null;
+  const isFeatured = showFeatured && featuredDays !== null && featuredDays <= 2;
+
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-8">
       <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Government Gazette Jobs" }]} />
@@ -100,61 +123,81 @@ export default async function GovernmentJobsPage({
       <p className="mt-2 max-w-[62ch] text-[16px] leading-relaxed text-ink-soft">
         Find the latest government vacancies published through official Gazette notifications.
       </p>
+
+      <div className="mt-5 grid grid-cols-3 gap-2 border border-rule bg-surface-raised p-3 sm:max-w-md">
+        <div className="border-r border-rule pr-2">
+          <div className="font-mono text-[20px] font-bold text-ink">{all.length}</div>
+          <div className="text-[10px] uppercase tracking-wide text-ink-faint">Total posts</div>
+        </div>
+        <div className="border-r border-rule pr-2">
+          <div className="font-mono text-[20px] font-bold text-ink">{institutionCount}</div>
+          <div className="text-[10px] uppercase tracking-wide text-ink-faint">Institutions</div>
+        </div>
+        <div>
+          <div className="font-mono text-[20px] font-bold text-accent">{closingSoonCount}</div>
+          <div className="text-[10px] uppercase tracking-wide text-ink-faint">&lt;7d close</div>
+        </div>
+      </div>
+
       <p className="mt-4 max-w-[70ch] border-l-2 border-stamp bg-stamp-wash px-4 py-3 text-[14px] leading-relaxed text-ink">
         Always check the original Gazette notice for official requirements, deadlines and
         application instructions.
       </p>
 
-      <div className="mt-6">
+      <div className="mt-6 grid grid-cols-12 gap-6 lg:gap-8">
         <FilterBar
           placeholder="Search government jobs..."
           resultCount={results.length}
           facets={[
-            { key: "category", label: "Category", options: facetValues(all, (v) => v.category) },
+            {
+              key: "category",
+              label: "Category",
+              options: facetCounts(all, (v) => v.category),
+            },
             {
               key: "institution",
               label: "Institution",
-              options: facetValues(all, (v) => v.instEn),
+              options: facetCounts(all, (v) => v.instEn),
             },
-            { key: "closing", label: "Closing within", options: ["7", "14", "30"] },
+            { key: "closing", label: "Closing within", options: closingCounts },
           ]}
           sorts={[
             { value: "closing", label: "Closing soon" },
             { value: "serial", label: "Gazette order" },
           ]}
         />
-      </div>
 
-      <div className="mt-6">
-        {pageItems.length === 0 ? (
-          <EmptyState
-            title={hasFilters ? "No matching jobs" : "No government jobs available"}
-            body={
-              hasFilters
-                ? `We couldn't find a Gazette vacancy matching your search. Try another keyword or remove some filters.`
-                : "There are currently no Gazette vacancies in the register."
-            }
-            action={
-              hasFilters ? (
-                <Link
-                  href="/government-jobs"
-                  className="inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-4 text-[14px] font-bold text-ink"
-                >
-                  Clear filters
-                </Link>
-              ) : null
-            }
-          />
-        ) : (
-          <>
-            <div className="border-t border-rule bg-surface-raised">
-              {pageItems.map((v) => (
-                <GovJobCard key={v.slug} vacancy={v} />
-              ))}
-            </div>
-            <Pagination page={safePage} totalPages={totalPages} makeHref={makeHref} />
-          </>
-        )}
+        <div className="col-span-12 lg:col-span-8 xl:col-span-9">
+          {pageItems.length === 0 ? (
+            <EmptyState
+              title={hasFilters ? "No matching jobs" : "No government jobs available"}
+              body={
+                hasFilters
+                  ? `We couldn't find a Gazette vacancy matching your search. Try another keyword or remove some filters.`
+                  : "There are currently no Gazette vacancies in the register."
+              }
+              action={
+                hasFilters ? (
+                  <Link
+                    href="/government-jobs"
+                    className="inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-4 text-[14px] font-bold text-ink"
+                  >
+                    Clear filters
+                  </Link>
+                ) : null
+              }
+            />
+          ) : (
+            <>
+              <div className="border-t border-rule bg-surface-raised">
+                {pageItems.map((v, i) => (
+                  <GovJobCard key={v.slug} vacancy={v} featured={isFeatured && i === 0} />
+                ))}
+              </div>
+              <Pagination page={safePage} totalPages={totalPages} makeHref={makeHref} />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

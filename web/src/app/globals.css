@@ -1,46 +1,51 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   "The Register" — ported from main.html (see job.md §11.6).
-   Modeled on the case-file/ledger culture of Sri Lankan government offices:
-   manila folders, fountain-pen ink, rubber date-stamps. One accent means
-   urgency (a closing date), a second distinct accent means verified/open.
-   Never decorative.
+   Full swap to a Material-3-inspired "Gazette Ledger" system (per explicit
+   user direction — see job.md). Same civic-ledger spirit as the previous
+   "Register" system (cream paper, dark ink, hairline rules, a red accent
+   reserved for urgency), but a deep navy ink, an added amber accent for
+   secondary emphasis, and Newsreader/Plus Jakarta Sans in place of
+   Fraunces/Atkinson Hyperlegible.
 
    NOTE: no custom key here is named after a Tailwind scale keyword
-   (base, sm, lg, ...). job.md §11.6 documents a silent, invisible bug caused
+   (base, sm, lg, ...). job.md documents a silent, invisible bug caused
    by a custom colour named `base` colliding with the built-in `text-base`
    font-size utility. Do not reintroduce that class of name.
    ========================================================================= */
 
 :root {
-  --surface: #ede6d6;
-  --surface-raised: #f5f0e4;
-  --surface-sunken: #e3dac6;
-  --ink: #1c2b3a;
-  --ink-soft: #48576a;
-  --ink-faint: #6b6f47;      /* 5.9:1 on --surface */
-  --rule: #c7b896;
-  --rule-strong: #a99b72;
-  --stamp: #b23a2e;          /* rubber date-stamp red — urgency only */
-  --stamp-wash: #f1ddd8;
-  --verified: #2f5d50;       /* approval ink-stamp green — verified/open only */
-  --verified-wash: #dde8e2;
+  --surface: #faf9f6;
+  --surface-raised: #ffffff;
+  --surface-sunken: #efeeeb;
+  --ink: #0f2038;            /* deep navy — doubles as body text and as bg-ink for dark chrome */
+  --ink-soft: #44474d;
+  --ink-faint: #5f6268;      /* AA on --surface */
+  --rule: #d6d5cf;
+  --rule-strong: #9a9a94;
+  --stamp: #ba1a1a;          /* urgency only */
+  --stamp-wash: #ffdad6;
+  --verified: #1f5c3f;       /* verified/open only */
+  --verified-wash: #dbe8e0;
+  --accent: #8c4f10;         /* amber ink — secondary emphasis, never urgency */
+  --accent-wash: #fbe3c6;
 }
 
 [data-theme="dark"] {
-  --surface: #1b2430;
-  --surface-raised: #222d3b;
-  --surface-sunken: #151d27;
-  --ink: #e8e1d0;
-  --ink-soft: #b7af9a;
-  --ink-faint: #968e75;      /* 4.79:1 on dark --surface */
-  --rule: #33404f;
-  --rule-strong: #46566a;
-  --stamp: #e0796c;
-  --stamp-wash: #3a211d;
-  --verified: #6fbba6;
-  --verified-wash: #1e3129;
+  --surface: #14181f;
+  --surface-raised: #1c212b;
+  --surface-sunken: #0f131a;
+  --ink: #e7e6e0;
+  --ink-soft: #b8bcc4;
+  --ink-faint: #8b8f97;
+  --rule: #333844;
+  --rule-strong: #474d5c;
+  --stamp: #ff8a80;
+  --stamp-wash: #3a1815;
+  --verified: #7fd4a8;
+  --verified-wash: #163326;
+  --accent: #ffb870;
+  --accent-wash: #3a2711;
 }
 
 @theme inline {
@@ -56,9 +61,11 @@
   --color-stamp-wash: var(--stamp-wash);
   --color-verified: var(--verified);
   --color-verified-wash: var(--verified-wash);
+  --color-accent: var(--accent);
+  --color-accent-wash: var(--accent-wash);
 
-  --font-display: "Fraunces", Georgia, serif;
-  --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --font-display: "Newsreader", Georgia, serif;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-siserif: "Noto Serif Sinhala", Georgia, serif;
 }
@@ -88,6 +95,27 @@ body {
     animation: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Material Symbols, loaded via <link> in layout.tsx (next/font/google does not
+   expose the FILL/GRAD/opsz variable axes this family needs). Used sparingly,
+   as a supporting glyph next to text that already carries the meaning —
+   never as the sole carrier of information (spec §55). */
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1em;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  vertical-align: -0.15em;
 }
 
 /* A citation is a small bordered block, not a dot-joined string. */

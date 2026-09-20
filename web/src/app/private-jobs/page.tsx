@@ -1,7 +1,7 @@
 import { Breadcrumb, EmptyState, ErrorState } from "@/components/Chrome";
 import { FilterBar } from "@/components/FilterBar";
 import { Pagination, PrivateJobCard } from "@/components/JobCards";
-import { daysUntil, facetValues, getPrivateJobs } from "@/lib/jobs";
+import { daysUntil, facetCounts, getPrivateJobs } from "@/lib/jobs";
 import type { PrivateJob, SearchParamsShape } from "@/lib/types";
 import Link from "next/link";
 
@@ -82,6 +82,7 @@ export default async function PrivateJobsPage({
   };
 
   const datedCount = all.filter((j) => j.closingDate).length;
+  const employerCount = new Set(all.map((j) => j.employerName).filter(Boolean)).size;
   const hasFilters = Boolean(
     sp.search || sp.sector || sp.institution || sp.location || sp.employment,
   );
@@ -96,28 +97,40 @@ export default async function PrivateJobsPage({
       <p className="mt-2 max-w-[62ch] text-[16px] leading-relaxed text-ink-soft">
         Discover current job opportunities from companies and organisations across Sri Lanka.
       </p>
+
+      <div className="mt-5 grid grid-cols-2 gap-2 border border-rule bg-surface-raised p-3 sm:max-w-xs">
+        <div className="border-r border-rule pr-2">
+          <div className="font-mono text-[20px] font-bold text-ink">{all.length}</div>
+          <div className="text-[10px] uppercase tracking-wide text-ink-faint">Listings</div>
+        </div>
+        <div>
+          <div className="font-mono text-[20px] font-bold text-ink">{employerCount}</div>
+          <div className="text-[10px] uppercase tracking-wide text-ink-faint">Employers</div>
+        </div>
+      </div>
+
       <p className="mt-4 max-w-[70ch] border-l-2 border-rule-strong px-4 py-3 text-[14px] leading-relaxed text-ink-soft">
         Collected from employers&rsquo; own career sites. Only {datedCount} of {all.length}{" "}
         listings publish a closing date — most private employers don&rsquo;t, so these are
         ordered by date posted rather than deadline.
       </p>
 
-      <div className="mt-6">
+      <div className="mt-6 grid grid-cols-12 gap-6 lg:gap-8">
         <FilterBar
           placeholder="Search private-sector jobs..."
           resultCount={results.length}
           facets={[
-            { key: "sector", label: "Sector", options: facetValues(all, (j) => j.sector) },
+            { key: "sector", label: "Sector", options: facetCounts(all, (j) => j.sector) },
             {
               key: "institution",
               label: "Company",
-              options: facetValues(all, (j) => j.employerName),
+              options: facetCounts(all, (j) => j.employerName),
             },
-            { key: "location", label: "Location", options: facetValues(all, (j) => j.location) },
+            { key: "location", label: "Location", options: facetCounts(all, (j) => j.location) },
             {
               key: "employment",
               label: "Employment type",
-              options: facetValues(all, (j) => j.employmentType),
+              options: facetCounts(all, (j) => j.employmentType),
             },
           ]}
           sorts={[
@@ -126,34 +139,34 @@ export default async function PrivateJobsPage({
             { value: "employer", label: "Company (A–Z)" },
           ]}
         />
-      </div>
 
-      <div className="mt-6">
-        {pageItems.length === 0 ? (
-          <EmptyState
-            title="No matching jobs"
-            body="We couldn't find a private-sector job matching your search. Try another keyword or remove some filters."
-            action={
-              hasFilters ? (
-                <Link
-                  href="/private-jobs"
-                  className="inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-4 text-[14px] font-bold text-ink"
-                >
-                  Clear filters
-                </Link>
-              ) : null
-            }
-          />
-        ) : (
-          <>
-            <div className="border-t border-rule bg-surface-raised">
-              {pageItems.map((j) => (
-                <PrivateJobCard key={j.slug} job={j} />
-              ))}
-            </div>
-            <Pagination page={safePage} totalPages={totalPages} makeHref={makeHref} />
-          </>
-        )}
+        <div className="col-span-12 lg:col-span-8 xl:col-span-9">
+          {pageItems.length === 0 ? (
+            <EmptyState
+              title="No matching jobs"
+              body="We couldn't find a private-sector job matching your search. Try another keyword or remove some filters."
+              action={
+                hasFilters ? (
+                  <Link
+                    href="/private-jobs"
+                    className="inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-4 text-[14px] font-bold text-ink"
+                  >
+                    Clear filters
+                  </Link>
+                ) : null
+              }
+            />
+          ) : (
+            <>
+              <div className="border-t border-rule bg-surface-raised">
+                {pageItems.map((j) => (
+                  <PrivateJobCard key={j.slug} job={j} />
+                ))}
+              </div>
+              <Pagination page={safePage} totalPages={totalPages} makeHref={makeHref} />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Icon } from "./Icon";
 
 /** Spec §56: breadcrumbs are clickable except the current page. */
 export function Breadcrumb({ trail }: { trail: { label: string; href?: string }[] }) {
@@ -8,9 +9,7 @@ export function Breadcrumb({ trail }: { trail: { label: string; href?: string }[
         {trail.map((crumb, i) => (
           <li key={crumb.label} className="flex items-center gap-2">
             {i > 0 && (
-              <span aria-hidden="true" className="text-rule-strong">
-                /
-              </span>
+              <Icon name="chevron_right" className="text-[14px] text-rule-strong" />
             )}
             {crumb.href ? (
               <Link href={crumb.href} className="underline underline-offset-2 hover:text-ink">
@@ -40,7 +39,8 @@ export function EmptyState({
 }) {
   return (
     <div className="border border-rule bg-surface-raised px-6 py-12 text-center">
-      <h2 className="font-display text-xl font-semibold text-ink">{title}</h2>
+      <Icon name="search_off" className="text-[32px] text-ink-faint" />
+      <h2 className="mt-2 font-display text-xl font-semibold text-ink">{title}</h2>
       <p className="mx-auto mt-2 max-w-md text-[15px] leading-relaxed text-ink-soft">{body}</p>
       {action ? <div className="mt-5">{action}</div> : null}
     </div>
@@ -51,7 +51,8 @@ export function EmptyState({
 export function ErrorState({ what }: { what: string }) {
   return (
     <div role="alert" className="border border-stamp bg-stamp-wash px-6 py-10 text-center">
-      <h2 className="font-display text-xl font-semibold text-ink">Unable to load {what}</h2>
+      <Icon name="error" className="text-[32px] text-stamp" />
+      <h2 className="mt-2 font-display text-xl font-semibold text-ink">Unable to load {what}</h2>
       <p className="mx-auto mt-2 max-w-md text-[15px] leading-relaxed text-ink-soft">
         Something went wrong while retrieving the data. Please try again.
       </p>

@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { Fraunces, Atkinson_Hyperlegible, IBM_Plex_Mono } from "next/font/google";
+import { Newsreader, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
+import { formatUpdatedAt, getGovUpdatedAt, getMostUrgentGovVacancy } from "@/lib/jobs";
 
-const fraunces = Fraunces({
+const newsreader = Newsreader({
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
   variable: "--font-display-loaded",
   display: "swap",
 });
 
-/** Atkinson Hyperlegible is a deliberate accessibility choice for a broad,
- *  non-designer audience — not a stylistic default (job.md §11.6). */
-const atkinson = Atkinson_Hyperlegible({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-body-loaded",
   display: "swap",
 });
@@ -32,10 +32,33 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Real data only in the masthead: the true "last updated" timestamp the
+  // ingestion pipeline wrote, and the single most urgent open vacancy (or
+  // nothing, if nothing is actually closing soon) — never an invented
+  // gazette edition number or a fabricated ticker line.
+  //
+  // Only a plain, serializable summary crosses into the client SiteHeader —
+  // never the vacancy object itself, and never anything imported from
+  // lib/jobs.ts directly inside a "use client" file, which would drag the
+  // fs-based module into the browser bundle (Turbopack refuses to build it).
+  const updated = formatUpdatedAt(getGovUpdatedAt());
+  const mostUrgent = getMostUrgentGovVacancy();
+  const urgent = mostUrgent
+    ? { slug: mostUrgent.vacancy.slug, titleEn: mostUrgent.vacancy.titleEn, days: mostUrgent.days }
+    : null;
+
   return (
     <html lang="en" data-theme="light">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
+      </head>
       <body
-        className={`${fraunces.variable} ${atkinson.variable} ${plexMono.variable} flex min-h-screen flex-col`}
+        className={`${newsreader.variable} ${plusJakarta.variable} ${plexMono.variable} flex min-h-screen flex-col`}
       >
         <a
           href="#main"
@@ -43,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <SiteHeader />
+        <SiteHeader updatedLabel={updated} urgentVacancy={urgent} />
         <main id="main" className="flex-1">
           {children}
         </main>

@@ -927,6 +927,51 @@ debounced search, removable chips, mobile drawer), `JobCards`, `Pagination`, `Br
 root via `fs` so there's one source of truth shared with both ingest pipelines — noted in
 `lib/jobs.ts` that a real deploy will need a copy step, rather than pre-solving it.
 
+### 11.8 "The Register" swapped for a Material-3-inspired "Gazette Ledger" system
+
+*2026-09-20.* A full HTML mockup arrived (Newsreader + Plus Jakarta Sans, Material Symbols
+icons, an M3 token set: navy `primary` #0f2038, amber `secondary` #8c4f10/#fdad67, cream
+`surface` #faf9f6, `error` #ba1a1a) styled as a newspaper-broadsheet gazette feed — masthead
+ribbon, urgency ticker, a sidebar "filter ledger" with counted checkboxes/pills, and a
+fact-grid inside each entry. First recommendation was a selective port (masthead bar, stat
+box, fact-grid, urgency badges) onto the existing Register tokens rather than a fifth full
+re-skin; overridden by explicit instruction: **full swap**.
+
+**What actually changed vs. what stayed:** the token *names* in `globals.css` stayed
+identical (`surface`, `ink`, `ink-soft`, `rule`, `stamp`, `verified`, plus a new `accent`
+pair for the amber) — only their values and the two font variables changed (Fraunces →
+Newsreader, Atkinson Hyperlegible → Plus Jakarta Sans; IBM Plex Mono and Noto Serif Sinhala
+kept). Because every component already referenced tokens by name rather than hardcoded
+colors, most of detail pages and `about/` needed zero structural edits — they picked up the
+new palette and fonts automatically. The real work was structural: `FilterBar` rewritten
+from a top bar into a sticky sidebar ledger with real per-option counts (`facetCounts` in
+`lib/jobs.ts`), both listing pages restructured into a 12-col grid, `SiteHeader` rebuilt
+with a state ribbon + a real urgency ticker, and `JobCards` gained a fact-grid box and a
+"most urgent" lead treatment.
+
+**Deliberately dropped from the mockup, and why** (all in tension with rules already
+recorded in this file): stock/AI-look photography in every card — exactly what the pasted
+75-section spec said to avoid; a "Gazette No. 2,403" edition number and ministry/stat
+counts — no such field exists anywhere in the real data, confirmed by inspecting
+`vacancies.json` before writing a single token, so the masthead surfaces the real
+`updatedAt` timestamp instead; a "Candidate Sign In" button and avatar — no auth system
+exists; an EN/SI/TA language switcher — i18n routing isn't wired, and a switcher that does
+nothing is worse than none. The urgency ticker and every stat shown (total posts,
+institutions, `<7d close`, employers) are computed from the real dataset at request time,
+never hardcoded.
+
+**Bug caught before it shipped:** `SiteHeader` (a `"use client"` component) originally
+imported `daysUntil` directly from `lib/jobs.ts`. That module's top-level `fs`/`path`
+imports made Turbopack try to bundle Node's `fs` for the browser and hard-panic production
+builds ("the chunking context does not support external modules (request: node:fs)").
+Fixed by computing the urgent-vacancy summary server-side in `layout.tsx` and passing only
+a plain `{ slug, titleEn, days }` object as a prop — client components must never import
+from `lib/jobs.ts` directly, only receive its output as serialized props. Verified clean
+on both a fresh production build (`next build`, 56/56 pages) and a fully restarted dev
+server (an orphaned dev process from before the fix was still answering port 3000 and had
+to be killed to get a trustworthy check — stale processes had previously produced spurious
+"missing key" React warnings that did not correspond to any actual missing key in source).
+
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
 

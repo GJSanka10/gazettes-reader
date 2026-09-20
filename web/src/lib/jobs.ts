@@ -100,3 +100,61 @@ export function facetValues<T>(items: T[], pick: (item: T) => string | undefined
     (a, b) => a.localeCompare(b),
   );
 }
+
+/** Same, but with a real count per value — for the filter ledger's
+ *  "(14)" style counters. Counts are always the true count in `items`,
+ *  never invented (job.md: no fabricated stats in the UI). */
+export function facetCounts<T>(
+  items: T[],
+  pick: (item: T) => string | undefined | null,
+): { value: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const item of items) {
+    const v = pick(item);
+    if (v && v.trim()) counts.set(v, (counts.get(v) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([value, count]) => ({ value, count }))
+    .sort((a, b) => a.value.localeCompare(b.value));
+}
+
+/** Top-level `updatedAt` written by the ingestion pipelines — the only
+ *  honest "how fresh is this" signal we have (there is no single "current
+ *  gazette edition" field in the data, so the masthead must not invent one). */
+export function getGovUpdatedAt(): string | null {
+  return readJson<{ updatedAt?: string }>("vacancies.json")?.updatedAt ?? null;
+}
+
+export function getPrivateUpdatedAt(): string | null {
+  return readJson<{ updatedAt?: string }>("private-vacancies.json")?.updatedAt ?? null;
+}
+
+/** "3 hours ago" — real relative time from a real ISO timestamp. */
+export function formatUpdatedAt(iso: string | null): string | null {
+  if (!iso) return null;
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return null;
+  const diffMs = Date.now() - then;
+  const diffMin = Math.round(diffMs / 60_000);
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  if (Math.abs(diffMin) < 60) return rtf.format(-diffMin, "minute");
+  const diffHr = Math.round(diffMin / 60);
+  if (Math.abs(diffHr) < 24) return rtf.format(-diffHr, "hour");
+  const diffDay = Math.round(diffHr / 24);
+  return rtf.format(-diffDay, "day");
+}
+
+/** The single most urgent open government vacancy, for the header ticker.
+ *  Real data only — if nothing is closing soon, the caller shows nothing.
+ *  Returns the computed `days` alongside it so callers never need to
+ *  re-derive it (and never need to import lib/jobs.ts client-side to do so). */
+export function getMostUrgentGovVacancy(): { vacancy: GovVacancy; days: number } | null {
+  const all = getGovVacancies();
+  if (!all) return null;
+  const withDays = all
+    .filter((v) => v.status !== "closed")
+    .map((v) => ({ vacancy: v, days: daysUntil(v.dateEn ?? v.dateSi) }))
+    .filter((x): x is { vacancy: GovVacancy; days: number } => x.days !== null && x.days >= 0 && x.days <= 7)
+    .sort((a, b) => a.days - b.days);
+  return withDays[0] ?? null;
+}
