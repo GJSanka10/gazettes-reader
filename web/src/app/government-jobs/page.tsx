@@ -158,20 +158,20 @@ export default async function GovernmentJobsPage({
           </div>
           <div className="grid grid-cols-3 gap-2 p-3">
             <div className="border-r border-rule pr-2">
-              <div className="font-mono text-[20px] font-bold leading-none text-ink">{all.length}</div>
+              <div className="font-display text-[22px] font-semibold leading-none text-ink">{all.length}</div>
               <div className="font-ui mt-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-faint">
                 Total posts
               </div>
             </div>
             <div className="border-r border-rule pr-2">
-              <div className="font-mono text-[20px] font-bold leading-none text-ink">{institutionCount}</div>
+              <div className="font-display text-[22px] font-semibold leading-none text-ink">{institutionCount}</div>
               <div className="font-ui mt-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-faint">
                 Institutions
               </div>
             </div>
             <div>
               {/* Crimson: an urgency stat, not a prestige one. */}
-              <div className="font-mono text-[20px] font-bold leading-none text-stamp">{closingSoonCount}</div>
+              <div className="font-display text-[22px] font-semibold leading-none text-stamp">{closingSoonCount}</div>
               <div className="font-ui mt-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-faint">
                 &lt;7d close
               </div>

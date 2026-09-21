@@ -48,7 +48,9 @@ function FactGrid({ items }: { items: { label: string; value?: string | null }[]
           <span className="block text-[9px] font-bold uppercase tracking-wide text-ink-faint">
             {c.label}
           </span>
-          <span className="font-mono text-[12px] font-semibold leading-tight text-ink">{c.value}</span>
+          {/* Plus Jakarta Sans, not mono — the reference reserves monospace
+              for genuine reference codes, not fact values like "45 Posts". */}
+          <span className="text-[13px] font-semibold leading-tight text-ink">{c.value}</span>
         </div>
       ))}
     </div>

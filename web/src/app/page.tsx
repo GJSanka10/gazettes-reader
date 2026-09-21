@@ -15,12 +15,7 @@ export default function HomePage() {
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-14 md:px-8 md:py-20">
-      <span className="font-ui inline-flex items-center gap-1.5 border border-rule-strong px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-ink-soft">
-        <Icon name="menu_book" className="text-[15px]" />
-        Sri Lanka&rsquo;s job register
-      </span>
-
-      <h1 className="mt-4 max-w-[18ch] font-display text-[38px] font-semibold leading-[44px] tracking-tight text-ink md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
+      <h1 className="max-w-[18ch] font-display text-[38px] font-semibold leading-[44px] tracking-tight text-ink md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
         Find your next career opportunity
       </h1>
       <p className="mt-4 max-w-[60ch] text-[20px] leading-[30px] text-ink-soft">
@@ -92,7 +87,7 @@ function ChoiceCard({
         <div className="mt-4 flex gap-4 border-t border-rule pt-3">
           {realStats.map((s) => (
             <div key={s.label}>
-              <div className="font-mono text-[18px] font-bold text-ink">{s.value}</div>
+              <div className="font-display text-[20px] font-semibold text-ink">{s.value}</div>
               <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">{s.label}</div>
             </div>
           ))}

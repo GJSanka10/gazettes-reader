@@ -1156,6 +1156,40 @@ Verified: `tsc` clean, `next build` 56/56 pages, fresh dev server, all routes 20
 console warnings. Visual confirmation is still pending a fresh screenshot from the user —
 unlike every other change in this file, this one cannot be closed out from this end alone.
 
+### 11.13 `frontend-design` skill invocation — caught a real, fixable mismatch
+
+*2026-09-21.* The next screenshot the user sent was the reference image again, not a fresh
+capture of the running app, alongside a direct instruction to run
+`npx claude-code-templates@latest --skill creative-design/frontend-design`. That template
+was already installed from earlier in this project (it's the `frontend-design` skill
+already in this repo's `.claude/skills/`), so it was invoked directly rather than
+re-running the npx installer for no benefit.
+
+The skill's guidance flags five clustered "AI-generated design" tells, and #3 on its own
+list is almost a description of this exact build: "a broadsheet-style layout with hairline
+rules, zero border-radius, and dense newspaper-like columns." Its own rule resolves the
+apparent conflict: *"Where the brief pins down a visual direction, follow it exactly —
+the brief's own words always win, including when it asks for one of these looks."* The
+user has pointed at this exact reference image four times now; that is the brief pinning
+it down. Nothing about the broadsheet direction itself changed.
+
+What the skill's checklist did catch, on a careful re-read against the actual reference
+markup: **"a monospace face for small data labels" is listed as a generic tell, and it
+turned out true here** — `FactGrid` values ("45 Posts", "21–35 Yrs") and every stat-box
+number (142, 08, 04-equivalent counts) had been set in IBM Plex Mono, but the reference's
+own markup uses its *headline* font (Newsreader-equivalent, bold) for exactly these
+values — monospace there is reserved for genuine reference codes (`LK-2403-SLICTS`,
+`P. 1412`) and the 3–14-day closing-date line, both of which are correctly still mono.
+Fixed: `FactGrid` values and all stat-box/ChoiceCard numbers moved from `font-mono` to
+`font-display`, matching the reference precisely instead of a font choice invented for
+this build. Also dropped a tracked-out uppercase eyebrow label above the homepage H1
+("Sri Lanka's job register") — flagged by the same skill as a common generated-page tell,
+and, unlike the broadsheet direction itself, not something the reference dictates (it has
+no homepage at all; that page's design was this build's own addition).
+
+Verified: `tsc` clean, `next build` 56/56 pages, fresh dev server, all routes 200, no
+console warnings.
+
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
 
