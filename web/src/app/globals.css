@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   Ported directly from the user's original "GazetteJobs.LK" M3 mockup's own
-   Tailwind config — exact hex values, not a reinterpretation. Where a
-   semantic role in this app doesn't map to a literal M3 token, the closest
-   real usage in that mockup's own markup was followed (e.g. body/label/
-   caption text there is Plus Jakarta Sans, headlines are Newsreader; nav/
-   button active-states use `primary` #000818 as a solid fill).
+   The user's original mockup's exact M3 hex values (§11.11) were implemented
+   precisely, then judged directly against the rendered result: too dark/
+   heavy (near-black #000818 as body text AND every button/border/badge) and
+   too flat/dull (low-chroma cream+navy+gray with only tiny gold/crimson
+   accents). This is a deliberate departure from the mockup's literal values,
+   made on direct user feedback about the *rendered* page rather than a
+   fifth guess — a richer, lighter navy (clearly blue, not near-black) and
+   noticeably more saturated gold/crimson, used more generously.
 
    NOTE: no custom key here is named after a Tailwind scale keyword
    (base, sm, lg, ...). job.md documents a silent, invisible bug caused
@@ -15,37 +17,37 @@
    ========================================================================= */
 
 :root {
-  --surface: #faf9f6;         /* M3 surface/background */
-  --surface-raised: #ffffff;  /* M3 surface-container-lowest */
-  --surface-sunken: #f4f3f0;  /* M3 surface-container-low */
-  --ink: #000818;             /* M3 primary — body text AND solid-fill chrome (nav, buttons) */
-  --ink-soft: #44474d;        /* M3 on-surface-variant */
-  --ink-faint: #75777e;       /* M3 outline */
-  --rule: #e3e2e0;            /* M3 surface-container-highest — the mockup's dominant hairline */
-  --rule-strong: #000818;     /* M3 primary, used for its own strong 2px framing */
-  --stamp: #ba1a1a;           /* M3 error — deadlines/urgency ONLY */
-  --stamp-wash: #ffdad6;      /* M3 error-container */
-  --accent: #8c4f10;          /* M3 secondary — prestige/official marks ONLY */
-  --accent-wash: #fdad67;     /* M3 secondary-container — a solid badge fill in the mockup, not a pale wash */
-  --verified: #8c4f10;        /* "verified against source" reads as an official seal: gold, not a bespoke green */
-  --verified-wash: #fdad67;
+  --surface: #faf9f6;         /* paper */
+  --surface-raised: #ffffff;
+  --surface-sunken: #f7f1e5;  /* warm ivory, not flat gray — panels & tender cards */
+  --ink: #1c3c63;             /* rich navy, clearly blue — body text AND solid-fill chrome */
+  --ink-soft: #4a6883;
+  --ink-faint: #64798c;       /* AA on --surface */
+  --rule: #e6dfcf;            /* warm hairline */
+  --rule-strong: #4a6883;     /* medium navy framing — present without being heavy everywhere */
+  --stamp: #c41e1e;           /* deadlines/urgency ONLY — brighter than a muted error-red */
+  --stamp-wash: #fbdcd2;
+  --accent: #7a4a0e;          /* dark bronze text — prestige/official marks ONLY, on cream or on --accent-wash */
+  --accent-wash: #f0a93a;     /* vivid amber — a solid badge/emblem fill, not a pale wash */
+  --verified: #7a4a0e;        /* "verified against source" reads as an official seal: gold, not a bespoke green */
+  --verified-wash: #f0a93a;
 }
 
 [data-theme="dark"] {
-  --surface: #101315;
-  --surface-raised: #1a1c1e;
-  --surface-sunken: #0a0c0e;
-  --ink: #d5e3ff;             /* M3 primary-fixed family, inverted for dark */
-  --ink-soft: #c5c6ce;
-  --ink-faint: #8f9196;
-  --rule: #33363a;
-  --rule-strong: #b7c7e7;
-  --stamp: #ffb4ab;
-  --stamp-wash: #3a1414;
-  --accent: #ffb77b;
-  --accent-wash: #6d3a00;
-  --verified: #ffb77b;
-  --verified-wash: #6d3a00;
+  --surface: #10171f;
+  --surface-raised: #1a222c;
+  --surface-sunken: #0b1119;
+  --ink: #cfe0f4;
+  --ink-soft: #a9c0d6;
+  --ink-faint: #7f97ac;
+  --rule: #2e3947;
+  --rule-strong: #6f92b3;
+  --stamp: #ff8a72;
+  --stamp-wash: #3d1810;
+  --accent: #ffc670;
+  --accent-wash: #6b4108;
+  --verified: #ffc670;
+  --verified-wash: #6b4108;
 }
 
 @theme inline {

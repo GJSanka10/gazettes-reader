@@ -104,7 +104,7 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
                   href={j.applyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#163a5f]"
+                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#2d5580]"
                 >
                   <Icon name="open_in_new" className="text-[15px]" />
                   Apply on employer site

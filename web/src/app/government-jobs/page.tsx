@@ -181,7 +181,7 @@ export default async function GovernmentJobsPage({
             href="https://documents.gov.lk/web/gazettes"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-ui flex min-h-[44px] items-center justify-center gap-1.5 border-t border-rule-strong bg-ink px-4 text-[12px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#163a5f]"
+            className="font-ui flex min-h-[44px] items-center justify-center gap-1.5 border-t border-rule-strong bg-ink px-4 text-[12px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#2d5580]"
           >
             <Icon name="folder_open" className="text-[16px]" />
             Browse official Gazette archive

@@ -1190,6 +1190,51 @@ no homepage at all; that page's design was this build's own addition).
 Verified: `tsc` clean, `next build` 56/56 pages, fresh dev server, all routes 200, no
 console warnings.
 
+### 11.14 Palette judged and rejected at real scale — "too dark/heavy" + "too flat/dull"
+
+*2026-09-21.* The user's next message, with no screenshot: "site colour pallet is not good
+at all." After four color passes already, this was the point to stop guessing — asked one
+`AskUserQuestion` rather than trying a sixth blind pass, offering concrete candidate
+complaints (too dark/heavy, too flat/dull, gold/orange badges clash, wrong direction
+entirely). Answer: **too dark/heavy AND too flat/dull**, both — not "wrong direction," not
+the gold/crimson combination clashing.
+
+This is the mockup's own exact hex values (§11.11) failing on direct judgment of the
+*rendered* result, not a re-derivation error — `#000818` really is what the reference uses,
+faithfully implemented, and it just doesn't work at full-UI scale the way it might in a
+single small screenshot. Overriding the literal reference values here was the right call:
+the brief (per §11.13's own `frontend-design` skill guidance) wins on *direction*, but the
+user is the final judge of whether a specific execution of that direction actually looks
+good, and they said it doesn't.
+
+**Fix, keeping the navy/gold/crimson civic-gazette identity but changing execution:**
+- `ink` (body text AND every solid-fill button/border, since it's used pervasively):
+  `#000818` (near-black) → `#1c3c63` (a rich, clearly-blue navy). This one token change
+  cascades through nearly every component already built, so it was the highest-leverage
+  single fix for "too dark/heavy."
+- `rule-strong` un-tied from `ink` entirely — previously literally the same near-black
+  value used for every strong border (filter-panel header, masthead double-rule, featured
+  card frame); now a separate medium navy (`#4a6883`, matching `ink-soft`) so structural
+  framing reads as present without stacking near-black everywhere `ink` also appears.
+- `accent`/`accent-wash` (gold): `#8c4f10`/`#fdad67` (muted brown-gold) → `#7a4a0e` (a
+  darker bronze, for contrast against fills) /`#f0a93a` (a distinctly more saturated,
+  warmer amber) — addresses "too flat/dull" directly.
+- `stamp` (crimson): `#ba1a1a` → `#c41e1e`, a brighter red.
+- `surface-sunken`: `#f4f3f0` (flat gray-cream) → `#f7f1e5` (warm ivory) — every sidebar
+  panel and tender-card fill now carries a touch of warmth instead of reading neutral-gray.
+- Found and fixed a knock-on bug: four files had a hardcoded `hover:bg-[#163a5f]` on
+  `bg-ink` buttons, tuned as a *lighter* shade relative to the old near-black `#000818`.
+  Against the new, already-lighter `#1c3c63` base, that hardcoded value was now *darker*
+  than the resting state — hover would have gotten heavier, not lighter. Replaced with
+  `#2d5580`, a proper lighter tint of the new ink.
+
+Verified: `tsc` clean, `next build` 56/56 pages, fresh dev server, all routes 200, no
+console warnings, and every new hex value (`--ink: #1c3c63`, `--accent: #7a4a0e`,
+`--accent-wash: #f0a93a`, `--stamp: #c41e1e`, `--surface-sunken: #f7f1e5`, both themes)
+confirmed directly in the compiled CSS. Visual confirmation against the actual complaint
+is still pending — unlike the hex-matching passes, "does this look less heavy and less
+flat now" can only be judged by the user looking at it.
+
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
 
