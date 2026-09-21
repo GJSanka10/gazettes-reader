@@ -24,13 +24,16 @@ function iconForSector(sector?: string | null): string {
   return "business_center";
 }
 
+/** A solid-fill emblem tile in the position a photo occupies in the
+ *  reference — deliberately bold and colored rather than a pale placeholder,
+ *  since a small gray box reads as empty space, not as a design choice. */
 function IconPanel({ icon }: { icon: string }) {
   return (
     <div
       aria-hidden="true"
-      className="hidden w-[104px] shrink-0 items-center justify-center border-r border-rule bg-surface-sunken sm:flex"
+      className="hidden w-[140px] shrink-0 items-center justify-center bg-ink sm:flex"
     >
-      <Icon name={icon} className="text-[36px] text-ink-faint" />
+      <Icon name={icon} className="text-[52px] text-surface-raised/90" />
     </div>
   );
 }
@@ -39,13 +42,13 @@ function FactGrid({ items }: { items: { label: string; value?: string | null }[]
   const cells = items.filter((i) => i.value);
   if (cells.length === 0) return null;
   return (
-    <div className="font-ui mt-3 grid grid-cols-2 gap-2 border-t border-rule pt-3 sm:grid-cols-4">
+    <div className="font-ui mt-2.5 grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-rule pt-2.5 sm:grid-cols-4">
       {cells.map((c) => (
         <div key={c.label}>
-          <span className="block text-[10px] font-bold uppercase tracking-wide text-ink-faint">
+          <span className="block text-[9px] font-bold uppercase tracking-wide text-ink-faint">
             {c.label}
           </span>
-          <span className="font-mono text-[13px] font-semibold text-ink">{c.value}</span>
+          <span className="font-mono text-[12px] font-semibold leading-tight text-ink">{c.value}</span>
         </div>
       ))}
     </div>
@@ -57,7 +60,7 @@ function FactGrid({ items }: { items: { label: string; value?: string | null }[]
 function CategoryBadge({ category }: { category?: string | null }) {
   if (!category) return null;
   return (
-    <span className="font-ui inline-block bg-accent-wash px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-accent">
+    <span className="font-ui inline-block bg-accent-wash px-1.5 py-[3px] text-[9px] font-bold uppercase tracking-[0.08em] text-accent">
       {category}
     </span>
   );
@@ -85,16 +88,16 @@ export function GovJobCard({
     return (
       <article className={`relative flex border border-ink bg-surface-raised ${closed ? "opacity-75" : ""}`}>
         <IconPanel icon={icon} />
-        <div className="min-w-0 flex-1 p-5">
-          <div className="mb-2 flex flex-wrap items-center gap-3">
+        <div className="min-w-0 flex-1 p-4">
+          <div className="mb-1.5 flex flex-wrap items-center gap-2">
             <JobStatusLabel status={vacancy.status} closingDate={vacancy.dateEn ?? vacancy.dateSi} />
             <CategoryBadge category={vacancy.category} />
           </div>
-          <div className="font-ui flex items-baseline justify-between gap-3 text-[12px] text-ink-faint">
+          <div className="font-ui flex items-baseline justify-between gap-3 text-[11px] text-ink-faint">
             <span className="truncate">{vacancy.instEn}</span>
             {vacancy.page && <span className="shrink-0 font-mono">{vacancy.page}</span>}
           </div>
-          <h3 className="mt-1 font-display text-[26px] font-semibold leading-tight text-ink">
+          <h3 className="mt-0.5 font-display text-[24px] font-semibold leading-tight text-ink">
             <Link
               href={`/government-jobs/${vacancy.slug}`}
               className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
@@ -102,9 +105,9 @@ export function GovJobCard({
               {vacancy.titleEn}
             </Link>
           </h3>
-          <div aria-hidden="true" className="mt-3 h-0.5 w-14 bg-accent" />
+          <div aria-hidden="true" className="mt-2 h-0.5 w-14 bg-accent" />
           {vacancy.titleSi && (
-            <p lang="si" className="si-body mt-2 font-[family-name:var(--font-siserif)] text-[15px] text-ink-soft">
+            <p lang="si" className="si-body mt-1.5 font-[family-name:var(--font-siserif)] text-[14px] text-ink-soft">
               {vacancy.titleSi}
             </p>
           )}
@@ -116,12 +119,12 @@ export function GovJobCard({
             ]}
           />
           {vacancy.real && (
-            <span className="font-ui mt-3 inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-verified">
+            <span className="font-ui mt-2 inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-verified">
               <Icon name="verified" className="text-[13px]" />
               Verified against Gazette
             </span>
           )}
-          {vacancy.citation && <p className="citation-box mt-3 inline-block">{vacancy.citation}</p>}
+          {vacancy.citation && <p className="citation-box mt-2 inline-block">{vacancy.citation}</p>}
         </div>
       </article>
     );
@@ -134,8 +137,8 @@ export function GovJobCard({
       }`}
     >
       <IconPanel icon={icon} />
-      <div className="min-w-0 flex-1 p-5">
-        <div className="mb-2 flex flex-wrap items-center gap-3">
+      <div className="min-w-0 flex-1 p-4">
+        <div className="mb-1.5 flex flex-wrap items-center gap-2">
           <JobStatusLabel status={vacancy.status} closingDate={vacancy.dateEn ?? vacancy.dateSi} />
           <CategoryBadge category={vacancy.category} />
           {vacancy.real && (
@@ -151,12 +154,12 @@ export function GovJobCard({
           )}
         </div>
 
-        <div className="font-ui flex items-baseline justify-between gap-3 text-[12px] text-ink-faint">
+        <div className="font-ui flex items-baseline justify-between gap-3 text-[11px] text-ink-faint">
           <span className="truncate">{vacancy.instEn}</span>
           {vacancy.page && <span className="shrink-0 font-mono">{vacancy.page}</span>}
         </div>
 
-        <h3 className="mt-0.5 font-display text-[20px] font-semibold leading-snug text-ink">
+        <h3 className="mt-0.5 font-display text-[19px] font-semibold leading-snug text-ink">
           <Link
             href={`/government-jobs/${vacancy.slug}`}
             className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"
@@ -165,7 +168,7 @@ export function GovJobCard({
           </Link>
         </h3>
         {vacancy.titleSi && (
-          <p lang="si" className="si-body mt-0.5 font-[family-name:var(--font-siserif)] text-[14px] text-ink-soft">
+          <p lang="si" className="si-body mt-0.5 font-[family-name:var(--font-siserif)] text-[13px] text-ink-soft">
             {vacancy.titleSi}
           </p>
         )}
@@ -178,7 +181,7 @@ export function GovJobCard({
           ]}
         />
 
-        {vacancy.citation && <p className="citation-box mt-3 inline-block">{vacancy.citation}</p>}
+        {vacancy.citation && <p className="citation-box mt-2 inline-block">{vacancy.citation}</p>}
       </div>
     </article>
   );
@@ -193,8 +196,8 @@ export function PrivateJobCard({ job }: { job: PrivateJob }) {
   return (
     <article className="group relative flex border-b border-rule transition-colors hover:bg-surface-sunken">
       <IconPanel icon={iconForSector(job.sector)} />
-      <div className="min-w-0 flex-1 p-5">
-        <div className="mb-2 flex flex-wrap items-center gap-3">
+      <div className="min-w-0 flex-1 p-4">
+        <div className="mb-1.5 flex flex-wrap items-center gap-2">
           <JobStatusLabel status={job.status} closingDate={job.closingDate} />
           {job._needsReview && (
             <span className="font-ui text-[11px] uppercase tracking-wide text-ink-faint">
@@ -203,9 +206,9 @@ export function PrivateJobCard({ job }: { job: PrivateJob }) {
           )}
         </div>
 
-        <p className="font-ui text-[12px] text-ink-faint">{job.employerName}</p>
+        <p className="font-ui text-[11px] text-ink-faint">{job.employerName}</p>
 
-        <h3 className="mt-0.5 font-display text-[20px] font-semibold leading-snug text-ink">
+        <h3 className="mt-0.5 font-display text-[19px] font-semibold leading-snug text-ink">
           <Link
             href={`/private-jobs/${job.slug}`}
             className="cursor-pointer after:absolute after:inset-0 hover:underline underline-offset-2"

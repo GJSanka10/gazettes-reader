@@ -111,19 +111,19 @@ export default async function PrivateJobsPage({
   ];
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-8">
+    <div className="mx-auto max-w-[1200px] px-4 py-5 md:px-8">
       <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Private Sector Jobs" }]} />
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-10">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-8">
         <div>
-          <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
+          <h1 className="font-display text-[26px] font-semibold leading-[32px] tracking-tight text-ink md:text-[34px] md:leading-[40px]">
             Private Sector Jobs
           </h1>
-          <p className="mt-2 max-w-[62ch] text-[17px] leading-[27px] text-ink-soft">
+          <p className="mt-1.5 max-w-[62ch] text-[15px] leading-[23px] text-ink-soft">
             Discover current job opportunities from companies and organisations across Sri
             Lanka.
           </p>
-          <p className="mt-4 max-w-[62ch] border-l-2 border-rule-strong px-4 py-3 text-[14px] leading-relaxed text-ink-soft">
+          <p className="mt-2.5 max-w-[62ch] border-l-2 border-rule-strong px-3 py-2 text-[13px] leading-relaxed text-ink-soft">
             Collected from employers&rsquo; own career sites. Only {datedCount} of {all.length}{" "}
             listings publish a closing date, so these are ordered by date posted rather than
             deadline.
@@ -131,22 +131,22 @@ export default async function PrivateJobsPage({
         </div>
 
         <div className="border border-rule-strong bg-surface-raised">
-          <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-4 py-2.5">
-            <span className="font-ui text-[13px] font-bold uppercase tracking-wide text-ink">
+          <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-3 py-2">
+            <span className="font-ui text-[12px] font-bold uppercase tracking-wide text-ink">
               Employer Register
             </span>
-            <Icon name="business_center" className="text-[18px] text-accent" />
+            <Icon name="business_center" className="text-[16px] text-accent" />
           </div>
-          <div className="grid grid-cols-2 gap-2 p-4">
+          <div className="grid grid-cols-2 gap-2 p-3">
             <div className="border-r border-rule pr-2">
-              <div className="font-mono text-[22px] font-bold leading-none text-ink">{all.length}</div>
-              <div className="font-ui mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-faint">
+              <div className="font-mono text-[20px] font-bold leading-none text-ink">{all.length}</div>
+              <div className="font-ui mt-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-faint">
                 Listings
               </div>
             </div>
             <div>
-              <div className="font-mono text-[22px] font-bold leading-none text-ink">{employerCount}</div>
-              <div className="font-ui mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-faint">
+              <div className="font-mono text-[20px] font-bold leading-none text-ink">{employerCount}</div>
+              <div className="font-ui mt-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-faint">
                 Employers
               </div>
             </div>
@@ -154,10 +154,10 @@ export default async function PrivateJobsPage({
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-12 gap-6 lg:gap-8">
+      <div className="mt-4 grid grid-cols-12 gap-5 lg:gap-7">
         <FilterBar placeholder="Search private-sector jobs..." facets={facets} />
 
-        <div className="col-span-12 space-y-4 lg:col-span-8 xl:col-span-9">
+        <div className="col-span-12 space-y-3 lg:col-span-8 xl:col-span-9">
           <FeedControls
             facets={facets}
             resultCount={results.length}

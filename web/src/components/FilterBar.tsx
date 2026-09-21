@@ -147,8 +147,8 @@ export function FilterBar({ placeholder, facets }: FilterBarProps) {
     if (facet.options.length <= PILL_THRESHOLD && facet.multi) {
       const selected = (params.get(facet.key) ?? "").split(",").filter(Boolean);
       return (
-        <div key={facet.key} className="border-t border-rule pt-3">
-          <span className="mb-2 block text-[11px] font-bold uppercase tracking-wide text-ink">
+        <div key={facet.key} className="border-t border-rule pt-2.5">
+          <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-ink">
             {facet.label}
           </span>
           <div className="flex flex-col gap-1">
@@ -178,8 +178,8 @@ export function FilterBar({ placeholder, facets }: FilterBarProps) {
     if (facet.options.length <= PILL_THRESHOLD) {
       const current = params.get(facet.key) ?? "";
       return (
-        <div key={facet.key} className="border-t border-rule pt-3">
-          <span className="mb-2 block text-[11px] font-bold uppercase tracking-wide text-ink">
+        <div key={facet.key} className="border-t border-rule pt-2.5">
+          <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-ink">
             {facet.label}
           </span>
           <div className="flex flex-col gap-1">
@@ -211,7 +211,7 @@ export function FilterBar({ placeholder, facets }: FilterBarProps) {
 
     const current = params.get(facet.key) ?? "";
     return (
-      <label key={facet.key} className="block border-t border-rule pt-3">
+      <label key={facet.key} className="block border-t border-rule pt-2.5">
         <span className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">
           {facet.label}
         </span>
@@ -255,23 +255,23 @@ export function FilterBar({ placeholder, facets }: FilterBarProps) {
 
       {/* Desktop sidebar ledger. */}
       <aside className="font-ui col-span-12 hidden lg:col-span-4 lg:block xl:col-span-3">
-        <div className="border border-rule-strong bg-surface-raised lg:sticky lg:top-24">
-          <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-4 py-2.5">
-            <span className="inline-flex items-center gap-1.5 text-[14px] font-bold uppercase tracking-wide text-ink">
-              <Icon name="tune" className="text-[18px] text-ink-faint" />
+        <div className="border border-rule-strong bg-surface-raised lg:sticky lg:top-20">
+          <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-3 py-2">
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-bold uppercase tracking-wide text-ink">
+              <Icon name="tune" className="text-[16px] text-ink-faint" />
               Filter register
             </span>
             {activeCount > 0 && (
               <button
                 type="button"
                 onClick={clearAll}
-                className="cursor-pointer text-[12px] font-bold uppercase tracking-wide text-accent hover:underline"
+                className="cursor-pointer text-[11px] font-bold uppercase tracking-wide text-accent hover:underline"
               >
                 Reset
               </button>
             )}
           </div>
-          <div className="p-4">{panelBody("desktop")}</div>
+          <div className="p-3">{panelBody("desktop")}</div>
         </div>
       </aside>
 
@@ -383,7 +383,7 @@ export function FeedControls({
     });
 
   return (
-    <div className="font-ui flex flex-wrap items-center gap-3 border border-rule-strong bg-surface-raised px-4 py-2.5">
+    <div className="font-ui flex flex-wrap items-center gap-3 border border-rule-strong bg-surface-raised px-3 py-2">
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
         {chips.length > 0 && (
           <span className="text-[11px] font-bold uppercase tracking-wide text-ink-faint">Active:</span>

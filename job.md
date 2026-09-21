@@ -1114,6 +1114,48 @@ values (`--ink: #000818`, `--stamp: #ba1a1a`, `--accent: #8c4f10`, `--accent-was
 rather than assumed from the source, Plus Jakarta Sans confirmed as the actually-served
 font family, and all routes 200 with no console warnings.
 
+### 11.12 The real blocker: no way to see the rendered page
+
+*2026-09-21.* After §11.11 the user asked, reasonably, why the UI still didn't look close
+to the reference after three passes that each checked out on paper. Answer, checked rather
+than assumed: this environment has no screenshot/browser-automation tool at all —
+`WebFetch` explicitly refuses `localhost`, and nothing else renders a page. Every previous
+pass verified hex values and class names existed in the HTML/CSS output via `curl`/`grep`;
+none of that catches "the composition doesn't read the same," which is exactly the kind of
+gap that was happening. Tried `ui-ux-pro-max`'s `--design-system` search as the user asked
+("why don't we use ui skills") — its own output for "government" is a minimal
+high-contrast-blue/Atkinson-Hyperlegible system, the same generic gov-blue direction §11.6
+already rejected, and a direct style-domain search returned nothing closer than "Data-Dense
+Dashboard" (useful only as a generic "tighten spacing" signal). Concluded, and told the
+user directly: this skill originates a design from a style keyword, it doesn't clone a
+specific reference image, and running it further would move away from the target, not
+toward it.
+
+**Real unblock:** asked the user to paste a screenshot of the actual running page instead
+of guessing blind a fourth time. They did. Direct comparison against the reference surfaced
+two concrete, fixable gaps neither prior pass had caught:
+1. The `IconPanel` (small pale-gray box, faint icon) carried nowhere near the visual weight
+   of the reference's full-color photography in the same position — it read as empty space,
+   not a design choice.
+2. Every layer of spacing — page padding, masthead gaps, card padding, sidebar padding,
+   fact-grid gaps — was measurably looser than the reference's dense, newspaper-column feel.
+   The reference fits a masthead + filter panel + 5 full entries above the fold; this build
+   fit one card.
+
+**Fixes:** `IconPanel` → a bold solid-`ink`-fill emblem tile (140px, up from 104px) with a
+large light icon, instead of a pale placeholder — still an honest icon, not a fake photo,
+but with real visual weight. Tightened spacing throughout `JobCards.tsx`, `FilterBar.tsx`,
+and both listing pages (card padding `p-5`→`p-4`, page padding `py-8`→`py-5`, masthead
+gaps, sidebar padding, fact-grid gaps, stat-box padding) — while explicitly leaving every
+*interactive* touch target (checkboxes, buttons, the search input) at its accessible
+minimum size, since density has to come from margins and padding, never from shrinking
+anything a person has to click (the skill's own checklist flags 44×44px as CRITICAL, and
+that rule doesn't bend for this).
+
+Verified: `tsc` clean, `next build` 56/56 pages, fresh dev server, all routes 200, no
+console warnings. Visual confirmation is still pending a fresh screenshot from the user —
+unlike every other change in this file, this one cannot be closed out from this end alone.
+
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
 
