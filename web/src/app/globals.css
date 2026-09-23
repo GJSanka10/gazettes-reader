@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   The user's original mockup's exact M3 hex values (§11.11) were implemented
-   precisely, then judged directly against the rendered result: too dark/
-   heavy (near-black #000818 as body text AND every button/border/badge) and
-   too flat/dull (low-chroma cream+navy+gray with only tiny gold/crimson
-   accents). This is a deliberate departure from the mockup's literal values,
-   made on direct user feedback about the *rendered* page rather than a
-   fifth guess — a richer, lighter navy (clearly blue, not near-black) and
-   noticeably more saturated gold/crimson, used more generously.
+   §11.11's exact mockup navy, and §11.14's lighter/brighter retune of that
+   same navy, were both judged by the user as "still the same direction" —
+   confirmation that the problem was the hue family (institutional blue),
+   not its shade. This is a real pivot, not another retune: ink moves off
+   navy entirely onto a deep oxblood/maroon — the color of an official seal
+   or rubber stamp on a Sri Lankan civic document, not a generic government-
+   blue portal. Gold stays (never complained about); urgency red shifts
+   toward vermillion so it reads as clearly distinct from the new maroon ink
+   rather than a shade of it.
 
    NOTE: no custom key here is named after a Tailwind scale keyword
    (base, sm, lg, ...). job.md documents a silent, invisible bug caused
@@ -17,37 +18,37 @@
    ========================================================================= */
 
 :root {
-  --surface: #faf9f6;         /* paper */
+  --surface: #fbf6ec;         /* warm gold-tinted paper, not neutral cream */
   --surface-raised: #ffffff;
-  --surface-sunken: #f7f1e5;  /* warm ivory, not flat gray — panels & tender cards */
-  --ink: #1c3c63;             /* rich navy, clearly blue — body text AND solid-fill chrome */
-  --ink-soft: #4a6883;
-  --ink-faint: #64798c;       /* AA on --surface */
-  --rule: #e6dfcf;            /* warm hairline */
-  --rule-strong: #4a6883;     /* medium navy framing — present without being heavy everywhere */
-  --stamp: #c41e1e;           /* deadlines/urgency ONLY — brighter than a muted error-red */
-  --stamp-wash: #fbdcd2;
-  --accent: #7a4a0e;          /* dark bronze text — prestige/official marks ONLY, on cream or on --accent-wash */
-  --accent-wash: #f0a93a;     /* vivid amber — a solid badge/emblem fill, not a pale wash */
-  --verified: #7a4a0e;        /* "verified against source" reads as an official seal: gold, not a bespoke green */
-  --verified-wash: #f0a93a;
+  --surface-sunken: #f4e6cf;  /* deeper warm gold-cream — panels & tender cards */
+  --ink: #641f36;             /* deep oxblood/maroon — body text AND solid-fill chrome */
+  --ink-soft: #8a4a5c;
+  --ink-faint: #92707a;       /* AA on --surface */
+  --rule: #ead9bd;            /* warm hairline */
+  --rule-strong: #8a4a5c;     /* medium maroon framing — present without stacking near-black */
+  --stamp: #d1401f;           /* vermillion — deadlines/urgency ONLY, distinct hue from ink */
+  --stamp-wash: #fbdccb;
+  --accent: #8a5a0c;          /* dark bronze text — prestige/official marks ONLY, on cream or on --accent-wash */
+  --accent-wash: #f2b33d;     /* vivid gold — a solid badge/emblem fill, not a pale wash */
+  --verified: #8a5a0c;        /* "verified against source" reads as an official seal: gold, not a bespoke green */
+  --verified-wash: #f2b33d;
 }
 
 [data-theme="dark"] {
-  --surface: #10171f;
-  --surface-raised: #1a222c;
-  --surface-sunken: #0b1119;
-  --ink: #cfe0f4;
-  --ink-soft: #a9c0d6;
-  --ink-faint: #7f97ac;
-  --rule: #2e3947;
-  --rule-strong: #6f92b3;
-  --stamp: #ff8a72;
-  --stamp-wash: #3d1810;
-  --accent: #ffc670;
-  --accent-wash: #6b4108;
-  --verified: #ffc670;
-  --verified-wash: #6b4108;
+  --surface: #1c1216;
+  --surface-raised: #271a1f;
+  --surface-sunken: #130c0e;
+  --ink: #eecdd6;
+  --ink-soft: #cf9fac;
+  --ink-faint: #a97f8a;
+  --rule: #3e2830;
+  --rule-strong: #b17987;
+  --stamp: #ff8f66;
+  --stamp-wash: #3d1c10;
+  --accent: #ffcb70;
+  --accent-wash: #70490a;
+  --verified: #ffcb70;
+  --verified-wash: #70490a;
 }
 
 @theme inline {

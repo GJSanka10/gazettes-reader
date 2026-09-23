@@ -127,7 +127,7 @@ export default async function GovJobDetail({ params }: { params: Promise<{ slug:
                       href={v.pdfUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-center text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#2d5580]"
+                      className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-center text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#7d3049]"
                     >
                       <Icon name="picture_as_pdf" className="text-[16px]" />
                       View official Gazette PDF

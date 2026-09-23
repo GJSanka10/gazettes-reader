@@ -315,7 +315,7 @@ export function FilterBar({ placeholder, facets }: FilterBarProps) {
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                className="min-h-[44px] flex-1 cursor-pointer bg-ink text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#2d5580]"
+                className="min-h-[44px] flex-1 cursor-pointer bg-ink text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#7d3049]"
               >
                 Apply filters
               </button>

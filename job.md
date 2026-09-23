@@ -1235,6 +1235,39 @@ confirmed directly in the compiled CSS. Visual confirmation against the actual c
 is still pending — unlike the hex-matching passes, "does this look less heavy and less
 flat now" can only be judged by the user looking at it.
 
+### 11.15 §11.14's retune wasn't enough — a real hue-family pivot off navy
+
+*2026-09-21.* User's response to §11.14, still with no screenshot: "still same direction."
+A lighter, brighter navy is still navy — confirmation that the complaint was never about
+this specific shade calibration, it was the hue family itself (institutional blue) reading
+as generic regardless of how it's tuned. Retuning the same three hues a third time would
+have risked the same result; this pass changed the hue family instead.
+
+**`ink` moved off navy entirely, onto a deep oxblood/maroon** (`#1c3c63` → `#641f36`) — the
+colour of an official seal or rubber date-stamp on a Sri Lankan civic document, not a
+generic government-blue portal. This also serves the very first instruction of this whole
+project (job.md's opening brief: "distinctive," "avoid generic layouts") in a way three
+navy-based passes hadn't. Since `stamp` (urgency) needs to stay clearly distinguishable
+from `ink` now that both are in the red family, `stamp` shifted from crimson toward
+vermillion (`#c41e1e` → `#d1401f`) for real hue separation, not just a lightness
+difference. `accent` (gold) was untouched — never part of any complaint — but `surface`/
+`surface-sunken` warmed further toward a gold-tinted parchment (`#faf9f6`/`#f7f1e5` →
+`#fbf6ec`/`#f4e6cf`) to read as one cohesive maroon-and-gold system rather than a neutral
+cream with maroon dropped on top.
+
+Also caught and fixed the same knock-on class of bug as §11.14: the hardcoded button-hover
+shade (`#2d5580`, tuned as a lighter tint of the *previous* navy `ink`) was now a
+navy-family colour sitting on a maroon button — visibly wrong hue, not just wrong
+lightness. Replaced with `#7d3049`, a lighter tint of the new maroon, in the same four
+files as last time.
+
+Verified: `tsc` clean, `next build` 56/56 pages, a dev server that for once started clean
+with no stray process on port 3000 to kill first, all routes 200, no console warnings, and
+`--ink: #641f36`, `--stamp: #d1401f`, `--accent-wash: #f2b33d`, `--surface: #fbf6ec`
+confirmed directly in the compiled CSS in both themes. As with §11.14, whether this
+actually reads as different rather than "still the same direction" is the user's call, not
+something verifiable from here.
+
 <details>
 <summary>Original Phase 0 instruction (superseded, kept for history)</summary>
 
