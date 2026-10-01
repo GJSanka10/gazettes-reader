@@ -1,102 +1,150 @@
 import Link from "next/link";
-import { Icon } from "@/components/Icon";
-import { getGovVacancies, getPrivateJobs } from "@/lib/jobs";
+import { Suspense } from "react";
+import { RememberListPage } from "@/components/BackLink";
+import { HomeSearch } from "@/components/HomeSearch";
+import { connection } from "next/server";
+import { LatestBlock } from "@/components/Feed";
+import { GazetteScan } from "@/components/GazetteScan";
+import { PrivateJobRow, RowGroup } from "@/components/JobCards";
+import { HomeFeed } from "@/components/HomeFeed";
+import { BrowsePanel, ClosingSoonPanel, HowToApplyPanel, SourcesPanel } from "@/components/Rail";
+import { SavedPanel } from "@/components/SavedPanel";
+import { daysUntil } from "@/lib/dates";
+import {
+  facetCounts,
+  getGovUpdatedAt,
+  getGovVacancies,
+  getLatestGazetteIssue,
+  getPrivateJobs,
+  getUpcomingDeadlines,
+  isNew,
+} from "@/lib/jobs";
 
-/** Spec §4: the homepage does not list jobs. Its job is to let someone choose
- *  which of the two collections they want, and get out of the way. */
-export default function HomePage() {
-  const gov = getGovVacancies();
-  const priv = getPrivateJobs();
+const PRIVATE_ON_HOME = 8;
 
-  const govOpen = gov?.filter((v) => v.status !== "closed").length ?? null;
-  const privCount = priv?.length ?? null;
-  const institutionCount = gov ? new Set(gov.map((v) => v.instEn).filter(Boolean)).size : null;
-  const employerCount = priv ? new Set(priv.map((j) => j.employerName).filter(Boolean)).size : null;
+export default async function HomePage() {
+  // "Today", "new" and "days left" must all be the request's, not the build's.
+  await connection();
 
-  return (
-    <div className="mx-auto max-w-[1200px] px-4 py-14 md:px-8 md:py-20">
-      <h1 className="max-w-[18ch] font-display text-[38px] font-semibold leading-[44px] tracking-tight text-ink md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
-        Find your next career opportunity
-      </h1>
-      <p className="mt-4 max-w-[60ch] text-[20px] leading-[30px] text-ink-soft">
-        Explore the latest Government Gazette vacancies and private-sector opportunities in Sri
-        Lanka.
-      </p>
+  const gov = getGovVacancies() ?? [];
+  const priv = getPrivateJobs() ?? [];
+  const issue = getLatestGazetteIssue();
 
-      <div className="mt-10 grid gap-5 md:grid-cols-2">
-        <ChoiceCard
-          href="/government-jobs"
-          icon="account_balance"
-          title="Government Jobs"
-          body="Vacancies published through official Gazette notices, with closing dates and a link to the original document."
-          stats={[
-            govOpen === null ? null : { label: "Open now", value: String(govOpen) },
-            institutionCount === null ? null : { label: "Institutions", value: String(institutionCount) },
-          ]}
-          cta="View government jobs"
-        />
-        <ChoiceCard
-          href="/private-jobs"
-          icon="work"
-          title="Private Jobs"
-          body="Openings collected from the career sites of companies and organisations operating in Sri Lanka."
-          stats={[
-            privCount === null ? null : { label: "Listings", value: String(privCount) },
-            employerCount === null ? null : { label: "Employers", value: String(employerCount) },
-          ]}
-          cta="View private jobs"
+  const open = gov.filter((v) => v.status !== "closed");
+  const closedCount = gov.length - open.length;
+  const newCount = open.filter(isNew).length;
+  const closingThisWeek = open.filter((v) => {
+    const d = daysUntil(v.dateEn ?? v.dateSi);
+    return d !== null && d >= 0 && d <= 7;
+  }).length;
+
+  // Newest first (by when we first saw it), then soonest closing.
+  const feed = [...open].sort((a, b) => {
+    const seen = (b.firstSeenAt ?? "").localeCompare(a.firstSeenAt ?? "");
+    if (seen !== 0) return seen;
+    return (daysUntil(a.dateEn ?? a.dateSi) ?? 999) - (daysUntil(b.dateEn ?? b.dateSi) ?? 999);
+  });
+
+  const newestPrivate = [...priv]
+    .sort((a, b) => (b.datePosted ? Date.parse(b.datePosted) : 0) - (a.datePosted ? Date.parse(a.datePosted) : 0))
+    .slice(0, PRIVATE_ON_HOME);
+  const employers = new Set(priv.map((j) => j.employerName)).size;
+  const fields = facetCounts(open, (v) => v.category).sort((a, b) => b.count - a.count).slice(0, 6);
+
+  const intro = (
+    <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:gap-16">
+      <div>
+        <h1 className="headline max-w-[16ch] text-[34px] text-ink sm:text-[56px] lg:text-[68px]">
+          Government jobs, without the Gazette hunting.
+        </h1>
+        <p className="mt-4 max-w-[54ch] text-[16.5px] leading-relaxed text-ink-2 sm:mt-5 sm:text-[17px]">
+          New Sri Lankan government vacancies, summarised so you can tell in a minute whether one is for you. The
+          original notice is always one click away.
+        </p>
+        <HomeSearch fields={fields} />
+      </div>
+      <div className="flex flex-col gap-8">
+        <div className="hidden lg:block">
+          <GazetteScan
+            title={feed[0]?.titleEn}
+            org={feed[0]?.instEn}
+            days={feed[0] ? daysUntil(feed[0].dateEn ?? feed[0].dateSi) : null}
+          />
+        </div>
+        <LatestBlock
+          issue={issue ? { number: issue.number, date: issue.date, count: issue.vacancies.length } : null}
+          updatedAt={getGovUpdatedAt()}
+          total={open.length}
+          newCount={newCount}
+          closingThisWeek={closingThisWeek}
         />
       </div>
-
-      <p className="font-ui mt-10 flex max-w-[70ch] items-start gap-2 border-l-2 border-rule-strong pl-4 text-[13px] leading-relaxed text-ink-soft">
-        <Icon name="info" className="mt-0.5 shrink-0 text-[16px]" />
-        This is an independent digest, not an official government website. Always check the
-        original Gazette notice or the employer&rsquo;s own posting for official requirements,
-        deadlines and application instructions.
-      </p>
     </div>
   );
-}
 
-function ChoiceCard({
-  href,
-  icon,
-  title,
-  body,
-  stats,
-  cta,
-}: {
-  href: string;
-  icon: string;
-  title: string;
-  body: string;
-  stats: ({ label: string; value: string } | null)[];
-  cta: string;
-}) {
-  const realStats = stats.filter((s): s is { label: string; value: string } => s !== null);
   return (
-    <Link
-      href={href}
-      className="group flex cursor-pointer flex-col border border-rule-strong bg-surface-raised p-6 transition-colors hover:border-ink"
-    >
-      <Icon name={icon} className="text-[26px] text-accent" />
-      <h2 className="mt-3 font-display text-[26px] font-medium text-ink">{title}</h2>
-      <p className="mt-3 flex-1 text-[16px] leading-[26px] text-ink-soft">{body}</p>
+    <>
+      <Suspense fallback={null}>
+        <RememberListPage label="Latest vacancies" />
+      </Suspense>
+      <HomeFeed
+        intro={intro}
+        items={feed.map((v) => ({ v, isNew: isNew(v) }))}
+        aside={
+          <>
+            <ClosingSoonPanel title="Closing in the next two weeks" entries={getUpcomingDeadlines(15).slice(0, 6)} showKind />
+            <SavedPanel />
+            <HowToApplyPanel />
+            <BrowsePanel
+              title="Private jobs by employer"
+              action={{ href: "/private-jobs", label: "All" }}
+              items={facetCounts(priv, (j) => j.employerName)
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 6)
+                .map((e) => ({
+                  label: e.value,
+                  count: e.count,
+                  href: `/private-jobs?institution=${encodeURIComponent(e.value)}`,
+                }))}
+            />
+            <SourcesPanel />
+          </>
+        }
+      >
+        {closedCount > 0 && (
+          <p className="mt-4 text-[14px] text-ink-3">
+            {closedCount} closed {closedCount === 1 ? "vacancy is" : "vacancies are"} kept on the{" "}
+            <Link href="/government-jobs" className="underline underline-offset-4 hover:text-ink">
+              government jobs page
+            </Link>{" "}
+            for reference.
+          </p>
+        )}
 
-      {realStats.length > 0 && (
-        <div className="mt-4 flex gap-4 border-t border-rule pt-3">
-          {realStats.map((s) => (
-            <div key={s.label}>
-              <div className="font-display text-[20px] font-semibold text-ink">{s.value}</div>
-              <div className="font-ui text-[10px] font-bold uppercase tracking-wide text-ink-faint">{s.label}</div>
+        {newestPrivate.length > 0 && (
+          <section aria-labelledby="private-title" className="mt-14">
+            <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+              <h2 id="private-title" className="title text-[26px] text-ink">
+                Private sector, newest postings
+              </h2>
+              <Link
+                href="/private-jobs"
+                className="text-[15px] font-semibold text-ink underline decoration-mark decoration-[3px] underline-offset-[5px] hover:decoration-ink"
+              >
+                All {priv.length} private jobs
+              </Link>
             </div>
-          ))}
-        </div>
-      )}
-
-      <span className="font-ui mt-5 inline-flex items-center gap-1 text-[13px] font-bold uppercase tracking-wide text-ink underline underline-offset-4">
-        {cta} <Icon name="arrow_forward" className="text-[16px]" />
-      </span>
-    </Link>
+            <p className="mb-5 text-[15px] text-ink-2">
+              From {employers} employers&rsquo; own career sites. You apply with the employer, not here.
+            </p>
+            <RowGroup>
+              {newestPrivate.map((j) => (
+                <PrivateJobRow key={j.slug} job={j} />
+              ))}
+            </RowGroup>
+          </section>
+        )}
+      </HomeFeed>
+    </>
   );
 }

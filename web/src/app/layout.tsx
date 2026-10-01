@@ -1,90 +1,74 @@
 import type { Metadata } from "next";
-import { Newsreader, Plus_Jakarta_Sans, IBM_Plex_Mono, Noto_Serif_Sinhala } from "next/font/google";
+import { Archivo, Noto_Sans_Sinhala, Noto_Sans_Tamil } from "next/font/google";
 import "./globals.css";
-import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
-import { formatUpdatedAt, getGovUpdatedAt, getMostUrgentGovVacancy } from "@/lib/jobs";
+import { BottomNav, SiteFooter, SiteHeader } from "@/components/SiteHeader";
+import { Toaster } from "@/components/Toaster";
+import { MotionProvider } from "@/components/MotionProvider";
 
-// Newsreader: headlines only, matching the mockup's own type split.
-const newsreader = Newsreader({
+// One family across its width axis: condensed for countdowns, wide for
+// headlines, normal for reading.
+const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-display-loaded",
+  axes: ["wdth"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
-// Plus Jakarta Sans carries everything else — body, labels, captions, nav —
-// exactly as the mockup's own Tailwind config assigns it. Loaded once and
-// referenced by both --font-body and --font-ui in globals.css.
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-ui-loaded",
-  display: "swap",
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-mono-loaded",
-  display: "swap",
-});
-
-// Previously referenced by name in globals.css but never actually fetched
-// anywhere — real Sinhala vacancy titles were silently falling back to
-// Georgia. Fixed here rather than left for the next redesign to trip over.
-const notoSerifSinhala = Noto_Serif_Sinhala({
+// Sinhala and Tamil in the matching Noto sans cuts.
+const sinhala = Noto_Sans_Sinhala({
   subsets: ["sinhala"],
-  weight: ["400", "600"],
-  variable: "--font-siserif-loaded",
+  weight: ["400", "600", "700"],
+  variable: "--font-si",
   display: "swap",
 });
+
+const tamil = Noto_Sans_Tamil({
+  subsets: ["tamil"],
+  weight: ["400", "600", "700"],
+  variable: "--font-ta",
+  display: "swap",
+});
+
+// Absolute base for canonical and Open Graph URLs. Set NEXT_PUBLIC_SITE_URL in
+// production; localhost is only the development fallback.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "The Living Gazette — Government and private-sector jobs in Sri Lanka",
   description:
-    "Search current Sri Lankan Government Gazette vacancies and private-sector job openings, with closing dates and links to the official source.",
+    "Sri Lankan Government Gazette vacancies and private-sector openings, summarised, sorted by closing date, and linked to the official source.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // Real data only in the masthead: the true "last updated" timestamp the
-  // ingestion pipeline wrote, and the single most urgent open vacancy (or
-  // nothing, if nothing is actually closing soon) — never an invented
-  // gazette edition number or a fabricated ticker line.
-  //
-  // Only a plain, serializable summary crosses into the client SiteHeader —
-  // never the vacancy object itself, and never anything imported from
-  // lib/jobs.ts directly inside a "use client" file, which would drag the
-  // fs-based module into the browser bundle (Turbopack refuses to build it).
-  const updated = formatUpdatedAt(getGovUpdatedAt());
-  const mostUrgent = getMostUrgentGovVacancy();
-  const urgent = mostUrgent
-    ? { slug: mostUrgent.vacancy.slug, titleEn: mostUrgent.vacancy.titleEn, days: mostUrgent.days }
-    : null;
-
   return (
-    <html lang="en" data-theme="light">
+    // Font variables go on <html>, not <body>: the theme's --font-sans alias is
+    // declared on :root and resolves its var() references there.
+    <html lang="en" className={`${archivo.variable} ${sinhala.variable} ${tamil.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&display=block"
         />
       </head>
-      <body
-        className={`${newsreader.variable} ${plusJakarta.variable} ${plexMono.variable} ${notoSerifSinhala.variable} flex min-h-screen flex-col`}
-      >
+      <body className="flex min-h-screen flex-col">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:border focus:border-ink focus:bg-surface-raised focus:px-4 focus:py-2"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-mark focus:px-4 focus:py-2 focus:font-semibold focus:text-on-mark"
         >
           Skip to content
         </a>
-        <SiteHeader updatedLabel={updated} urgentVacancy={urgent} />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <SiteFooter />
+        <MotionProvider>
+          <SiteHeader />
+          <main id="main" className="flex-1">
+            {children}
+          </main>
+          <SiteFooter />
+          <BottomNav />
+          <Toaster />
+        </MotionProvider>
       </body>
     </html>
   );

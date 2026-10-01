@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { GovVacancy, JobStatus, PrivateJob } from "./types";
+import { daysUntil, parseClosingDate } from "./dates";
+import { QUALIFICATION_LABEL } from "./labels";
 
 /**
  * Both pipelines (scripts/ingest.py and scripts/private-ingest/) write to the
@@ -13,15 +15,18 @@ import type { GovVacancy, JobStatus, PrivateJob } from "./types";
  */
 const DATA_DIR = path.join(process.cwd(), "..", "data");
 
-function slugify(input: string): string {
-  return input
+function slugify(input: string, max = 80): string {
+  const slug = input
     .toLowerCase()
     .normalize("NFKD")
     .replace(/[^\w\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .slice(0, 80);
+    .replace(/-+/g, "-");
+  if (slug.length <= max) return slug;
+  // Cut at a word boundary, never mid-word.
+  const cut = slug.slice(0, max + 1);
+  return cut.slice(0, cut.lastIndexOf("-") > 0 ? cut.lastIndexOf("-") : max);
 }
 
 function readJson<T>(file: string): T | null {
@@ -34,21 +39,7 @@ function readJson<T>(file: string): T | null {
   }
 }
 
-/** Parse the closing-date strings the pipelines actually emit:
- *  "24 Sep 2026", "2026-09-24", or null. */
-export function parseClosingDate(value?: string | null): Date | null {
-  if (!value) return null;
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
-}
-
-export function daysUntil(value?: string | null): number | null {
-  const date = parseClosingDate(value);
-  if (!date) return null;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return Math.ceil((date.getTime() - today.getTime()) / 86_400_000);
-}
+export { daysUntil, parseClosingDate } from "./dates";
 
 export function deriveStatus(closing?: string | null): JobStatus {
   const days = daysUntil(closing);
@@ -67,7 +58,9 @@ export function getGovVacancies(): GovVacancy[] | null {
     .filter((v) => v.titleEn)
     .map((v) => ({
       ...v,
-      slug: v.slug || slugify(`${v.titleEn}-${v.instEn ?? ""}-${v.serial ?? ""}`),
+      // The serial is appended whole, after the word-boundary cut, so two notices
+      // with the same long title and institution can never share a URL.
+      slug: v.slug || [slugify(`${v.titleEn}-${v.instEn ?? ""}`, 70), v.serial && slugify(v.serial)].filter(Boolean).join("-"),
       status: deriveStatus(v.dateEn ?? v.dateSi),
     }));
 }
@@ -165,4 +158,143 @@ export function getMostUrgentGovVacancy(): { vacancy: GovVacancy; days: number }
     .filter((x): x is { vacancy: GovVacancy; days: number } => x.days !== null && x.days >= 0 && x.days <= 7)
     .sort((a, b) => a.days - b.days);
   return withDays[0] ?? null;
+}
+
+/** One closing date from either collection — the unit the homepage runway
+ *  and "closing next" list are built from. */
+export interface DeadlineEntry {
+  kind: "gov" | "pvt";
+  slug: string;
+  title: string;
+  org: string;
+  date: Date;
+  days: number;
+}
+
+export function getUpcomingDeadlines(withinDays: number): DeadlineEntry[] {
+  const out: DeadlineEntry[] = [];
+  for (const v of getGovVacancies() ?? []) {
+    const raw = v.dateEn ?? v.dateSi;
+    const date = parseClosingDate(raw);
+    const days = daysUntil(raw);
+    if (date && days !== null && days >= 0 && days < withinDays)
+      out.push({ kind: "gov", slug: v.slug, title: v.titleEn, org: v.instEn, date, days });
+  }
+  for (const j of getPrivateJobs() ?? []) {
+    const date = parseClosingDate(j.closingDate);
+    const days = daysUntil(j.closingDate);
+    if (date && days !== null && days >= 0 && days < withinDays)
+      out.push({ kind: "pvt", slug: j.slug, title: j.titleEn, org: j.employerName, date, days });
+  }
+  return out.sort((a, b) => a.days - b.days || a.kind.localeCompare(b.kind));
+}
+
+/** "New" means this site first picked the vacancy up within the last week. It
+ *  says nothing about when the Gazette printed it — that's `publishedDate`. */
+export const NEW_WINDOW_DAYS = 7;
+
+export function isNew(v: GovVacancy): boolean {
+  if (!v.firstSeenAt) return false;
+  const seen = new Date(v.firstSeenAt).getTime();
+  return !Number.isNaN(seen) && Date.now() - seen <= NEW_WINDOW_DAYS * 86_400_000;
+}
+
+/** The most recent Gazette issue we hold vacancies from, if any. Null until the
+ *  pipeline has ingested a real Part I : Section (IIA) issue — callers must fall
+ *  back to "latest update" wording rather than invent an edition. */
+export function getLatestGazetteIssue(): { number: string | null; date: string; vacancies: GovVacancy[] } | null {
+  const fromGazette = (getGovVacancies() ?? []).filter((v) => v.sourceKind === "gazette" && v.publishedDate);
+  if (!fromGazette.length) return null;
+  const latest = fromGazette.map((v) => v.publishedDate!).sort().at(-1)!;
+  const inIssue = fromGazette.filter((v) => v.publishedDate === latest);
+  return { number: inIssue.find((v) => v.gazetteNumber)?.gazetteNumber ?? null, date: latest, vacancies: inIssue };
+}
+
+/* ---------- Listing filters ------------------------------------------------ */
+
+export { JOB_TYPE_LABEL, QUALIFICATION_LABEL, SOURCE_LABEL } from "./labels";
+
+/** Organisation type, grouped by keywords in the institution's name. The UI
+ *  labels it as grouped by name, since no official register backs it. */
+export function orgTypeOf(inst?: string | null): string {
+  const n = (inst ?? "").toLowerCase();
+  if (!n) return "Other institutions";
+  if (n.includes("ministry")) return "Ministries";
+  if (n.includes("university")) return "Universities";
+  if (n.includes("provincial council") || n.includes("provincial")) return "Provincial councils";
+  if (n.includes("department") || n.includes("secretariat")) return "Departments";
+  if (/(board|corporation|authority|commission|bank|limited|ltd|company)/.test(n)) return "State institutions";
+  return "Other institutions";
+}
+
+/** Every job-type tag that applies: the employment term plus how selection works. */
+export function jobTypesOf(v: GovVacancy): string[] {
+  const out: string[] = [];
+  if (v.employmentTerm) out.push(v.employmentTerm);
+  if (v.examType === "open") out.push("open-exam");
+  if (v.examType === "limited") out.push("limited-exam");
+  if (v.examType === "none") out.push("interview-only");
+  return out;
+}
+
+/** Like facetCounts, for fields that hold several values per item. */
+export function facetCountsMulti<T>(items: T[], pick: (item: T) => string[]): { value: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const item of items) for (const v of new Set(pick(item))) if (v.trim()) counts.set(v, (counts.get(v) ?? 0) + 1);
+  return [...counts.entries()].map(([value, count]) => ({ value, count })).sort((a, b) => a.value.localeCompare(b.value));
+}
+
+export interface GovFilters {
+  search?: string;
+  category?: string;
+  institution?: string;
+  org?: string;
+  qualification?: string;
+  location?: string;
+  term?: string;
+  source?: string;
+  closing?: string;
+  published?: string;
+}
+
+export const GOV_FILTER_KEYS: (keyof GovFilters)[] = [
+  "search", "category", "institution", "org", "qualification", "location", "term", "source", "closing", "published",
+];
+
+function searchHaystack(v: GovVacancy): string {
+  return [
+    v.titleEn, v.instEn, v.category, v.tag, v.qualEn, v.descEn, v.citation, v.selectionMethod,
+    v.gazetteNumber && `gazette ${v.gazetteNumber} ${v.gazetteNumber.replace(/,/g, "")}`,
+    v.qualificationLevel && QUALIFICATION_LABEL[v.qualificationLevel],
+    ...(v.locations ?? []),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+/** One place that applies every listing filter, so the empty state can ask
+ *  "what if this one filter were removed?" using exactly the same rules. */
+export function applyGovFilters(all: GovVacancy[], f: GovFilters): GovVacancy[] {
+  const within = (value: string | null | undefined, limit: string | undefined, past: boolean) => {
+    const d = daysUntil(value);
+    if (d === null) return false;
+    return past ? d <= 0 && d >= -Number(limit) : d >= 0 && d <= Number(limit);
+  };
+  return all.filter((v) => {
+    if (f.search) {
+      const hay = searchHaystack(v);
+      if (!f.search.toLowerCase().split(/\s+/).filter(Boolean).every((t) => hay.includes(t))) return false;
+    }
+    if (f.category && !matchesAnyParam(v.category, f.category)) return false;
+    if (f.institution && v.instEn !== f.institution) return false;
+    if (f.org && !matchesAnyParam(orgTypeOf(v.instEn), f.org)) return false;
+    if (f.qualification && !matchesAnyParam(v.qualificationLevel, f.qualification)) return false;
+    if (f.location && !(v.locations ?? []).some((l) => matchesAnyParam(l, f.location))) return false;
+    if (f.term && !jobTypesOf(v).some((t) => matchesAnyParam(t, f.term))) return false;
+    if (f.source && !matchesAnyParam(v.sourceKind, f.source)) return false;
+    if (f.closing && !within(v.dateEn ?? v.dateSi, f.closing, false)) return false;
+    if (f.published && !within(v.publishedDate, f.published, true)) return false;
+    return true;
+  });
 }

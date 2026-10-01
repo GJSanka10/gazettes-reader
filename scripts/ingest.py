@@ -90,6 +90,15 @@ qualEn         - qualifications required, English, as close to verbatim as reaso
 citation       - the gazette number OR circular number this notice cites, or null if neither is stated
 citationType   - "gazette" if it cites a gazette number, "circular" if it cites a circular/other reference, or null
 closingDateISO - closing date in YYYY-MM-DD format, or null if not stated
+publishedDateISO - the date the notice itself says it was published or advertised (e.g. "Advertised on 13/09/2026"), in YYYY-MM-DD format, or null. Not a circular's issue date.
+gazetteNumber  - the Gazette issue number if the text says this notice appeared in the Gazette (e.g. "2,506"), or null
+qualificationLevel - highest qualification the post requires, one of: "ol", "al", "nvq", "diploma", "degree", "masters", "professional"; or null if not stated
+locations      - list of places of work as printed (e.g. ["Colombo"], ["Island-wide"]), or []
+employmentTerm - "permanent", "contract" or "temporary" if stated, else null
+examType       - "open" for an open competitive examination, "limited" for a limited competitive examination, "none" if selection is by interview only, else null
+selectionMethod - how candidates are selected, as stated (e.g. "Written test and interview"), or null
+howToApply     - list of short, plain-English steps taken only from the notice's own instructions (format, where to send, by when, how to mark the envelope), or []
+requiredDocuments - list of documents the notice says to enclose, or []
 category       - pick exactly one from this list, whichever fits best: {categories}
 confidence     - your own confidence 0.0-1.0 that this extraction is accurate and complete
 
@@ -113,7 +122,15 @@ gazette/closing-date fields for each.
 Return ONLY a JSON array (no markdown fences, no commentary). Each element is an object \
 with these exact keys: titleEn, instEn, descEn, age, quota, salary, qualEn, citation, \
 citationType ("gazette" if a gazette number is cited, else "circular", else null), \
-closingDateISO (YYYY-MM-DD or null), category (one of: {categories}), confidence (0.0-1.0).
+closingDateISO (YYYY-MM-DD or null), category (one of: {categories}), confidence (0.0-1.0), qualificationLevel, locations, employmentTerm, examType, selectionMethod, howToApply, requiredDocuments — defined as follows:
+qualificationLevel - highest qualification the post requires, one of: "ol", "al", "nvq", "diploma", "degree", "masters", "professional"; or null if not stated
+locations      - list of places of work as printed (e.g. ["Colombo"], ["Island-wide"]), or []
+employmentTerm - "permanent", "contract" or "temporary" if stated, else null
+examType       - "open" for an open competitive examination, "limited" for a limited competitive examination, "none" if selection is by interview only, else null
+selectionMethod - how candidates are selected, as stated (e.g. "Written test and interview"), or null
+howToApply     - list of short, plain-English steps taken only from the notice's own instructions (format, where to send, by when, how to mark the envelope), or []
+requiredDocuments - list of documents the notice says to enclose, or []
+
 
 If a field isn't in the text, use null — never guess. If this chunk contains no actual \
 vacancy/post notices (e.g. it's front matter, rules-and-instructions boilerplate, or an \
@@ -133,6 +150,60 @@ def is_valid_title(title):
     if not title or not str(title).strip():
         return False
     return str(title).strip().lower() not in ("none", "null", "n/a")
+
+
+# The masthead printed on every Gazette issue: "No. 2,506 – FRIDAY, SEPTEMBER 19, 2026".
+GAZETTE_NUMBER_REGEX = re.compile(
+    r"No\.\s*([\d,]{3,7})\s*[-–—]\s*(?:MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY)",
+    re.IGNORECASE,
+)
+
+
+def gazette_number_from_text(text):
+    """The issue number from the Gazette's own masthead, or None if it isn't printed."""
+    m = GAZETTE_NUMBER_REGEX.search(text or "")
+    return m.group(1) if m else None
+
+
+def next_serial(data, added, prefix):
+    """Next free serial for a prefix. Computed from the highest existing number, not the
+    list length: the list can shrink (entries removed or moved to fixtures), and a
+    length-based serial would then reissue numbers already in use — and serials feed
+    the vacancy's URL slug."""
+    highest = 0
+    for v in data["vacancies"] + added:
+        m = re.fullmatch(rf"{re.escape(prefix)}-(\d+)", str(v.get("serial", "")))
+        if m:
+            highest = max(highest, int(m.group(1)))
+    return f"{prefix}-{highest + 1}"
+
+
+QUALIFICATION_LEVELS = {"ol", "al", "nvq", "diploma", "degree", "masters", "professional"}
+
+
+def detail_fields(structured):
+    """The eligibility and how-to-apply fields, normalised. Anything outside the
+    allowed values becomes null rather than being guessed into a bucket."""
+    def as_list(v):
+        return [str(x).strip() for x in v if str(x).strip()] if isinstance(v, list) else []
+
+    def one_of(v, allowed):
+        v = str(v).strip().lower() if v else None
+        return v if v in allowed else None
+
+    return {
+        "qualificationLevel": one_of(structured.get("qualificationLevel"), QUALIFICATION_LEVELS),
+        "locations": as_list(structured.get("locations")),
+        "employmentTerm": one_of(structured.get("employmentTerm"), {"permanent", "contract", "temporary"}),
+        "examType": one_of(structured.get("examType"), {"open", "limited", "none"}),
+        "selectionMethod": structured.get("selectionMethod") or None,
+        "howToApply": as_list(structured.get("howToApply")),
+        "requiredDocuments": as_list(structured.get("requiredDocuments")),
+    }
+
+
+def now_iso():
+    return datetime.now(timezone.utc).isoformat()
 
 
 def most_recent_friday():
@@ -209,6 +280,9 @@ def ingest_from_documents_gov_lk(data, pages_per_chunk=4, max_chunks=8):
         print("  ! looks scanned or empty — skipping (see job.md §7.1 step 2 for the OCR fallback this needs).")
         return []
 
+    gazette_number = gazette_number_from_text(text[:4000])
+    print(f"  Gazette No. {gazette_number or '(not found on masthead)'}, published {date_str}")
+
     # Rough page splitting: pdfplumber gave us one blob, so split back into pages via
     # the page-number headers this Gazette prints, and batch a handful per LLM call.
     added = []
@@ -227,7 +301,7 @@ def ingest_from_documents_gov_lk(data, pages_per_chunk=4, max_chunks=8):
                 continue
             status, days = compute_status(structured.get("closingDateISO"))
             entry = {
-                "serial": f"GOVLK-{len(data['vacancies']) + len(added) + 1}",
+                "serial": next_serial(data, added, "GOVLK"),
                 "real": True,
                 "titleEn": structured.get("titleEn"),
                 "instEn": structured.get("instEn"),
@@ -239,6 +313,10 @@ def ingest_from_documents_gov_lk(data, pages_per_chunk=4, max_chunks=8):
                 "category": structured.get("category") if structured.get("category") in CATEGORIES else "Administrative & Management",
                 "citation": structured.get("citation") or f"Gazette {date_str}",
                 "citationType": structured.get("citationType") or "gazette",
+                "sourceKind": "gazette",
+                "gazetteNumber": gazette_number,
+                "publishedDate": date_str,
+                "firstSeenAt": now_iso(),
                 "sourceUrl": f"https://documents.gov.lk/web/Gazette?date={date_str}",
                 "pdfUrl": urls["english"],
                 "descEn": structured.get("descEn"),
@@ -247,6 +325,7 @@ def ingest_from_documents_gov_lk(data, pages_per_chunk=4, max_chunks=8):
                 "salary": structured.get("salary"),
                 "qualEn": structured.get("qualEn"),
                 "confidence": structured.get("confidence"),
+                **detail_fields(structured),
                 "verifiedAt": None,
                 "_needsReview": True,
                 "_sourceKey": source_key,
@@ -453,7 +532,7 @@ def main():
         status, days = compute_status(structured.get("closingDateISO"))
 
         entry = {
-            "serial": f"ING-{len(data['vacancies']) + len(added) + 1}",
+            "serial": next_serial(data, added, "ING"),
             "titleEn": structured.get("titleEn"),
             "instEn": structured.get("instEn"),
             "dateEn": structured.get("closingDateISO"),
@@ -464,6 +543,12 @@ def main():
             "category": structured.get("category") if structured.get("category") in CATEGORIES else "Administrative & Management",
             "citation": structured.get("citation"),
             "citationType": structured.get("citationType"),
+            # gazette.lk mostly reposts institutions' own adverts. Only call it a Gazette
+            # notice when the notice itself cites a Gazette issue.
+            "sourceKind": "gazette" if structured.get("gazetteNumber") else "institution-notice",
+            "gazetteNumber": structured.get("gazetteNumber"),
+            "publishedDate": structured.get("publishedDateISO"),
+            "firstSeenAt": now_iso(),
             "sourceUrl": post_url,
             "pdfUrl": pdf_url,
             "sourceLabel": source_label,
@@ -473,6 +558,7 @@ def main():
             "salary": structured.get("salary"),
             "qualEn": structured.get("qualEn"),
             "confidence": structured.get("confidence"),
+            **detail_fields(structured),
             "verifiedAt": None,
             "_needsReview": True,
         }

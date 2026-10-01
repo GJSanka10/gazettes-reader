@@ -1,5 +1,7 @@
 export type JobStatus = "urgent" | "soon" | "open" | "closed";
 
+export type QualificationLevel = "ol" | "al" | "nvq" | "diploma" | "degree" | "masters" | "professional";
+
 /** Government Gazette vacancy — schema written by scripts/ingest.py. */
 export interface GovVacancy {
   serial: string;
@@ -19,6 +21,27 @@ export interface GovVacancy {
   tag?: string;
   citation?: string;
   citationType?: "gazette" | "circular" | null;
+  /** Where the vacancy was actually published. Most gazette.lk items are an
+   *  institution's own advert, not a Gazette notice — the UI must say which. */
+  sourceKind?: "gazette" | "institution-notice";
+  /** Gazette issue number, e.g. "2,506". Null unless the notice was in the Gazette. */
+  gazetteNumber?: string | null;
+  /** YYYY-MM-DD the notice was published/advertised, only when actually printed. */
+  publishedDate?: string | null;
+  /** When this site first picked the vacancy up. Drives "New". */
+  firstSeenAt?: string | null;
+  /** Highest qualification the post requires, as the notice states it. */
+  qualificationLevel?: QualificationLevel | null;
+  /** Places of work as printed, e.g. ["Colombo"] or ["Island-wide"]. */
+  locations?: string[];
+  employmentTerm?: "permanent" | "contract" | "temporary" | null;
+  /** Open/limited competitive exam, or "none" when selection is by interview. */
+  examType?: "open" | "limited" | "none" | null;
+  /** How candidates are selected, as stated: "Written test and interview". */
+  selectionMethod?: string | null;
+  /** Steps taken only from the notice's own instructions. */
+  howToApply?: string[];
+  requiredDocuments?: string[];
   sourceUrl?: string;
   pdfUrl?: string;
   descEn?: string;
@@ -71,4 +94,9 @@ export interface SearchParamsShape {
   closing?: string;
   sort?: string;
   page?: string;
+  view?: string;
+  qualification?: string;
+  org?: string;
+  term?: string;
+  source?: string;
 }

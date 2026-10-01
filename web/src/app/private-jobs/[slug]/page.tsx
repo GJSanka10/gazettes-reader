@@ -1,9 +1,13 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Breadcrumb } from "@/components/Chrome";
-import { JobStatusLabel } from "@/components/JobStatus";
+import { buttonClass } from "@/components/Chrome";
+import { DetailHeader, DetailSection } from "@/components/Detail";
 import { Icon } from "@/components/Icon";
+import { Reminder } from "@/components/Reminder";
+import { SaveButton, ShareButtons } from "@/components/SaveButton";
 import { getPrivateJobBySlug, getPrivateJobs } from "@/lib/jobs";
+
+// "N days left" is date-relative, so rebuild the page at least hourly.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return (getPrivateJobs() ?? []).map((j) => ({ slug: j.slug }));
@@ -16,15 +20,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: `${j.titleEn} — ${j.employerName}`, description: j.descEn?.slice(0, 160) };
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="mt-8">
-      <h2 className="font-display text-[20px] font-semibold text-ink">{title}</h2>
-      <div className="mt-2 whitespace-pre-line text-[16px] leading-relaxed text-ink-soft">
-        {children}
-      </div>
-    </section>
-  );
+function formatDate(value?: string | null) {
+  if (!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime())
+    ? value
+    : d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
 export default async function PrivateJobDetail({ params }: { params: Promise<{ slug: string }> }) {
@@ -32,106 +33,95 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
   const j = getPrivateJobBySlug(slug);
   if (!j) notFound();
 
+  const applyHref = j.applyUrl && j.applyUrl !== "#" ? j.applyUrl : j.sourceUrl;
+  const sector = j.sector ? (j.sector === "other" ? "Other sectors" : j.sector.charAt(0).toUpperCase() + j.sector.slice(1)) : null;
+
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-8 md:px-8">
-      <Breadcrumb
-        trail={[
-          { label: "Home", href: "/" },
-          { label: "Private Sector Jobs", href: "/private-jobs" },
-          { label: j.titleEn },
+    <div>
+      <DetailHeader
+        kind="pvt"
+        backHref="/private-jobs"
+        backLabel="All private jobs"
+        kicker={j.employmentType}
+        title={j.titleEn}
+        org={j.employerName}
+        closingDate={j.closingDate}
+        facts={[
+          { label: "Location", value: j.location?.replace(", Sri Lanka", "") },
+          { label: "Employment type", value: j.employmentType },
+          { label: "Salary", value: j.salary },
+          { label: "Posted", value: formatDate(j.datePosted) },
+          { label: "Sector", value: sector },
         ]}
+        actions={
+          <>
+            {applyHref && (
+              <a href={applyHref} target="_blank" rel="noopener noreferrer" className={`${buttonClass.mark} w-full sm:w-auto`}>
+                <Icon name="open_in_new" className="text-[19px]" />
+                Apply on the employer&rsquo;s site
+              </a>
+            )}
+            <SaveButton job={{ slug: j.slug, kind: "pvt", title: j.titleEn, org: j.employerName, closingDate: j.closingDate ?? null }} />
+            <ShareButtons title={j.titleEn} org={j.employerName} path={`/private-jobs/${j.slug}`} />
+          </>
+        }
       />
 
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <article>
-          <div className="mb-3">
-            <JobStatusLabel status={j.status} closingDate={j.closingDate} />
-          </div>
+      <div className="mx-auto max-w-[1240px] px-4 md:px-8">
+        <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
+          <article className="space-y-8">
+            {j.qualEn && (
+              <DetailSection title="What they're looking for">
+                <div className="whitespace-pre-line">{j.qualEn}</div>
+              </DetailSection>
+            )}
 
-          <h1 className="font-display text-[28px] font-semibold leading-[34px] tracking-tight text-ink md:text-[36px] md:leading-[42px]">
-            {j.titleEn}
-          </h1>
-          <p className="font-ui mt-2 text-[15px] text-ink-soft">{j.employerName}</p>
+            {j.descEn && (
+              <DetailSection title="About the role">
+                <div className="whitespace-pre-line">{j.descEn}</div>
+              </DetailSection>
+            )}
 
-          {j.descEn && <Section title="About this role">{j.descEn}</Section>}
+            {!j.qualEn && !j.descEn && (
+              <p className="text-[16px] text-ink-2">The posting&rsquo;s full description is on the employer&rsquo;s site.</p>
+            )}
+          </article>
 
-          <Section title="Key details">
-            <div className="table-scroll">
-              <table className="fact-table">
-                <tbody>
-                  <tr>
-                    <th scope="row">Location</th>
-                    <td>{j.location ?? "Not specified"}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Employment type</th>
-                    <td>{j.employmentType ?? "Not specified"}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Sector</th>
-                    <td>{j.sector ?? "Not specified"}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Salary</th>
-                    {/* Spec §68: never invent a value that wasn't published. */}
-                    <td>{j.salary ?? "Not specified"}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Posted</th>
-                    <td>{j.datePosted ?? "Not specified"}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Closing date</th>
-                    <td>{j.closingDate ?? "Not specified"}</td>
-                  </tr>
-                </tbody>
-              </table>
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <div className="rounded-2xl bg-ink p-5 text-paper">
+              <h2 className="title text-[19px]">Apply with {j.employerName.split(" (")[0]}</h2>
+              <p className="mt-1.5 text-[14.5px] leading-relaxed text-paper/80">
+                The employer handles applications on their own careers site. We don&rsquo;t collect anything from you.
+              </p>
+              <div className="mt-4 space-y-2">
+                {j.applyUrl && j.applyUrl !== "#" && (
+                  <a
+                    href={j.applyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-mark px-5 text-[15px] font-bold text-on-mark hover:brightness-95"
+                  >
+                    <Icon name="open_in_new" className="text-[19px]" />
+                    Apply on the employer&rsquo;s site
+                  </a>
+                )}
+                {j.sourceUrl && j.sourceUrl !== j.applyUrl && (
+                  <a
+                    href={j.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-paper/30 px-5 text-[15px] font-semibold text-paper hover:bg-paper/10"
+                  >
+                    <Icon name="link" className="text-[19px]" />
+                    See the original posting
+                  </a>
+                )}
+                <p className="pt-0.5 text-center text-[13px] text-paper/60">Opens on an external site</p>
+              </div>
             </div>
-          </Section>
-
-          {j.qualEn && <Section title="Requirements">{j.qualEn}</Section>}
-        </article>
-
-        <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
-          <div className="border border-rule-strong bg-surface-sunken p-5">
-            <h2 className="font-ui text-[13px] font-bold uppercase tracking-wide text-ink">Apply</h2>
-            <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">
-              Applications are handled by the employer, not by this site.
-            </p>
-            <div className="font-ui mt-4 space-y-2">
-              {j.applyUrl && j.applyUrl !== "#" && (
-                <a
-                  href={j.applyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 bg-ink px-4 text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#7d3049]"
-                >
-                  <Icon name="open_in_new" className="text-[15px]" />
-                  Apply on employer site
-                </a>
-              )}
-              {j.sourceUrl && (
-                <a
-                  href={j.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 border border-ink px-4 text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-raised"
-                >
-                  <Icon name="open_in_new" className="text-[15px]" />
-                  View original posting
-                </a>
-              )}
-            </div>
-            <p className="font-ui mt-3 text-[12px] text-ink-faint">Opens in a new tab on an external site.</p>
-          </div>
-
-          <Link
-            href="/private-jobs"
-            className="font-ui inline-flex min-h-[44px] w-full cursor-pointer items-center justify-center border border-ink px-4 text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-sunken"
-          >
-            Back to all private jobs
-          </Link>
-        </aside>
+            <Reminder slug={j.slug} title={j.titleEn} org={j.employerName} closingDate={j.closingDate} path={`/private-jobs/${j.slug}`} />
+          </aside>
+        </div>
       </div>
     </div>
   );

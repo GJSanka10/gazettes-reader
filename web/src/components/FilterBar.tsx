@@ -1,13 +1,24 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, m } from "motion/react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
+import { EASE_IN, EASE_OUT } from "./MotionProvider";
+
+const noop = () => () => {};
+/** True only on the client, after hydration: portals need `document`. */
+function useMounted() {
+  return useSyncExternalStore(noop, () => true, () => false);
+}
 
 export interface FacetOption {
   value: string;
-  /** Real count within the current unfiltered set — never invented. */
+  /** Real count within the unfiltered set — never invented. */
   count: number;
+  /** Display label when the URL value isn't human-readable (e.g. "7"). */
+  label?: string;
 }
 
 export interface FacetConfig {
@@ -15,11 +26,7 @@ export interface FacetConfig {
   key: string;
   label: string;
   options: FacetOption[];
-  /** True OR-filtering across a comma-joined URL value, rendered as real
-   *  checkboxes — only meaningful for small option sets (see PILL_THRESHOLD).
-   *  A facet above the threshold always renders as a single-select <select>
-   *  regardless of this flag: a native multi-select control isn't worth the
-   *  UX cost for something like "Institution". */
+  /** OR-filtering across a comma-joined URL value. */
   multi?: boolean;
 }
 
@@ -28,11 +35,8 @@ export interface SortOption {
   label: string;
 }
 
-/** Facets with few options render as a ledger of checkboxes/pills with real
- *  counts; facets with many render as a bordered <select> instead — the same
- *  split the reference design uses between its checklists and its "Ministry"
- *  dropdown. */
-const PILL_THRESHOLD = 6;
+/** Above this many options a facet becomes a select instead of chips. */
+const CHIP_LIMIT = 8;
 
 function usePush() {
   const router = useRouter();
@@ -51,46 +55,61 @@ function usePush() {
   return { params, pathname, router, push };
 }
 
-interface FilterBarProps {
-  placeholder: string;
-  facets: FacetConfig[];
+export interface SearchSuggestion {
+  label: string;
+  /** What kind of thing it is: "Job title", "Institution", "Field", "Gazette". */
+  kind: string;
 }
 
-export function FilterBar({ placeholder, facets }: FilterBarProps) {
+const MAX_SUGGESTIONS = 6;
+
+function labelFor(facet: FacetConfig, value: string) {
+  return facet.options.find((o) => o.value === value)?.label ?? value;
+}
+
+export function ListToolbar({
+  placeholder,
+  facets,
+  sorts,
+  resultCount,
+  quickKey,
+  views,
+  suggestions = [],
+}: {
+  placeholder: string;
+  facets: FacetConfig[];
+  sorts: SortOption[];
+  resultCount: number;
+  /** A single-select facet promoted to an inline segmented control. */
+  quickKey?: string;
+  /** Optional layout switch, stored in `?view=`. The first option is the default. */
+  views?: { value: string; label: string; icon: string }[];
+  /** Search suggestions built on the server from the listings themselves. */
+  suggestions?: SearchSuggestion[];
+}) {
   const { params, push, router, pathname } = usePush();
-
   const [draft, setDraft] = useState(params.get("search") ?? "");
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const firstRender = useRef(true);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const filtersButton = useRef<HTMLButtonElement>(null);
+  const mounted = useMounted();
+  const lastPushed = useRef(params.get("search") ?? "");
 
+  // Debounced search: one navigation per pause, not per keystroke.
   useEffect(() => {
-    setDraft(params.get("search") ?? "");
-  }, [params]);
-
-  // Spec §32: debounce rather than firing per keystroke.
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    const current = params.get("search") ?? "";
-    if (draft === current) return;
-
+    const trimmed = draft.trim();
+    if (trimmed === lastPushed.current) return;
     const t = setTimeout(() => {
+      lastPushed.current = trimmed;
       push((next) => {
-        if (draft.trim()) next.set("search", draft.trim());
+        if (trimmed) next.set("search", trimmed);
         else next.delete("search");
       });
     }, 350);
     return () => clearTimeout(t);
-  }, [draft, params, push]);
+  }, [draft, push]);
 
-  const activeCount = useMemo(() => {
-    let n = 0;
-    for (const facet of facets) if (params.get(facet.key)) n++;
-    if (params.get("search")) n++;
-    return n;
-  }, [facets, params]);
+  const quick = facets.find((f) => f.key === quickKey);
+  const sheetFacets = facets.filter((f) => f.key !== quickKey && f.options.length > 0);
 
   const setFacet = (key: string, value: string) =>
     push((next) => {
@@ -98,327 +117,467 @@ export function FilterBar({ placeholder, facets }: FilterBarProps) {
       else next.delete(key);
     });
 
-  const toggleMultiFacet = (key: string, value: string) =>
+  const toggleMulti = (key: string, value: string) =>
     push((next) => {
       const current = (next.get(key) ?? "").split(",").filter(Boolean);
-      const isActive = current.includes(value);
-      const nextValues = isActive ? current.filter((v) => v !== value) : [...current, value];
+      const nextValues = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
       if (nextValues.length) next.set(key, nextValues.join(","));
       else next.delete(key);
     });
 
-  const clearAll = () => router.push(pathname, { scroll: false });
-
-  const searchField = (idPrefix: string) => (
-    <div>
-      <label htmlFor={`${idPrefix}-job-search`} className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">
-        Search register
-      </label>
-      <div className="relative">
-        <Icon
-          name="search"
-          className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[18px] text-ink-faint"
-        />
-        <input
-          id={`${idPrefix}-job-search`}
-          type="search"
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          placeholder={placeholder}
-          className="min-h-[44px] w-full border border-ink bg-surface pl-9 pr-9 text-[14px] text-ink placeholder:text-ink-faint focus:border-2"
-        />
-        {draft && (
-          <button
-            type="button"
-            onClick={() => setDraft("")}
-            aria-label="Clear search"
-            className="absolute right-0 top-0 flex h-[44px] w-9 cursor-pointer items-center justify-center text-ink-soft hover:text-ink"
-          >
-            <Icon name="close" className="text-[16px]" />
-          </button>
-        )}
-      </div>
-    </div>
-  );
-
-  const facetField = (facet: FacetConfig) => {
-    if (facet.options.length === 0) return null;
-
-    if (facet.options.length <= PILL_THRESHOLD && facet.multi) {
-      const selected = (params.get(facet.key) ?? "").split(",").filter(Boolean);
-      return (
-        <div key={facet.key} className="border-t border-rule pt-2.5">
-          <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-ink">
-            {facet.label}
-          </span>
-          <div className="flex flex-col gap-1">
-            {facet.options.map((opt) => {
-              const checked = selected.includes(opt.value);
-              return (
-                <label
-                  key={opt.value}
-                  className="flex min-h-[36px] cursor-pointer items-center gap-2 px-1 text-[13px] text-ink hover:bg-surface-sunken"
-                >
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => toggleMultiFacet(facet.key, opt.value)}
-                    className="h-4 w-4 shrink-0 accent-ink"
-                  />
-                  <span className="min-w-0 flex-1 truncate">{opt.value}</span>
-                  <span className="font-mono text-[11px] text-ink-faint">{opt.count}</span>
-                </label>
-              );
-            })}
-          </div>
-        </div>
-      );
-    }
-
-    if (facet.options.length <= PILL_THRESHOLD) {
-      const current = params.get(facet.key) ?? "";
-      return (
-        <div key={facet.key} className="border-t border-rule pt-2.5">
-          <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-ink">
-            {facet.label}
-          </span>
-          <div className="flex flex-col gap-1">
-            {facet.options.map((opt) => {
-              const active = current === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => setFacet(facet.key, active ? "" : opt.value)}
-                  className={`flex min-h-[36px] cursor-pointer items-center justify-between gap-2 border px-2 text-left text-[13px] transition-colors ${
-                    active
-                      ? "border-ink bg-ink text-surface-raised"
-                      : "border-transparent text-ink hover:border-rule-strong"
-                  }`}
-                >
-                  <span className="truncate">{opt.value}</span>
-                  <span className={`font-mono text-[11px] ${active ? "text-surface-raised/80" : "text-ink-faint"}`}>
-                    {opt.count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      );
-    }
-
-    const current = params.get(facet.key) ?? "";
-    return (
-      <label key={facet.key} className="block border-t border-rule pt-2.5">
-        <span className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">
-          {facet.label}
-        </span>
-        <select
-          className="min-h-[44px] w-full cursor-pointer border border-ink bg-surface px-2.5 text-[13px] text-ink focus:border-2"
-          value={current}
-          onChange={(e) => setFacet(facet.key, e.target.value)}
-        >
-          <option value="">All ({facet.options.reduce((n, o) => n + o.count, 0)})</option>
-          {facet.options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.value} ({opt.count})
-            </option>
-          ))}
-        </select>
-      </label>
-    );
-  };
-
-  const panelBody = (idPrefix: string) => (
-    <div className="space-y-3">
-      {searchField(idPrefix)}
-      {facets.map(facetField)}
-    </div>
-  );
-
-  return (
-    <>
-      {/* Mobile: a compact trigger bar above the results, not a sidebar. */}
-      <div className="font-ui col-span-12 lg:hidden">
-        <button
-          type="button"
-          onClick={() => setDrawerOpen(true)}
-          aria-expanded={drawerOpen}
-          className="inline-flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-1.5 border border-ink px-3 text-[13px] font-bold uppercase tracking-wide text-ink"
-        >
-          <Icon name="tune" className="text-[18px]" />
-          Filter register{activeCount ? ` (${activeCount})` : ""}
-        </button>
-      </div>
-
-      {/* Desktop sidebar ledger. */}
-      <aside className="font-ui col-span-12 hidden lg:col-span-4 lg:block xl:col-span-3">
-        <div className="border border-rule-strong bg-surface-raised lg:sticky lg:top-20">
-          <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-3 py-2">
-            <span className="inline-flex items-center gap-1.5 text-[13px] font-bold uppercase tracking-wide text-ink">
-              <Icon name="tune" className="text-[16px] text-ink-faint" />
-              Filter register
-            </span>
-            {activeCount > 0 && (
-              <button
-                type="button"
-                onClick={clearAll}
-                className="cursor-pointer text-[11px] font-bold uppercase tracking-wide text-accent hover:underline"
-              >
-                Reset
-              </button>
-            )}
-          </div>
-          <div className="p-3">{panelBody("desktop")}</div>
-        </div>
-      </aside>
-
-      {/* Mobile drawer (spec §36, §54) */}
-      {drawerOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-ink/50"
-            onClick={() => setDrawerOpen(false)}
-            aria-hidden="true"
-          />
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Filters"
-            className="font-ui absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto border-t-2 border-ink bg-surface-raised p-5"
-          >
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-[14px] font-bold uppercase tracking-wide text-ink">Filter register</h2>
-              <button
-                type="button"
-                onClick={() => setDrawerOpen(false)}
-                aria-label="Close filters"
-                className="flex h-11 w-11 cursor-pointer items-center justify-center border border-ink text-ink"
-              >
-                <Icon name="close" className="text-[20px]" />
-              </button>
-            </div>
-            {panelBody("mobile")}
-            <div className="mt-6 flex gap-3 border-t border-rule pt-4">
-              <button
-                type="button"
-                onClick={() => {
-                  clearAll();
-                  setDrawerOpen(false);
-                }}
-                className="min-h-[44px] flex-1 cursor-pointer border border-ink text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-sunken"
-              >
-                Clear
-              </button>
-              <button
-                type="button"
-                onClick={() => setDrawerOpen(false)}
-                className="min-h-[44px] flex-1 cursor-pointer bg-ink text-[13px] font-semibold uppercase tracking-wide text-surface-raised hover:bg-[#7d3049]"
-              >
-                Apply filters
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
-/** The "Feed Controls & Active Meta Ribbon" bar: active-filter chips, a live
- *  result count, and sort — sitting above the card list rather than buried
- *  in the sidebar, matching the reference layout. */
-export function FeedControls({
-  facets,
-  sorts,
-  resultCount,
-}: {
-  facets: FacetConfig[];
-  sorts: SortOption[];
-  resultCount: number;
-}) {
-  const { params, push } = usePush();
-
-  const chips = useMemo(() => {
-    const list: { key: string; label: string; value: string; remove: () => void }[] = [];
+  const chips = (() => {
+    const list: { id: string; text: string; remove: () => void }[] = [];
     for (const facet of facets) {
       const raw = params.get(facet.key);
-      if (!raw) continue;
-      if (facet.multi) {
-        for (const value of raw.split(",").filter(Boolean)) {
-          list.push({
-            key: `${facet.key}:${value}`,
-            label: facet.label,
-            value,
-            remove: () =>
-              push((next) => {
-                const remaining = raw.split(",").filter((v) => v && v !== value);
-                if (remaining.length) next.set(facet.key, remaining.join(","));
-                else next.delete(facet.key);
-              }),
-          });
-        }
-      } else {
+      if (!raw || facet.key === quickKey) continue;
+      const values = facet.multi ? raw.split(",").filter(Boolean) : [raw];
+      for (const value of values) {
         list.push({
-          key: facet.key,
-          label: facet.label,
-          value: raw,
-          remove: () => push((next) => next.delete(facet.key)),
+          id: `${facet.key}:${value}`,
+          text: labelFor(facet, value),
+          remove: () =>
+            facet.multi
+              ? toggleMulti(facet.key, value)
+              : push((next) => next.delete(facet.key)),
         });
       }
     }
-    const search = params.get("search");
-    if (search) {
-      list.push({ key: "search", label: "Search", value: search, remove: () => push((next) => next.delete("search")) });
-    }
     return list;
-  }, [facets, params, push]);
+  })();
 
-  const setSort = (value: string) =>
-    push((next) => {
-      if (value) next.set("sort", value);
-      else next.delete("sort");
-    });
+  const sheetActive = chips.length;
+  const hasAny = sheetActive > 0 || Boolean(params.get("search")) || Boolean(quickKey && params.get(quickKey));
 
   return (
-    <div className="font-ui flex flex-wrap items-center gap-3 border border-rule-strong bg-surface-raised px-3 py-2">
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
-        {chips.length > 0 && (
-          <span className="text-[11px] font-bold uppercase tracking-wide text-ink-faint">Active:</span>
-        )}
-        {chips.map((chip) => (
-          <button
-            key={chip.key}
-            type="button"
-            onClick={chip.remove}
-            className="inline-flex min-h-[28px] cursor-pointer items-center gap-1.5 border border-rule-strong bg-surface px-2 text-[12px] text-ink hover:border-ink"
-            aria-label={`Remove filter ${chip.label}: ${chip.value}`}
-          >
-            {chip.value}
-            <Icon name="close" className="text-[13px] text-ink-soft" />
-          </button>
-        ))}
-        <p aria-live="polite" className="text-[13px] text-ink-soft">
-          <strong className="font-mono text-ink">{resultCount}</strong> {resultCount === 1 ? "result" : "results"}
-        </p>
+    <div className="z-30 border-b border-rule bg-surface md:sticky md:top-16">
+      <div className="mx-auto max-w-[1240px] px-4 py-3 md:px-8">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <SearchBox
+            draft={draft}
+            setDraft={setDraft}
+            placeholder={placeholder}
+            suggestions={suggestions}
+            onPick={(label) => {
+              setDraft(label);
+              lastPushed.current = label;
+              push((next) => next.set("search", label));
+            }}
+          />
+
+          {quick && quick.options.length > 0 && (
+            <div
+              role="group"
+              aria-label={quick.label}
+              className="no-scrollbar order-last flex w-full overflow-x-auto rounded-lg bg-paper p-1 lg:order-none lg:w-auto"
+            >
+              {[{ value: "", label: "Any date", count: undefined as number | undefined }, ...quick.options].map((opt) => {
+                const active = (params.get(quick.key) ?? "") === opt.value;
+                return (
+                  <button
+                    key={opt.value || "any"}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setFacet(quick.key, opt.value)}
+                    className={`h-10 shrink-0 cursor-pointer whitespace-nowrap rounded-md px-3.5 text-[14px] font-semibold transition-colors ${
+                      active ? "bg-mark text-on-mark" : "text-ink-2 hover:bg-sunk hover:text-ink"
+                    }`}
+                  >
+                    {opt.label ?? opt.value}
+                    {opt.count !== undefined && (
+                      <span className={`nums ml-1.5 font-medium ${active ? "text-on-mark/75" : "text-ink-3"}`}>{opt.count}</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {sheetFacets.length > 0 && (
+            <button
+              type="button"
+              ref={filtersButton}
+              onClick={() => setSheetOpen(true)}
+              aria-haspopup="dialog"
+              className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-lg border border-rule-2 bg-surface px-5 text-[15px] font-semibold text-ink hover:border-ink"
+            >
+              <Icon name="tune" className="text-[20px]" />
+              Filters
+              {sheetActive > 0 && (
+                <span className="nums inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-mark px-1.5 text-[12px] font-bold text-on-mark">
+                  {sheetActive}
+                </span>
+              )}
+            </button>
+          )}
+
+          <label className="relative inline-flex h-12 items-center">
+            <span className="sr-only">Sort by</span>
+            <Icon name="swap_vert" className="pointer-events-none absolute left-4 text-[20px] text-ink-3" />
+            <select
+              value={params.get("sort") ?? sorts[0]?.value ?? ""}
+              onChange={(e) => setFacet("sort", e.target.value === sorts[0]?.value ? "" : e.target.value)}
+              className="h-12 cursor-pointer appearance-none rounded-lg border border-rule-2 bg-surface pl-11 pr-10 text-[15px] font-semibold text-ink hover:border-ink"
+            >
+              {sorts.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+            <Icon name="expand_more" className="pointer-events-none absolute right-3.5 text-[20px] text-ink-3" />
+          </label>
+        </div>
+
+        <div className="mt-3 flex min-h-8 flex-wrap items-center gap-2">
+          <p aria-live="polite" className="text-[14px] text-ink-2">
+            <strong className="nums font-semibold text-ink">{resultCount}</strong>{" "}
+            {resultCount === 1 ? "listing" : "listings"}
+          </p>
+          {views && views.length > 1 && (
+            <div role="group" aria-label="Layout" className="order-last ml-auto flex rounded-lg bg-paper p-0.5">
+              {views.map((v, i) => {
+                const current = params.get("view") ?? views[0].value;
+                const active = current === v.value;
+                return (
+                  <button
+                    key={v.value}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setFacet("view", i === 0 ? "" : v.value)}
+                    className={`inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium transition-colors ${
+                      active ? "bg-ink text-paper" : "text-ink-2 hover:text-ink"
+                    }`}
+                  >
+                    <Icon name={v.icon} className="text-[17px]" />
+                    {v.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {chips.map((chip) => (
+            <button
+              key={chip.id}
+              type="button"
+              onClick={chip.remove}
+              aria-label={`Remove filter: ${chip.text}`}
+              className="inline-flex h-8 max-w-[260px] cursor-pointer items-center gap-1 rounded-full bg-mark-soft pl-3 pr-1.5 text-[13.5px] font-medium text-ink hover:bg-mark hover:text-on-mark"
+            >
+              <span className="truncate">{chip.text}</span>
+              <Icon name="close" className="text-[16px] text-ink-2" />
+            </button>
+          ))}
+          {hasAny && (
+            <button
+              type="button"
+              onClick={() => {
+                setDraft("");
+                lastPushed.current = "";
+                // Clearing filters shouldn't also throw away the chosen layout.
+                const view = params.get("view");
+                router.push(view ? `${pathname}?view=${view}` : pathname, { scroll: false });
+              }}
+              className="h-8 cursor-pointer rounded-md px-2 text-[13px] font-medium text-ink-2 underline underline-offset-4 hover:text-ink"
+            >
+              Clear all
+            </button>
+          )}
+        </div>
       </div>
 
-      <label className="flex shrink-0 items-center gap-2">
-        <span className="text-[11px] font-bold uppercase tracking-wide text-ink-faint">Sort</span>
-        <select
-          className="min-h-[36px] cursor-pointer border border-ink bg-surface px-2 text-[13px] text-ink"
-          value={params.get("sort") ?? sorts[0]?.value ?? ""}
-          onChange={(e) => setSort(e.target.value)}
-        >
-          {sorts.map((s) => (
-            <option key={s.value} value={s.value}>
-              {s.label}
-            </option>
-          ))}
-        </select>
+      {/* Portalled to <body>: the sticky toolbar is its own stacking context,
+          so a sheet rendered inside it would sit under the site header. */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {sheetOpen && (
+              <FilterSheet
+                key="filters"
+                facets={sheetFacets}
+                params={params}
+                resultCount={resultCount}
+                onToggle={toggleMulti}
+                onSet={setFacet}
+                onClose={() => {
+                  setSheetOpen(false);
+                  // Back to where the person was, not the top of the page.
+                  filtersButton.current?.focus();
+                }}
+              />
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
+    </div>
+  );
+}
+
+function FilterSheet({
+  facets,
+  params,
+  resultCount,
+  onToggle,
+  onSet,
+  onClose,
+}: {
+  facets: FacetConfig[];
+  params: URLSearchParams;
+  resultCount: number;
+  onToggle: (key: string, value: string) => void;
+  onSet: (key: string, value: string) => void;
+  onClose: () => void;
+}) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  // Held in a ref so a parent re-render (every filter click navigates) doesn't
+  // re-run the mount effect and yank focus back to the close button.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onCloseRef.current();
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
+  // A side panel on wide screens, a bottom sheet on phones: it moves in
+  // from the edge it's attached to, and leaves the same way, a bit faster.
+  const [wide] = useState(() => window.matchMedia("(min-width: 768px)").matches);
+  const offscreen = wide ? { x: 48, opacity: 0 } : { y: 64, opacity: 0 };
+
+  return (
+    <div className="fixed inset-0 z-50">
+      <m.div
+        className="absolute inset-0 bg-ink/45"
+        onClick={onClose}
+        aria-hidden="true"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { duration: 0.2, ease: EASE_OUT } }}
+        exit={{ opacity: 0, transition: { duration: 0.15, ease: EASE_IN } }}
+      />
+      <m.div
+        initial={offscreen}
+        animate={{ x: 0, y: 0, opacity: 1, transition: { type: "spring", stiffness: 420, damping: 38 } }}
+        exit={{ ...offscreen, transition: { duration: 0.16, ease: EASE_IN } }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="filter-title"
+        className="absolute inset-x-0 bottom-0 flex max-h-[85vh] flex-col rounded-t-2xl bg-surface shadow-lift md:inset-y-3 md:left-auto md:right-3 md:max-h-none md:w-[440px] md:rounded-2xl"
+      >
+        <div className="flex items-center justify-between px-6 pb-2 pt-5">
+          <h2 id="filter-title" className="headline text-[28px] text-ink">
+            Filters
+          </h2>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label="Close filters"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-md hover:bg-sunk"
+          >
+            <Icon name="close" className="text-[24px]" />
+          </button>
+        </div>
+
+        <div className="flex-1 space-y-7 overflow-y-auto px-6 py-4">
+          {facets.map((facet) => {
+            const selected = (params.get(facet.key) ?? "").split(",").filter(Boolean);
+
+            if (facet.options.length > CHIP_LIMIT) {
+              return (
+                <label key={facet.key} className="block">
+                  <span className="mb-2.5 block text-[15px] font-bold text-ink">{facet.label}</span>
+                  <select
+                    value={facet.multi ? "" : selected[0] ?? ""}
+                    onChange={(e) =>
+                      facet.multi ? e.target.value && onToggle(facet.key, e.target.value) : onSet(facet.key, e.target.value)
+                    }
+                    className="h-11 w-full cursor-pointer rounded-lg border border-rule-2 bg-surface px-4 text-[15px] text-ink hover:border-ink"
+                  >
+                    <option value="">{facet.multi ? "Add…" : "Any"}</option>
+                    {facet.options.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {(o.label ?? o.value) + ` (${o.count})`}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              );
+            }
+
+            return (
+              <fieldset key={facet.key}>
+                <legend className="mb-2.5 text-[15px] font-bold text-ink">{facet.label}</legend>
+                <div className="flex flex-wrap gap-2">
+                  {facet.options.map((o) => {
+                    const on = selected.includes(o.value);
+                    return (
+                      <button
+                        key={o.value}
+                        type="button"
+                        aria-pressed={on}
+                        onClick={() =>
+                          facet.multi ? onToggle(facet.key, o.value) : onSet(facet.key, on ? "" : o.value)
+                        }
+                        className={`inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border px-4 text-left text-[14px] font-medium transition-colors ${
+                          on
+                            ? "border-mark bg-mark text-on-mark"
+                            : "border-rule-2 bg-surface text-ink hover:border-ink"
+                        }`}
+                      >
+                        {on && <Icon name="check" className="text-[18px]" />}
+                        {o.label ?? o.value}
+                        <span className={`nums ${on ? "text-on-mark/75" : "text-ink-3"}`}>{o.count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            );
+          })}
+        </div>
+
+        <div className="border-t border-rule px-6 py-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-ink text-[15px] font-bold text-paper hover:opacity-90"
+          >
+            Show {resultCount} {resultCount === 1 ? "listing" : "listings"}
+          </button>
+        </div>
+      </m.div>
+    </div>
+  );
+}
+
+/**
+ * Search input with suggestions (a WAI-ARIA combobox). Suggestions come from
+ * the real listings (titles, institutions, fields, Gazette numbers), so every
+ * one of them leads to at least one result.
+ */
+function SearchBox({
+  draft,
+  setDraft,
+  placeholder,
+  suggestions,
+  onPick,
+}: {
+  draft: string;
+  setDraft: (v: string) => void;
+  placeholder: string;
+  suggestions: SearchSuggestion[];
+  onPick: (label: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(-1);
+
+  const q = draft.trim().toLowerCase();
+  const matches = q
+    ? suggestions
+        .filter((s) => s.label.toLowerCase().includes(q) && s.label.toLowerCase() !== q)
+        // Prefix matches first, then the rest in their original order.
+        .sort((a, b) => Number(!a.label.toLowerCase().startsWith(q)) - Number(!b.label.toLowerCase().startsWith(q)))
+        .slice(0, MAX_SUGGESTIONS)
+    : [];
+  const showList = open && matches.length > 0;
+
+  const pick = (label: string) => {
+    onPick(label);
+    setOpen(false);
+    setActive(-1);
+  };
+
+  return (
+    <div className="relative min-w-[240px] flex-1">
+      <label htmlFor="job-search" className="sr-only">
+        Search listings
       </label>
+      <Icon
+        name="search"
+        className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[22px] text-ink-2"
+      />
+      <input
+        id="job-search"
+        type="search"
+        role="combobox"
+        aria-expanded={showList}
+        aria-controls="job-search-suggestions"
+        aria-autocomplete="list"
+        aria-activedescendant={showList && active >= 0 ? `job-search-opt-${active}` : undefined}
+        autoComplete="off"
+        value={draft}
+        onChange={(e) => {
+          setDraft(e.target.value);
+          setOpen(true);
+          setActive(-1);
+        }}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onKeyDown={(e) => {
+          if (!showList) return;
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setActive((i) => (i + 1) % matches.length);
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setActive((i) => (i <= 0 ? matches.length - 1 : i - 1));
+          } else if (e.key === "Enter" && active >= 0) {
+            e.preventDefault();
+            pick(matches[active].label);
+          } else if (e.key === "Escape") {
+            setOpen(false);
+          }
+        }}
+        placeholder={placeholder}
+        className="h-12 w-full rounded-lg border-2 border-ink bg-surface pl-12 pr-11 text-[16px] font-medium text-ink placeholder:font-normal placeholder:text-ink-3 focus:shadow-[0_0_0_4px_var(--mark)] focus:outline-none [&::-webkit-search-cancel-button]:hidden"
+      />
+      {draft && (
+        <button
+          type="button"
+          onClick={() => setDraft("")}
+          aria-label="Clear search"
+          className="absolute right-1.5 top-1/2 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-ink-2 hover:bg-sunk"
+        >
+          <Icon name="close" className="text-[18px]" />
+        </button>
+      )}
+      {showList && (
+        <ul
+          id="job-search-suggestions"
+          role="listbox"
+          aria-label="Suggestions"
+          className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-lg border border-rule bg-surface py-1.5 shadow-lift"
+        >
+          {matches.map((m, i) => (
+            <li
+              key={m.kind + m.label}
+              id={`job-search-opt-${i}`}
+              role="option"
+              aria-selected={i === active}
+              // mousedown, not click: the input's blur would close the list first.
+              onMouseDown={(e) => {
+                e.preventDefault();
+                pick(m.label);
+              }}
+              onMouseEnter={() => setActive(i)}
+              className={`flex cursor-pointer items-baseline justify-between gap-4 px-4 py-2 text-[15px] ${
+                i === active ? "bg-mark-soft" : ""
+              }`}
+            >
+              <span className="min-w-0 truncate text-ink">{m.label}</span>
+              <span className="shrink-0 text-[13px] text-ink-3">{m.kind}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

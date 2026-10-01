@@ -1,101 +1,324 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   §11.11's exact mockup navy, and §11.14's lighter/brighter retune of that
-   same navy, were both judged by the user as "still the same direction" —
-   confirmation that the problem was the hue family (institutional blue),
-   not its shade. This is a real pivot, not another retune: ink moves off
-   navy entirely onto a deep oxblood/maroon — the color of an official seal
-   or rubber stamp on a Sri Lankan civic document, not a generic government-
-   blue portal. Gold stays (never complained about); urgency red shifts
-   toward vermillion so it reads as clearly distinct from the new maroon ink
-   rather than a shade of it.
+   "Highlighter" — the site reads the Gazette the way a job-seeker does, pen in
+   hand, and marks what matters. Mostly neutral paper and ink; one accent, the
+   highlighter yellow (`--mark`), used for selection, "New" and search matches.
+   Red (`--hot`) is semantic only: a closing date within seven days.
 
-   NOTE: no custom key here is named after a Tailwind scale keyword
-   (base, sm, lg, ...). job.md documents a silent, invisible bug caused
-   by a custom colour named `base` colliding with the built-in `text-base`
-   font-size utility. Do not reintroduce that class of name.
+   One family, Archivo, worked across its width axis: ultra-condensed black for
+   countdown numerals, wide heavy for headlines, normal for reading. Sinhala and
+   Tamil fall through to Noto Sans cuts at matching weights.
+
+   NOTE: no colour key is named after a Tailwind scale keyword (base, sm, ...):
+   a colour named `base` silently collides with the `text-base` utility.
    ========================================================================= */
 
 :root {
-  --surface: #fbf6ec;         /* warm gold-tinted paper, not neutral cream */
-  --surface-raised: #ffffff;
-  --surface-sunken: #f4e6cf;  /* deeper warm gold-cream — panels & tender cards */
-  --ink: #641f36;             /* deep oxblood/maroon — body text AND solid-fill chrome */
-  --ink-soft: #8a4a5c;
-  --ink-faint: #92707a;       /* AA on --surface */
-  --rule: #ead9bd;            /* warm hairline */
-  --rule-strong: #8a4a5c;     /* medium maroon framing — present without stacking near-black */
-  --stamp: #d1401f;           /* vermillion — deadlines/urgency ONLY, distinct hue from ink */
-  --stamp-wash: #fbdccb;
-  --accent: #8a5a0c;          /* dark bronze text — prestige/official marks ONLY, on cream or on --accent-wash */
-  --accent-wash: #f2b33d;     /* vivid gold — a solid badge/emblem fill, not a pale wash */
-  --verified: #8a5a0c;        /* "verified against source" reads as an official seal: gold, not a bespoke green */
-  --verified-wash: #f2b33d;
+  --paper: #f1f2ee;
+  --surface: #ffffff;
+  --sunk: #e6e7e2;
+  --ink: #1b1d22;
+  --ink-2: #454951;
+  --ink-3: #676b73;
+  --rule: #d8dad3;
+  --rule-2: #b1b4ac;
+
+  --mark: #ffd23f;
+  --mark-soft: #fff0b0;
+  --on-mark: #1b1d22;
+
+  --hot: #c4281c;
+  --hot-soft: #fbe2dd;
+  --ok: #1d6a44;
+
+  --lift: 0 1px 2px rgb(20 22 28 / 0.06), 0 12px 32px -16px rgb(20 22 28 / 0.28);
+  color-scheme: light;
 }
 
-[data-theme="dark"] {
-  --surface: #1c1216;
-  --surface-raised: #271a1f;
-  --surface-sunken: #130c0e;
-  --ink: #eecdd6;
-  --ink-soft: #cf9fac;
-  --ink-faint: #a97f8a;
-  --rule: #3e2830;
-  --rule-strong: #b17987;
-  --stamp: #ff8f66;
-  --stamp-wash: #3d1c10;
-  --accent: #ffcb70;
-  --accent-wash: #70490a;
-  --verified: #ffcb70;
-  --verified-wash: #70490a;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15171b;
+    --surface: #1e2126;
+    --sunk: #292c32;
+    --ink: #eceee8;
+    --ink-2: #c1c4bd;
+    --ink-3: #959992;
+    --rule: #31343a;
+    --rule-2: #575b62;
+    --mark: #ffd23f;
+    --mark-soft: #3a3217;
+    --on-mark: #15171b;
+    --hot: #ff7b6c;
+    --hot-soft: #3d1c18;
+    --ok: #74d0a0;
+    --lift: 0 0 0 1px rgb(0 0 0 / 0.5), 0 16px 40px -16px rgb(0 0 0 / 0.75);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #15171b;
+  --surface: #1e2126;
+  --sunk: #292c32;
+  --ink: #eceee8;
+  --ink-2: #c1c4bd;
+  --ink-3: #959992;
+  --rule: #31343a;
+  --rule-2: #575b62;
+  --mark: #ffd23f;
+  --mark-soft: #3a3217;
+  --on-mark: #15171b;
+  --hot: #ff7b6c;
+  --hot-soft: #3d1c18;
+  --ok: #74d0a0;
+  --lift: 0 0 0 1px rgb(0 0 0 / 0.5), 0 16px 40px -16px rgb(0 0 0 / 0.75);
+  color-scheme: dark;
 }
 
 @theme inline {
+  --color-paper: var(--paper);
   --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
-  --color-surface-sunken: var(--surface-sunken);
+  --color-sunk: var(--sunk);
   --color-ink: var(--ink);
-  --color-ink-soft: var(--ink-soft);
-  --color-ink-faint: var(--ink-faint);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
   --color-rule: var(--rule);
-  --color-rule-strong: var(--rule-strong);
-  --color-stamp: var(--stamp);
-  --color-stamp-wash: var(--stamp-wash);
-  --color-accent: var(--accent);
-  --color-accent-wash: var(--accent-wash);
-  --color-verified: var(--verified);
-  --color-verified-wash: var(--verified-wash);
+  --color-rule-2: var(--rule-2);
+  --color-mark: var(--mark);
+  --color-mark-soft: var(--mark-soft);
+  --color-on-mark: var(--on-mark);
+  --color-hot: var(--hot);
+  --color-hot-soft: var(--hot-soft);
+  --color-ok: var(--ok);
+  --shadow-lift: var(--lift);
 
-  /* Matches the mockup's own type split exactly: Newsreader is reserved for
-     headline-tier classes only (display-lg, headline-xl/lg/md/sm); every
-     body/label/caption class there is Plus Jakarta Sans. --font-ui exists
-     as a separate token only so existing `font-ui` utility usages keep
-     working — its value is the same font as --font-body here. */
-  --font-display: "Newsreader", Georgia, serif;
-  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --font-siserif: "Noto Serif Sinhala", Georgia, serif;
+  --font-sans: var(--font-archivo), var(--font-si), var(--font-ta), system-ui, sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--surface);
+  background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Spec §60: never remove focus indicators without replacing them. */
-*:focus-visible {
-  outline: 2px solid var(--stamp);
-  outline-offset: 2px;
+/* In a layer so Tailwind utilities (hidden, sm:block, ...) still win over
+   these; unlayered CSS would beat every utility regardless of specificity. */
+@layer components {
+  .nums {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Wide and heavy: page titles and the wordmark. */
+  .headline {
+    font-weight: 800;
+    font-stretch: 112%;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  /* Section and item titles: normal width, tight. */
+  .title {
+    font-weight: 700;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+  }
+
+  /* Countdown numerals: ultra-condensed black, departure-board style. */
+  .count {
+    font-weight: 800;
+    font-stretch: 62%;
+    font-variant-numeric: tabular-nums lining-nums;
+    letter-spacing: -0.01em;
+    line-height: 0.86;
+  }
+
+  /* The highlighter: a flat marker swipe behind text, wrapping cleanly. */
+  .marked {
+    background: var(--mark);
+    color: var(--on-mark);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  mark {
+    background: var(--mark-soft);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  .material-symbols-rounded {
+    font-family: "Material Symbols Rounded";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1em;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: "liga";
+    font-variation-settings: "FILL" 0, "wght" 450, "GRAD" 0, "opsz" 24;
+    -webkit-font-smoothing: antialiased;
+    vertical-align: -0.15em;
+  }
 }
 
-/* Spec §72 */
+/* Sinhala and Tamil need taller leading at every size. */
+[lang="si"],
+[lang="ta"] {
+  line-height: 1.75;
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+.skeleton {
+  background: var(--sunk);
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background: var(--mark);
+  color: var(--on-mark);
+}
+
+/* ---------------------------------------------------------------------------
+   Hero motion graphic (GazetteScan). Plain CSS on purpose, not the motion
+   library: it's the first thing on the page, and CSS animations start at
+   first paint instead of waiting for JavaScript to hydrate.
+   Page arrives, text settles, the highlighter sweeps the matching
+   paragraph, the job card lifts off. Every keyframe animates FROM a hidden
+   state, so each element's resting style is the final frame: with reduced
+   motion (animations off) the finished picture shows, never a blank one.
+   Interaction motion (feed, sheet, toast, saves) uses `motion` instead.
+   ------------------------------------------------------------------------ */
+.scan-page {
+  transform: rotate(-2deg);
+  animation: scan-page-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes scan-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) rotate(-6deg);
+  }
+}
+.scan-line {
+  transform-origin: left;
+  animation: scan-line-in 320ms ease-out both;
+  animation-delay: calc(260ms + var(--i, 0) * 40ms);
+}
+@keyframes scan-line-in {
+  from {
+    opacity: 0;
+    transform: scaleX(0.3);
+  }
+}
+.scan-swipe {
+  transform-origin: left;
+  animation: scan-swipe 700ms cubic-bezier(0.6, 0, 0.3, 1) 950ms both;
+}
+@keyframes scan-swipe {
+  from {
+    transform: scaleX(0);
+  }
+}
+/* The pen rides the swipe's leading edge, then lifts away. */
+.scan-pen {
+  left: calc(100% - 30px);
+  opacity: 0;
+  transform: rotate(-32deg);
+  animation: scan-pen 1000ms cubic-bezier(0.6, 0, 0.3, 1) 800ms both;
+}
+@keyframes scan-pen {
+  0% {
+    left: -52px;
+    opacity: 0;
+  }
+  15% {
+    left: -52px;
+    opacity: 1;
+  }
+  85% {
+    left: calc(100% - 50px);
+    opacity: 1;
+    transform: rotate(-32deg);
+  }
+  100% {
+    left: calc(100% - 30px);
+    opacity: 0;
+    transform: rotate(-20deg) translateY(-14px);
+  }
+}
+.scan-card {
+  animation: scan-card 600ms cubic-bezier(0.2, 1.3, 0.4, 1) 1850ms both;
+}
+@keyframes scan-card {
+  from {
+    opacity: 0;
+    transform: translate(-90px, -70px) scale(0.6) rotate(-4deg);
+  }
+}
+
+/* Closes today or tomorrow: three pulses to catch the eye, then still.
+   Endless motion on a static page reads as noise. */
+.pulse-dot {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--hot);
+}
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--hot);
+  animation: pulse-ring 1.6s ease-out 3;
+}
+@keyframes pulse-ring {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -104,95 +327,4 @@ body {
     animation: none !important;
     scroll-behavior: auto !important;
   }
-}
-
-.material-symbols-outlined {
-  font-family: "Material Symbols Outlined";
-  font-weight: normal;
-  font-style: normal;
-  font-size: 1em;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  font-feature-settings: "liga";
-  -webkit-font-smoothing: antialiased;
-  vertical-align: -0.15em;
-}
-
-/* "Dual-line editorial border": a 2px rule, 3px of whitespace, a 1px rule —
-   the masthead/section-divider pattern from the spec, as one element so it
-   never needs three stacked divs wherever it's used. */
-.masthead-rule {
-  height: 6px;
-  background:
-    linear-gradient(var(--rule-strong), var(--rule-strong)) top / 100% 2px no-repeat,
-    linear-gradient(var(--rule-strong), var(--rule-strong)) bottom / 100% 1px no-repeat;
-}
-
-/* A citation is a small bordered block, not a dot-joined string. */
-.citation-box {
-  border: 1px solid var(--rule-strong);
-  padding: 0.5rem 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  max-width: 100%;
-}
-
-/* Real bordered table for structured data, echoing the source document's own
-   "Post / Number of Vacancies" tables — not pill badges. */
-.fact-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-.fact-table th,
-.fact-table td {
-  border: 1px solid var(--rule);
-  padding: 0.5rem 0.625rem;
-  text-align: left;
-  font-size: 0.8125rem;
-  vertical-align: top;
-}
-.fact-table th {
-  font-family: var(--font-ui);
-  font-weight: 600;
-  color: var(--ink-soft);
-  font-size: 0.6875rem;
-  width: 8.5rem;
-}
-.fact-table td {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-}
-
-.table-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Sinhala needs its own leading at every scale, not just body copy. */
-.si-body {
-  line-height: 1.85;
-}
-
-/* Skeleton shimmer (spec §18, §41) */
-@keyframes register-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
-}
-.skeleton {
-  background: var(--rule);
-  border-radius: 2px;
-  animation: register-pulse 1.6s ease-in-out infinite;
-}
-
-::selection {
-  background: var(--stamp-wash);
-  color: var(--ink);
 }

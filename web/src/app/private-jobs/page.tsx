@@ -1,15 +1,18 @@
-import { Breadcrumb, EmptyState, ErrorState } from "@/components/Chrome";
-import { FeedControls, FilterBar } from "@/components/FilterBar";
-import { Pagination, PrivateJobCard } from "@/components/JobCards";
-import { Icon } from "@/components/Icon";
-import { daysUntil, facetCounts, getPrivateJobs, matchesAnyParam } from "@/lib/jobs";
+import { EmptyState, ErrorState, PageIntro, buttonClass } from "@/components/Chrome";
+import { RememberListPage } from "@/components/BackLink";
+import { Suspense } from "react";
+import { ListToolbar } from "@/components/FilterBar";
+import { Pagination, PrivateJobRow, RowGroup } from "@/components/JobCards";
+import { BrowsePanel, ClosingSoonPanel, PrivateApplyPanel } from "@/components/Rail";
+import { SavedPanel } from "@/components/SavedPanel";
+import { daysUntil, facetCounts, getPrivateJobs, getUpcomingDeadlines, matchesAnyParam } from "@/lib/jobs";
 import type { PrivateJob, SearchParamsShape } from "@/lib/types";
 import Link from "next/link";
 
-const PER_PAGE = 10;
+const PER_PAGE = 20;
 
 export const metadata = {
-  title: "Private Sector Jobs — The Living Gazette",
+  title: "Private jobs — The Living Gazette",
   description:
     "Current job opportunities from companies and organisations across Sri Lanka.",
 };
@@ -36,7 +39,7 @@ export default async function PrivateJobsPage({
 
   if (!all) {
     return (
-      <div className="mx-auto max-w-[1200px] px-4 py-10 md:px-8">
+      <div className="mx-auto max-w-[1240px] px-4 py-12 md:px-8">
         <ErrorState what="private-sector jobs" />
       </div>
     );
@@ -88,112 +91,106 @@ export default async function PrivateJobsPage({
     sp.search || sp.sector || sp.institution || sp.location || sp.employment,
   );
 
+  const sectorLabel = (s: string) => (s === "other" ? "Other sectors" : s.charAt(0).toUpperCase() + s.slice(1));
   const facets = [
-    { key: "sector", label: "Sector", options: facetCounts(all, (j) => j.sector), multi: true },
     {
-      key: "institution",
-      label: "Company",
-      options: facetCounts(all, (j) => j.employerName),
+      key: "sector",
+      label: "Sector",
+      options: facetCounts(all, (j) => j.sector).map((o) => ({ ...o, label: sectorLabel(o.value) })),
       multi: true,
     },
-    {
-      key: "location",
-      label: "Location",
-      options: facetCounts(all, (j) => j.location),
-      multi: true,
-    },
-    {
-      key: "employment",
-      label: "Employment type",
-      options: facetCounts(all, (j) => j.employmentType),
-      multi: true,
-    },
+    { key: "institution", label: "Company", options: facetCounts(all, (j) => j.employerName), multi: true },
+    { key: "location", label: "Location", options: facetCounts(all, (j) => j.location), multi: true },
+    { key: "employment", label: "Employment type", options: facetCounts(all, (j) => j.employmentType), multi: true },
   ];
 
+  const bands: { title: string; items: PrivateJob[] }[] = [];
+  if (sort === "closing") {
+    const band = (j: PrivateJob) => {
+      const d = daysUntil(j.closingDate);
+      if (d === null) return 2;
+      return d <= 7 ? 0 : 1;
+    };
+    ["Closing in the next 7 days", "Closing later", "No closing date given"].forEach((title, i) => {
+      const items = pageItems.filter((j) => band(j) === i);
+      if (items.length) bands.push({ title, items });
+    });
+  } else {
+    bands.push({ title: "", items: pageItems });
+  }
+
+  const terms = sp.search?.split(/\s+/).filter(Boolean);
+
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-5 md:px-8">
-      <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Private Sector Jobs" }]} />
+    <div>
+      <Suspense fallback={null}>
+        <RememberListPage label="All private jobs" filteredLabel="Back to your results" />
+      </Suspense>
+      <PageIntro
+        flush
+        title="Private jobs"
+        lede={
+          <>
+            {all.length} openings from {employerCount} employers&rsquo; own career sites. Only {datedCount} of them
+            give a closing date, so the newest postings come first. You apply on the employer&rsquo;s site, not here.
+          </>
+        }
+      />
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-8">
-        <div>
-          <h1 className="font-display text-[26px] font-semibold leading-[32px] tracking-tight text-ink md:text-[34px] md:leading-[40px]">
-            Private Sector Jobs
-          </h1>
-          <p className="mt-1.5 max-w-[62ch] text-[15px] leading-[23px] text-ink-soft">
-            Discover current job opportunities from companies and organisations across Sri
-            Lanka.
-          </p>
-          <p className="mt-2.5 max-w-[62ch] border-l-2 border-rule-strong px-3 py-2 text-[13px] leading-relaxed text-ink-soft">
-            Collected from employers&rsquo; own career sites. Only {datedCount} of {all.length}{" "}
-            listings publish a closing date, so these are ordered by date posted rather than
-            deadline.
-          </p>
-        </div>
+      <ListToolbar
+        placeholder="Search by title, company or skill"
+        facets={facets}
+        resultCount={results.length}
+        sorts={[
+          { value: "posted", label: "Newest first" },
+          { value: "closing", label: "Closing soonest" },
+          { value: "employer", label: "Company A to Z" },
+        ]}
+      />
 
-        <div className="border border-rule-strong bg-surface-raised">
-          <div className="flex items-center justify-between border-b-2 border-ink bg-surface-sunken px-3 py-2">
-            <span className="font-ui text-[12px] font-bold uppercase tracking-wide text-ink">
-              Employer Register
-            </span>
-            <Icon name="business_center" className="text-[16px] text-accent" />
-          </div>
-          <div className="grid grid-cols-2 gap-2 p-3">
-            <div className="border-r border-rule pr-2">
-              <div className="font-display text-[22px] font-semibold leading-none text-ink">{all.length}</div>
-              <div className="font-ui mt-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-faint">
-                Listings
-              </div>
-            </div>
-            <div>
-              <div className="font-display text-[22px] font-semibold leading-none text-ink">{employerCount}</div>
-              <div className="font-ui mt-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-faint">
-                Employers
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4 grid grid-cols-12 gap-5 lg:gap-7">
-        <FilterBar placeholder="Search private-sector jobs..." facets={facets} />
-
-        <div className="col-span-12 space-y-3 lg:col-span-8 xl:col-span-9">
-          <FeedControls
-            facets={facets}
-            resultCount={results.length}
-            sorts={[
-              { value: "posted", label: "Newest" },
-              { value: "closing", label: "Closing soon" },
-              { value: "employer", label: "Company (A–Z)" },
-            ]}
-          />
-
+      <div className="mx-auto mt-8 grid grid-cols-[minmax(0,1fr)] max-w-[1240px] gap-10 px-4 md:px-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="min-w-0 space-y-10">
           {pageItems.length === 0 ? (
             <EmptyState
-              title="No matching jobs"
-              body="We couldn't find a private-sector job matching your search. Try another keyword or remove some filters."
+              title="Nothing matches those filters"
+              body="Try a shorter search, or remove a filter to widen the list."
               action={
                 hasFilters ? (
-                  <Link
-                    href="/private-jobs"
-                    className="font-ui inline-flex min-h-[44px] cursor-pointer items-center border border-ink px-6 text-[13px] font-semibold uppercase tracking-wide text-ink hover:bg-surface-sunken"
-                  >
+                  <Link href="/private-jobs" className={buttonClass.outline}>
                     Clear filters
                   </Link>
                 ) : null
               }
             />
           ) : (
-            <>
-              <div className="border-t border-rule">
-                {pageItems.map((j) => (
-                  <PrivateJobCard key={j.slug} job={j} />
+            bands.map((b) => (
+              <RowGroup key={b.title || "all"} title={b.title || undefined} count={b.title ? b.items.length : undefined}>
+                {b.items.map((j) => (
+                  <PrivateJobRow key={j.slug} job={j} terms={terms} />
                 ))}
-              </div>
-              <Pagination page={safePage} totalPages={totalPages} makeHref={makeHref} />
-            </>
+              </RowGroup>
+            ))
           )}
+          <Pagination page={safePage} totalPages={totalPages} makeHref={makeHref} />
         </div>
+        <aside className="space-y-5">
+          <ClosingSoonPanel
+            title="Private jobs closing soon"
+            entries={getUpcomingDeadlines(31).filter((e) => e.kind === "pvt").slice(0, 5)}
+          />
+          <BrowsePanel
+            title="Employers"
+            items={facetCounts(all, (j) => j.employerName)
+              .sort((a, b) => b.count - a.count)
+              .map((e) => ({
+                label: e.value,
+                count: e.count,
+                href: `/private-jobs?institution=${encodeURIComponent(e.value)}`,
+              }))}
+          />
+          <SavedPanel />
+          <PrivateApplyPanel />
+        </aside>
       </div>
     </div>
   );
