@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-01T14:48:25.596557+00:00",
+  "updatedAt": "2026-10-09T13:37:10.826423+00:00",
   "vacancies": [
     {
       "real": true,
@@ -301,6 +301,141 @@
       "selectionMethod": null,
       "howToApply": [],
       "requiredDocuments": []
+    },
+    {
+      "serial": "ING-20",
+      "titleEn": "Director / Knowledge and Technology Transfer Offices (KTTO) (Part-time)",
+      "instEn": "Eastern University, Sri Lanka",
+      "dateEn": "2026-10-15",
+      "status": "soon",
+      "days": "5 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "10/2016",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": "2026-10-01",
+      "firstSeenAt": "2026-10-09T13:33:21.512474+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/director-ktto-eastern-university-of-sri-lanka-vacancies-2026.html",
+      "pdfUrl": "https://www.gazette.lk/dl/2026/10/Director-KTTO-EUSL.pdf",
+      "sourceLabel": null,
+      "descEn": "Part-time Director role to strengthen Knowledge and Technology Transfer Offices (KTTO) at Eastern University. Responsibilities include developing industry-oriented student projects, organizing trainings and consulting services, implementing IP policy, promoting university spin-offs and research cooperation, building strategic alliances, coordinating KTTO initiatives, and facilitating innovation-driven economic impact and technology transfer between university and industry.",
+      "age": null,
+      "quota": null,
+      "salary": "LKR 1,000 per month (all-inclusive allowance)",
+      "qualEn": "A Senior Academic staff (Senior Lecturer Gr.II or above position) and adequate experiences in the relevant field also be considered for the appointment. Required professional competencies: developing practice and business oriented student projects; organizing trainings and coaching activities for business; implementing (technical) consulting services for business; implementing an IP policy at universities; promoting the creation of University Spin-offs; promoting research cooperation between businesses and the University; promoting strategic alliances with the private sector; design, coordination and monitoring of KTTO initiatives and projects; building strong key partnerships for development and funding; facilitating innovation-driven economic impact; facilitating knowledge and technology transfer between universities and industry including research commercialization, intellectual property management, industry collaboration.",
+      "confidence": 0.9,
+      "qualificationLevel": "professional",
+      "locations": [
+        "Eastern University, Sri Lanka"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Submit application with a copy of CV through proper channel to the Vice-Chancellor",
+        "Apply on or before 15.10.2026"
+      ],
+      "requiredDocuments": [
+        "CV"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-21",
+      "titleEn": "Vice-Chancellor",
+      "instEn": "University of the Visual and Performing Arts",
+      "dateEn": "2026-10-20",
+      "status": "soon",
+      "days": "10 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "03/2023",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": "2026-09-20",
+      "firstSeenAt": "2026-10-09T13:35:04.981147+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/vice-chancellor-university-of-the-visual-performing-arts-job-vacancies-2026.html",
+      "pdfUrl": "https://www.gazette.lk/dl/2026/10/Vice-Chancellor-UVPA-E.pdf",
+      "sourceLabel": null,
+      "descEn": "The Vice-Chancellor serves as the Principal Executive, Academic, and Accounting Officer of the university, responsible for executing Council policies, directing academic affairs, introducing management policies, and upholding academic excellence, transparency, accountability, and democratic leadership. The role requires a record of high academic achievements, strong research profile, proven leadership, interpersonal skills, policy understanding, and commitment to the university's mission.",
+      "age": "Below 63 years",
+      "quota": null,
+      "salary": null,
+      "qualEn": "Citizen of Sri Lanka; less than 63 years of age by closing date; record of high academic achievements including a strong research profile; proven leadership qualities and interpersonal skills to interact objectively with diverse interest groups; clear understanding of policy issues and commitment to effective implementation; deep understanding of the ethos and mission of a university including its commitment to the community.",
+      "confidence": 0.95,
+      "qualificationLevel": null,
+      "locations": [
+        "Colombo 07"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Presentation before Special Council meeting (10-15 minutes) and evaluation based on criteria: Strategic Focus, Effective Leadership, Holistic Thinking/Conceptual Skills, Academic and Research Excellence, Personal Integrity, Professional Communication, Managerial Competence as per UGC Circular No. 03/2023.",
+      "howToApply": [
+        "Prepare application with: (i) statement of Vision for university development, (ii) brief account of proposals if appointed, (iii) Curriculum Vitae including date of birth and copy of NIC/passport.",
+        "If incumbent or former Vice-Chancellor, include report highlighting accomplishments during first term.",
+        "If serving in Public Service, Corporations, Statutory Bodies or Higher Educational Institutions, include employer letter indicating releasability.",
+        "Send soft copy of all documents plus cover letter in PDF to registrar@vpa.ac.lk by deadline.",
+        "Send hard copy addressed to Registrar/Secretary to the Council, University of the Visual and Performing Arts, 21, Albert Crescent, Colombo 07, under registered cover or hand delivered to reach by 3.00 p.m. on 20.10.2026.",
+        "Mark envelope top left corner with 'Post of Vice-Chancellor'."
+      ],
+      "requiredDocuments": [
+        "Statement of Vision for the development of the University",
+        "Brief account of what applicant proposes to achieve if appointed",
+        "Curriculum Vitae including date of birth",
+        "Copy of National Identity Card or valid passport",
+        "Report highlighting accomplishments during first period of office (if incumbent/former VC)",
+        "Letter from employer indicating whether applicant could be released (if serving in Public Service, Corporations, Statutory Bodies or Higher Educational Institutions)",
+        "Cover letter",
+        "Any other supporting documents"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-22",
+      "titleEn": "Manager - Human Resources and Administration",
+      "instEn": "People's Bank Development Board",
+      "dateEn": "2026-10-19",
+      "status": "soon",
+      "days": "9 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-09T13:37:06.389520+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/manager-janatha-estates-development-board-vacancies-2026.html",
+      "pdfUrl": "https://www.gazette.lk/dl/2026/10/Manager-Human-Resources-and-Administration-JEDB.pdf",
+      "sourceLabel": null,
+      "descEn": "The Manager - Human Resources and Administration is responsible for all institutional activities, financial and administrative functions, human resource development planning, management, and supervision in accordance with government circulars and institutional policies. Selected candidates must perform duties as assigned.",
+      "age": "22-45 yrs (external); no upper age limit (internal)",
+      "quota": null,
+      "salary": "MM 1-1 Rs. (91,690/-10x2,480/-15x3,450/-168,240/-)",
+      "qualEn": "External: University Grants Commission recognized degree in Human Resource Management or Management, and minimum 1 year experience in relevant field after degree. Internal: Either same qualifications as external, or serving as 'Executive Officer' in JM salary scale with minimum 5 years satisfactory service in relevant field.",
+      "confidence": 0.9,
+      "qualificationLevel": "degree",
+      "locations": [],
+      "employmentTerm": "permanent",
+      "examType": "none",
+      "selectionMethod": "Interview",
+      "howToApply": [
+        "Send application by registered post to Chairman, People's Bank Development Board, 55/75 Yawaksha Place, Colombo 02",
+        "Application must be received on or before 2026-10-19",
+        "Mark the post applied for on the top left corner of the envelope",
+        "Include names of referees in the application"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true
     }
   ]
 }
