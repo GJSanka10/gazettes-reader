@@ -1,14 +1,24 @@
-name: Weekly vacancy ingest
+name: Vacancy ingest (daily)
 
 on:
   schedule:
-    # 06:30 UTC Friday = noon in Colombo, a few hours after the Gazette's weekly release.
-    - cron: "30 6 * * 5"
-  workflow_dispatch: {} # manual "Run workflow" button, for testing without waiting a week
+    # Daily at 06:30 UTC (noon in Colombo). The Gazette is a Friday issue, but its
+    # English PDF often appears days later (the 2 Oct 2026 issue's was still missing on
+    # 11 Oct), and the free LLM tier allows 50 calls a day, so a backlog of issues takes
+    # several runs to clear. Running daily catches late PDFs within a day and lets a
+    # backlog clear in a few days instead of a few weeks.
+    - cron: "30 6 * * *"
+  workflow_dispatch: {} # manual "Run workflow" button
 
 permissions:
   contents: write
   pull-requests: write
+
+# Never two runs at once: both would carry forward the same open PR and spend the
+# same day's LLM quota twice.
+concurrency:
+  group: vacancy-ingest
+  cancel-in-progress: false
 
 jobs:
   ingest:
@@ -23,21 +33,48 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # Each run starts from main. If the last run's PR is still open (not yet
+      # reviewed), carry its work forward so it isn't redone: the same Gazette chunks
+      # re-sent to the LLM would spend the day's quota for nothing. See
+      # scripts/carry_forward.py. A merged or closed PR is not carried: merged work is
+      # already on main, and a closed one was rejected.
+      - name: Continue from the open review PR, if there is one
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open=$(gh pr list --head ingest/weekly-update --state open --json number --jq length)
+          if [ "$open" != "0" ]; then
+            git fetch origin ingest/weekly-update
+            git show FETCH_HEAD:data/vacancies.json > "$RUNNER_TEMP/review.json"
+            git checkout FETCH_HEAD -- web/public/gazette-pdfs 2>/dev/null || true
+            git reset -q
+            python scripts/carry_forward.py "$RUNNER_TEMP/review.json"
+          else
+            echo "No open review PR; starting from main."
+          fi
+
       - name: Run ingestion
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python scripts/ingest.py
 
-      - name: Open a PR with any new vacancies
+      - name: Open or update the review PR
         uses: peter-evans/create-pull-request@v6
         with:
           commit-message: "ingest: pull in new vacancy postings"
           title: "New vacancy postings for review"
           body: |
-            Automated ingestion run found new postings. Nothing here is public yet —
-            each entry is marked `_needsReview: true` until a human confirms the
-            extracted fields (especially the closing date) against the source PDF and
-            adds the Sinhala/Tamil text. See job.md §7.1 for the full pipeline and why
-            this review step exists.
+            Automated ingestion found new postings, or made progress on a Gazette issue.
+            This PR is rebuilt on top of `main` by every daily run until it's merged, so
+            it grows as new notices are found and never conflicts with `main`.
+
+            Nothing here is public until merged. Each new entry is marked
+            `_needsReview: true`: check the extracted fields, the closing date above all,
+            against the linked PDF. The notice PDFs themselves are in
+            `web/public/gazette-pdfs/`. See job.md §7.1 for why this review step exists.
           branch: ingest/weekly-update
-          add-paths: data/vacancies.json
+          # Merged or closed PRs leave no stale branch behind to block the next run.
+          delete-branch: true
+          add-paths: |
+            data/vacancies.json
+            web/public/gazette-pdfs
