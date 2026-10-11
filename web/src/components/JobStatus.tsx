@@ -18,14 +18,18 @@ export function Countdown({
   closingDate,
   fallback,
   size = "row",
+  today,
 }: {
   closingDate?: string | null;
+  /** "YYYY-MM-DD" from the server, when rendered inside a client component,
+   *  so hydration counts from the same day as the server did. */
+  today?: string;
   /** Shown when there is no closing date, e.g. an employer monogram. */
   fallback?: string;
   size?: "row" | "lg";
 }) {
   const date = parseClosingDate(closingDate);
-  const days = daysUntil(closingDate);
+  const days = daysUntil(closingDate, today);
   const heat = heatFor(days);
   const lg = size === "lg";
   const numeral = lg ? "text-[96px]" : "text-[46px]";

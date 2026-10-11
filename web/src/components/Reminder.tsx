@@ -30,15 +30,19 @@ export function Reminder({
   org,
   closingDate,
   path,
+  today,
 }: {
   slug: string;
   title: string;
   org: string;
   closingDate?: string | null;
   path: string;
+  /** The server's "today", so the server and the browser agree on whether
+   *  the date is still ahead. */
+  today?: string;
 }) {
   const date = parseClosingDate(closingDate);
-  const days = daysUntil(closingDate);
+  const days = daysUntil(closingDate, today);
   if (!date || days === null || days < 0) return null;
 
   const next = new Date(date);

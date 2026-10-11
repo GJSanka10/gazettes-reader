@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Noto_Sans_Sinhala, Noto_Sans_Tamil } from "next/font/google";
 import "./globals.css";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { BottomNav, SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { Toaster } from "@/components/Toaster";
 import { MotionProvider } from "@/components/MotionProvider";
@@ -29,15 +30,21 @@ const tamil = Noto_Sans_Tamil({
   display: "swap",
 });
 
-// Absolute base for canonical and Open Graph URLs. Set NEXT_PUBLIC_SITE_URL in
-// production; localhost is only the development fallback.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const DESCRIPTION =
+  "Sri Lankan Government Gazette vacancies and private-sector openings, summarised, sorted by closing date, and linked to the official source.";
 
 export const metadata: Metadata = {
+  // Absolute base for canonical and Open Graph URLs (see lib/site.ts).
   metadataBase: new URL(SITE_URL),
   title: "The Living Gazette — Government and private-sector jobs in Sri Lanka",
-  description:
-    "Sri Lankan Government Gazette vacancies and private-sector openings, summarised, sorted by closing date, and linked to the official source.",
+  description: DESCRIPTION,
+  applicationName: SITE_NAME,
+  // No canonical or Open Graph title here: these are inherited by every page
+  // that doesn't set its own, so a layout-level canonical of "/" would mark
+  // every page a copy of the homepage. Each page sets them via pageMeta().
+  openGraph: { type: "website", siteName: SITE_NAME, locale: "en_LK" },
+  // Large image cards when links are shared (WhatsApp, Facebook and X all read these).
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,10 +1,14 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { buttonClass } from "@/components/Chrome";
 import { DetailHeader, DetailSection } from "@/components/Detail";
 import { Icon } from "@/components/Icon";
 import { Reminder } from "@/components/Reminder";
+import { todayKey } from "@/lib/dates";
 import { SaveButton, ShareButtons } from "@/components/SaveButton";
 import { getPrivateJobBySlug, getPrivateJobs } from "@/lib/jobs";
+import { jobTitle, pageMeta } from "@/lib/site";
+import { breadcrumbLd, ldJson, privateJobPostingLd, privateSnippet } from "@/lib/seo";
 
 // "N days left" is date-relative, so rebuild the page at least hourly.
 export const revalidate = 3600;
@@ -13,11 +17,20 @@ export function generateStaticParams() {
   return (getPrivateJobs() ?? []).map((j) => ({ slug: j.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const j = getPrivateJobBySlug(slug);
-  if (!j) return { title: "Job not found — The Living Gazette" };
-  return { title: `${j.titleEn} — ${j.employerName}`, description: j.descEn?.slice(0, 160) };
+  if (!j) return { title: "Job not found — The Living Gazette", robots: { index: false } };
+  return {
+    ...pageMeta({
+      title: jobTitle(j.titleEn, j.employerName),
+      description: privateSnippet(j),
+      path: `/private-jobs/${j.slug}`,
+      type: "article",
+      siteImage: false,
+    }),
+    robots: j.status === "closed" ? { index: false, follow: true } : undefined,
+  };
 }
 
 function formatDate(value?: string | null) {
@@ -38,6 +51,19 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: ldJson([
+            ...(j.status === "closed" ? [] : [privateJobPostingLd(j)]),
+            breadcrumbLd([
+              { name: "Home", path: "/" },
+              { name: "Private jobs", path: "/private-jobs" },
+              { name: j.titleEn, path: `/private-jobs/${j.slug}` },
+            ]),
+          ]),
+        }}
+      />
       <DetailHeader
         kind="pvt"
         backHref="/private-jobs"
@@ -119,7 +145,7 @@ export default async function PrivateJobDetail({ params }: { params: Promise<{ s
                 <p className="pt-0.5 text-center text-[13px] text-paper/60">Opens on an external site</p>
               </div>
             </div>
-            <Reminder slug={j.slug} title={j.titleEn} org={j.employerName} closingDate={j.closingDate} path={`/private-jobs/${j.slug}`} />
+            <Reminder slug={j.slug} title={j.titleEn} org={j.employerName} closingDate={j.closingDate} path={`/private-jobs/${j.slug}`} today={todayKey()} />
           </aside>
         </div>
       </div>

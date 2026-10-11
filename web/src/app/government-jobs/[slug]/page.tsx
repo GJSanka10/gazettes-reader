@@ -6,9 +6,11 @@ import { SaveButton, ShareButtons } from "@/components/SaveButton";
 import { Icon } from "@/components/Icon";
 import { buttonClass } from "@/components/Chrome";
 import { Reminder } from "@/components/Reminder";
-import { dayParts, daysUntil, parseClosingDate, relativeDays } from "@/lib/dates";
+import { dayParts, daysUntil, parseClosingDate, relativeDays, todayKey } from "@/lib/dates";
 import { JOB_TYPE_LABEL, QUALIFICATION_LABEL, getGovVacancies, getGovVacancyBySlug, isNew, jobTypesOf } from "@/lib/jobs";
-import type { GovVacancy } from "@/lib/types";
+import type { Metadata } from "next";
+import { jobTitle, pageMeta } from "@/lib/site";
+import { breadcrumbLd, govJobPostingLd, govSnippet, ldJson } from "@/lib/seo";
 
 // "N days left" and "New" are date-relative, so rebuild the page at least hourly.
 export const revalidate = 3600;
@@ -17,45 +19,26 @@ export function generateStaticParams() {
   return (getGovVacancies() ?? []).map((v) => ({ slug: v.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const v = getGovVacancyBySlug(slug);
-  if (!v) return { title: "Vacancy not found — The Living Gazette" };
-  const title = `${v.titleEn} — ${v.instEn}`;
-  const description = v.descEn?.slice(0, 160);
+  if (!v) return { title: "Vacancy not found — The Living Gazette", robots: { index: false } };
   return {
-    title,
-    description,
-    alternates: { canonical: `/government-jobs/${v.slug}` },
-    openGraph: { title, description, type: "article" },
+    ...pageMeta({
+      title: jobTitle(v.titleEn, v.instEn),
+      description: govSnippet(v),
+      path: `/government-jobs/${v.slug}`,
+      type: "article",
+      siteImage: false,
+    }),
+    // Closed notices stay on the site for reference, but a search result
+    // that lands on a vacancy you can no longer apply for is a dead end.
+    robots: v.status === "closed" ? { index: false, follow: true } : undefined,
   };
 }
 
-/** schema.org JobPosting, built only from fields the notice actually states. */
-function jobPostingLd(v: GovVacancy) {
-  const closing = parseClosingDate(v.dateEn ?? v.dateSi);
-  const posted = v.publishedDate ?? v.firstSeenAt?.slice(0, 10);
-  const place = (v.locations ?? []).find((l) => l.toLowerCase() !== "island-wide");
-  const EMPLOYMENT: Record<string, string> = { permanent: "FULL_TIME", contract: "CONTRACTOR", temporary: "TEMPORARY" };
-  const employmentType = v.employmentTerm ? EMPLOYMENT[v.employmentTerm] : undefined;
-  const isoDay = (d: Date) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  return {
-    "@context": "https://schema.org",
-    "@type": "JobPosting",
-    title: v.titleEn,
-    description: [v.descEn, v.qualEn && `Qualifications: ${v.qualEn}`].filter(Boolean).join("\n\n"),
-    hiringOrganization: { "@type": "Organization", name: v.instEn },
-    jobLocation: {
-      "@type": "Place",
-      address: { "@type": "PostalAddress", addressCountry: "LK", ...(place ? { addressLocality: place } : {}) },
-    },
-    ...(posted ? { datePosted: posted } : {}),
-    // End of the closing day, Sri Lanka time.
-    ...(closing ? { validThrough: `${isoDay(closing)}T23:59:59+05:30` } : {}),
-    ...(employmentType ? { employmentType } : {}),
-  };
-}
+const outlineButton =
+  "flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-paper/30 px-5 text-[15px] font-semibold text-paper hover:bg-paper/10";
 
 function longDate(value?: string | null) {
   const d = parseClosingDate(value);
@@ -91,7 +74,16 @@ export default async function GovJobDetail({ params }: { params: Promise<{ slug:
       <script
         type="application/ld+json"
         // Escaped so a "</script>" inside notice text can't end the tag early.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingLd(v)).replace(/</g, "\\u003c") }}
+        dangerouslySetInnerHTML={{
+          __html: ldJson([
+            ...(closed ? [] : [govJobPostingLd(v)]),
+            breadcrumbLd([
+              { name: "Home", path: "/" },
+              { name: "Government jobs", path: "/government-jobs" },
+              { name: v.titleEn, path: `/government-jobs/${v.slug}` },
+            ]),
+          ]),
+        }}
       />
 
       <DetailHeader
@@ -211,7 +203,7 @@ export default async function GovJobDetail({ params }: { params: Promise<{ slug:
 
             <DetailSection title="Important dates">
               <DateRow dates={dates} />
-              <Reminder slug={v.slug} title={v.titleEn} org={v.instEn} closingDate={closing} path={`/government-jobs/${v.slug}`} />
+              <Reminder slug={v.slug} title={v.titleEn} org={v.instEn} closingDate={closing} path={`/government-jobs/${v.slug}`} today={todayKey()} />
             </DetailSection>
 
             {v.titleSi && (
@@ -245,35 +237,66 @@ export default async function GovJobDetail({ params }: { params: Promise<{ slug:
                   exactly as the notice itself says.
                 </p>
               </details>
-              {v.pdfUrl || v.sourceUrl ? (
+              {v.pdfUrl ? (
                 <div className="mt-4 space-y-2">
-                  {v.pdfUrl && (
-                    <a
-                      href={v.pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-mark px-5 text-[15px] font-bold text-on-mark hover:brightness-95"
-                    >
-                      <Icon name="picture_as_pdf" className="text-[20px]" />
-                      Open the notice (PDF)
+                  {v.pdfPages && (
+                    <p className="text-[13.5px] text-paper/70">
+                      Just this notice:{" "}
+                      {v.pdfPages[0] === v.pdfPages[1]
+                        ? `page ${v.pdfPages[0]}`
+                        : `pages ${v.pdfPages[0]}–${v.pdfPages[1]}`}{" "}
+                      of the Gazette issue
+                    </p>
+                  )}
+                  <a
+                    href={v.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-mark px-5 text-[15px] font-bold text-on-mark hover:brightness-95"
+                  >
+                    <Icon name="picture_as_pdf" className="text-[20px]" />
+                    Open the notice (PDF)
+                  </a>
+                  <a href={v.pdfUrl} download className={outlineButton}>
+                    <Icon name="download" className="text-[19px]" />
+                    Download PDF
+                  </a>
+                  {v.pdfFullUrl && v.pdfFullUrl !== v.pdfUrl && (
+                    <a href={v.pdfFullUrl} target="_blank" rel="noopener noreferrer" className={outlineButton}>
+                      <Icon name="menu_book" className="text-[19px]" />
+                      Full Gazette issue (PDF)
                     </a>
                   )}
-                  {v.sourceUrl && (
-                    <a
-                      href={v.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-lg px-5 text-[15px] font-semibold ${
-                        v.pdfUrl
-                          ? "border border-paper/30 text-paper hover:bg-paper/10"
-                          : "bg-mark font-bold text-on-mark hover:brightness-95"
-                      }`}
-                    >
-                      <Icon name="open_in_new" className="text-[19px]" />
-                      Open the source page
+                  {v.pdfUrlSi && (
+                    <a href={v.pdfUrlSi} target="_blank" rel="noopener noreferrer" lang="si" className={outlineButton}>
+                      <Icon name="picture_as_pdf" className="text-[19px]" />
+                      සිංහල නිවේදනය (PDF)
                     </a>
                   )}
-                  <p className="pt-0.5 text-center text-[13px] text-paper/60">Opens on an external site</p>
+                  {v.pdfFullUrlSi && (
+                    <>
+                      <a href={v.pdfFullUrlSi} target="_blank" rel="noopener noreferrer" lang="si" className={outlineButton}>
+                        <Icon name="menu_book" className="text-[19px]" />
+                        සිංහල ගැසට් පත්‍රය (සම්පූර්ණ)
+                      </a>
+                      <p className="text-center text-[13px] text-paper/60">
+                        Sinhala edition, whole issue. Its page numbers differ from the English one.
+                      </p>
+                    </>
+                  )}
+                </div>
+              ) : v.sourceUrl ? (
+                <div className="mt-4 space-y-2">
+                  <a
+                    href={v.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-mark px-5 text-[15px] font-bold text-on-mark hover:brightness-95"
+                  >
+                    <Icon name="open_in_new" className="text-[19px]" />
+                    Open the source page
+                  </a>
+                  <p className="pt-0.5 text-center text-[13px] text-paper/60">Opens in a new tab</p>
                 </div>
               ) : (
                 <p className="mt-4 rounded-lg bg-paper/10 p-4 text-[14px] leading-relaxed text-paper/85">

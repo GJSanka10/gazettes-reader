@@ -64,10 +64,20 @@ function Fact({ label, value, className = "" }: { label: string; value: string; 
  * clickable. On phones the bookmark tucks under the countdown so the title
  * keeps its width.
  */
-export function VacancyRow({ v, isNew, terms }: { v: GovVacancy; isNew: boolean; terms?: string[] }) {
+export function VacancyRow({
+  v,
+  isNew,
+  terms,
+  today,
+}: {
+  v: GovVacancy;
+  isNew: boolean;
+  terms?: string[];
+  today?: string;
+}) {
   return (
     <li className={vacancyRowClass(v)}>
-      <VacancyRowBody v={v} isNew={isNew} terms={terms} />
+      <VacancyRowBody v={v} isNew={isNew} terms={terms} today={today} />
     </li>
   );
 }
@@ -80,7 +90,18 @@ export function vacancyRowClass(v: GovVacancy) {
 }
 
 /** Everything inside a vacancy row. */
-export function VacancyRowBody({ v, isNew, terms }: { v: GovVacancy; isNew: boolean; terms?: string[] }) {
+export function VacancyRowBody({
+  v,
+  isNew,
+  terms,
+  today,
+}: {
+  v: GovVacancy;
+  isNew: boolean;
+  terms?: string[];
+  /** The server's "today", when this renders inside a client component. */
+  today?: string;
+}) {
   const closing = v.dateEn ?? v.dateSi;
 
   const facts = [
@@ -101,7 +122,7 @@ export function VacancyRowBody({ v, isNew, terms }: { v: GovVacancy; isNew: bool
   return (
     <>
       <div className="col-start-1 row-start-1">
-        <Countdown closingDate={closing} />
+        <Countdown closingDate={closing} today={today} />
       </div>
 
       <div className="col-start-2 row-span-2 row-start-1 min-w-0 sm:row-span-1">

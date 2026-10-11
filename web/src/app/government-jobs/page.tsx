@@ -25,6 +25,7 @@ import {
   type GovFilters,
 } from "@/lib/jobs";
 import type { GovVacancy, SearchParamsShape } from "@/lib/types";
+import { pageMeta } from "@/lib/site";
 
 const PER_PAGE = 20;
 
@@ -36,10 +37,12 @@ export async function generateMetadata({
   const sp = await searchParams;
   const filtered = GOV_FILTER_KEYS.some((k) => sp[k as keyof SearchParamsShape]);
   return {
-    title: "Government vacancies — The Living Gazette",
-    description:
-      "Search current Sri Lankan government vacancies by field, qualification, organisation and closing date, each linked to its original notice.",
-    alternates: { canonical: "/government-jobs" },
+    ...pageMeta({
+      title: "Government jobs in Sri Lanka — The Living Gazette",
+      description:
+        "Search current Sri Lankan government vacancies by field, qualification, organisation and closing date, each linked to its original Gazette or institution notice.",
+      path: "/government-jobs",
+    }),
     // Filtered and paginated variants are for people, not the search index (brief §26).
     robots: filtered || sp.page ? { index: false, follow: true } : undefined,
   };

@@ -43,7 +43,19 @@ export interface GovVacancy {
   howToApply?: string[];
   requiredDocuments?: string[];
   sourceUrl?: string;
+  /** The notice itself. For a Gazette issue, just this notice's pages cut out of it. */
   pdfUrl?: string;
+  /** [first, last] pages of the full issue that pdfUrl was cut from. */
+  pdfPages?: [number, number] | null;
+  /** The whole Gazette issue, when pdfUrl is an excerpt of it. */
+  pdfFullUrl?: string | null;
+  /** The real Sinhala-language notice PDF, when the source published one alongside the
+   *  English version. Linked as-is rather than text-extracted — see ingest.py's
+   *  STRUCTURING_PROMPT_BILINGUAL comment for why extracted text isn't trustworthy yet. */
+  pdfUrlSi?: string | null;
+  /** The whole Sinhala edition of the Gazette issue. Whole-issue only: each language
+   *  edition has its own page numbering, so the notice can't be cut out of it. */
+  pdfFullUrlSi?: string | null;
   descEn?: string;
   descSi?: string;
   age?: string;

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { EmptyState, ErrorState, PageIntro, buttonClass } from "@/components/Chrome";
 import { RememberListPage } from "@/components/BackLink";
 import { Suspense } from "react";
@@ -8,14 +9,28 @@ import { SavedPanel } from "@/components/SavedPanel";
 import { daysUntil, facetCounts, getPrivateJobs, getUpcomingDeadlines, matchesAnyParam } from "@/lib/jobs";
 import type { PrivateJob, SearchParamsShape } from "@/lib/types";
 import Link from "next/link";
+import { pageMeta } from "@/lib/site";
 
 const PER_PAGE = 20;
 
-export const metadata = {
-  title: "Private jobs — The Living Gazette",
-  description:
-    "Current job opportunities from companies and organisations across Sri Lanka.",
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParamsShape>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  const filtered = Boolean(sp.search || sp.sector || sp.institution || sp.location || sp.employment || sp.sort || sp.page);
+  return {
+    ...pageMeta({
+      title: "Private jobs in Sri Lanka — The Living Gazette",
+      description:
+        "Current openings from companies hiring in Sri Lanka, collected from their own career sites, newest first.",
+      path: "/private-jobs",
+    }),
+    // Filtered and paginated variants are for people, not the search index.
+    robots: filtered ? { index: false, follow: true } : undefined,
+  };
+}
 
 function matches(j: PrivateJob, q: string) {
   const haystack = [j.titleEn, j.employerName, j.location, j.sector, j.employmentType, j.qualEn, j.descEn]

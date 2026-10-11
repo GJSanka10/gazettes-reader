@@ -1,0 +1,4 @@
+Archivo is (c) The Archivo Project Authors (https://github.com/Omnibus-Type/Archivo),
+licensed under the SIL Open Font License, Version 1.1 (https://openfontlicense.org).
+These static TTF cuts are used only to render Open Graph share images, because the
+image renderer cannot read the WOFF2 files next/font serves to browsers.

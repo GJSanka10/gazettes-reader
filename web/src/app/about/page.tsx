@@ -1,7 +1,10 @@
-export const metadata = {
+import { pageMeta } from "@/lib/site";
+
+export const metadata = pageMeta({
   title: "About — The Living Gazette",
   description: "Where the job data on this site comes from, and how it is checked.",
-};
+  path: "/about",
+});
 
 const SOURCES = [
   {

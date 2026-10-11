@@ -13,16 +13,33 @@ export function parseClosingDate(value?: string | null): Date | null {
   return parsed;
 }
 
-export function startOfToday(): Date {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
+/** Closing dates are Sri Lankan calendar dates, so "today" is too, whatever
+ *  timezone the server or the reader's device happens to be in. */
+const ZONE = "Asia/Colombo";
+const KEY_FORMAT = new Intl.DateTimeFormat("en-CA", { timeZone: ZONE, year: "numeric", month: "2-digit", day: "2-digit" });
+
+/** Today's date in Sri Lanka, as "YYYY-MM-DD". The server computes this once
+ *  per request and hands it to client components, so the server render and
+ *  the browser's hydration count days from the same day. Without that, a page
+ *  rendered at 23:59 and hydrated at 00:00 disagrees ("4 days" vs "3 days")
+ *  and React throws a hydration error. */
+export function todayKey(now: Date = new Date()): string {
+  return KEY_FORMAT.format(now);
 }
 
-export function daysUntil(value?: string | null): number | null {
+export function startOfToday(today?: string): Date {
+  return parseClosingDate(today ?? todayKey())!;
+}
+
+/** Whole calendar days from `today` (default: now, in Sri Lanka) to the
+ *  closing date. Counted on UTC day numbers, so daylight-saving shifts on the
+ *  reader's device can't make a day 23 or 25 hours long. */
+export function daysUntil(value?: string | null, today?: string): number | null {
   const date = parseClosingDate(value);
   if (!date) return null;
-  return Math.round((date.getTime() - startOfToday().getTime()) / 86_400_000);
+  const t = startOfToday(today);
+  const day = (d: Date) => Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+  return Math.round((day(date) - day(t)) / 86_400_000);
 }
 
 /** Heat drives the only urgency colour: red within seven days. */

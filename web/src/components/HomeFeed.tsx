@@ -30,9 +30,12 @@ export function HomeFeed({
   items,
   aside,
   children,
+  today,
 }: {
   intro: React.ReactNode;
   items: FeedItem[];
+  /** Today in Sri Lanka ("YYYY-MM-DD"), fixed by the server for this request. */
+  today: string;
   /** The side column beside the feed on wide screens. */
   aside?: React.ReactNode;
   /** More sections under the feed, in the main column. */
@@ -179,7 +182,7 @@ export function HomeFeed({
                       exit={{ opacity: 0, transition: { duration: 0.14, ease: EASE_IN } }}
                       className={vacancyRowClass(v)}
                     >
-                      <VacancyRowBody v={v} isNew={isNew} />
+                      <VacancyRowBody v={v} isNew={isNew} today={today} />
                     </m.li>
                   ))}
                 </AnimatePresence>
@@ -192,7 +195,7 @@ export function HomeFeed({
                 <p className="text-[14px] text-ink-2">We couldn&rsquo;t read the level from these notices. Check them yourself.</p>
                 <Sheet className="mt-3">
                   {unknown.map(({ v, isNew }) => (
-                    <VacancyRow key={v.slug} v={v} isNew={isNew} />
+                    <VacancyRow key={v.slug} v={v} isNew={isNew} today={today} />
                   ))}
                 </Sheet>
               </div>

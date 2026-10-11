@@ -9,7 +9,7 @@ import { PrivateJobRow, RowGroup } from "@/components/JobCards";
 import { HomeFeed } from "@/components/HomeFeed";
 import { BrowsePanel, ClosingSoonPanel, HowToApplyPanel, SourcesPanel } from "@/components/Rail";
 import { SavedPanel } from "@/components/SavedPanel";
-import { daysUntil } from "@/lib/dates";
+import { daysUntil, todayKey } from "@/lib/dates";
 import {
   facetCounts,
   getGovUpdatedAt,
@@ -19,12 +19,21 @@ import {
   getUpcomingDeadlines,
   isNew,
 } from "@/lib/jobs";
+import { pageMeta } from "@/lib/site";
+
+export const metadata = pageMeta({
+  title: "Government jobs in Sri Lanka, from the Gazette — The Living Gazette",
+  description:
+    "New Sri Lankan government vacancies from the Gazette, summarised with closing dates, salary, age limits and qualifications. Plus private-sector openings.",
+  path: "/",
+});
 
 const PRIVATE_ON_HOME = 8;
 
 export default async function HomePage() {
   // "Today", "new" and "days left" must all be the request's, not the build's.
   await connection();
+  const today = todayKey();
 
   const gov = getGovVacancies() ?? [];
   const priv = getPrivateJobs() ?? [];
@@ -88,6 +97,7 @@ export default async function HomePage() {
         <RememberListPage label="Latest vacancies" />
       </Suspense>
       <HomeFeed
+        today={today}
         intro={intro}
         items={feed.map((v) => ({ v, isNew: isNew(v) }))}
         aside={
