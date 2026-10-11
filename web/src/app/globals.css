@@ -290,6 +290,32 @@ body {
   }
 }
 
+/* The hero headline's highlighter stroke: a band across the lower part of the
+   words (the ink stays readable in both themes), swept left to right once at
+   first paint. Its resting state is the full stroke. */
+.hero-mark {
+  background-image: linear-gradient(var(--mark), var(--mark));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.32em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.04em;
+  animation: hero-mark 900ms cubic-bezier(0.6, 0, 0.3, 1) 250ms both;
+}
+@keyframes hero-mark {
+  from {
+    background-size: 0% 0.32em;
+  }
+}
+
+/* The surface the scan animation sits on: paper with a faint dot grid. */
+.hero-desk {
+  background-color: var(--paper);
+  background-image: radial-gradient(var(--rule) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
 /* Closes today or tomorrow: three pulses to catch the eye, then still.
    Endless motion on a static page reads as noise. */
 .pulse-dot {

@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { RememberListPage } from "@/components/BackLink";
 import { HomeSearch } from "@/components/HomeSearch";
 import { connection } from "next/server";
-import { LatestBlock } from "@/components/Feed";
+import { EditionCard } from "@/components/EditionCard";
 import { GazetteScan } from "@/components/GazetteScan";
 import { PrivateJobRow, RowGroup } from "@/components/JobCards";
 import { HomeFeed } from "@/components/HomeFeed";
@@ -58,36 +58,48 @@ export default async function HomePage() {
     .sort((a, b) => (b.datePosted ? Date.parse(b.datePosted) : 0) - (a.datePosted ? Date.parse(a.datePosted) : 0))
     .slice(0, PRIVATE_ON_HOME);
   const employers = new Set(priv.map((j) => j.employerName)).size;
-  const fields = facetCounts(open, (v) => v.category).sort((a, b) => b.count - a.count).slice(0, 6);
+  const fields = facetCounts(open, (v) => v.category).sort((a, b) => b.count - a.count).slice(0, 5);
+
+  const updatedAt = getGovUpdatedAt();
+  const updated = updatedAt
+    ? new Date(updatedAt)
+        .toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Asia/Colombo" })
+        .replace("Sept", "Sep")
+    : null;
 
   const intro = (
-    <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:gap-16">
-      <div>
-        <h1 className="headline max-w-[16ch] text-[34px] text-ink sm:text-[56px] lg:text-[68px]">
-          Government jobs, without the Gazette hunting.
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-9 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center lg:gap-12 xl:gap-20">
+      <div className="min-w-0">
+        {updated && (
+          <p className="inline-flex h-8 items-center gap-2 rounded-full border border-rule bg-paper pl-2.5 pr-3.5 text-[13.5px] font-semibold text-ink-2">
+            <span aria-hidden="true" className="h-2 w-2 rounded-full bg-ok shadow-[0_0_0_3px_color-mix(in_srgb,var(--ok)_22%,transparent)]" />
+            Updated {updated}
+            {issue?.number && <span className="font-normal text-ink-3">· Gazette No. {issue.number}</span>}
+          </p>
+        )}
+        <h1 className="headline mt-5 max-w-[16ch] text-[36px] text-ink sm:text-[56px] lg:text-[58px] xl:text-[68px]">
+          Government jobs, without the <span className="hero-mark">Gazette hunting.</span>
         </h1>
-        <p className="mt-4 max-w-[54ch] text-[16.5px] leading-relaxed text-ink-2 sm:mt-5 sm:text-[17px]">
-          New Sri Lankan government vacancies, summarised so you can tell in a minute whether one is for you. The
-          original notice is always one click away.
+        <p className="mt-4 max-w-[52ch] text-[16.5px] leading-relaxed text-ink-2 sm:mt-5 sm:text-[17.5px]">
+          Every new Sri Lankan government vacancy, with the closing date, salary, age limit and qualifications up
+          front.<span className="hidden sm:inline"> The original notice is always one click away.</span>
         </p>
         <HomeSearch fields={fields} />
       </div>
-      <div className="flex flex-col gap-8">
-        <div className="hidden lg:block">
+      <EditionCard
+        issue={issue ? { number: issue.number, date: issue.date, count: issue.vacancies.length } : null}
+        updatedAt={updatedAt}
+        total={open.length}
+        newCount={newCount}
+        closingThisWeek={closingThisWeek}
+        scan={
           <GazetteScan
             title={feed[0]?.titleEn}
             org={feed[0]?.instEn}
             days={feed[0] ? daysUntil(feed[0].dateEn ?? feed[0].dateSi) : null}
           />
-        </div>
-        <LatestBlock
-          issue={issue ? { number: issue.number, date: issue.date, count: issue.vacancies.length } : null}
-          updatedAt={getGovUpdatedAt()}
-          total={open.length}
-          newCount={newCount}
-          closingThisWeek={closingThisWeek}
-        />
-      </div>
+        }
+      />
     </div>
   );
 
