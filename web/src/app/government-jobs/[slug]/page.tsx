@@ -94,6 +94,7 @@ export default async function GovJobDetail({ params }: { params: Promise<{ slug:
         title={v.titleEn}
         titleSi={v.titleSi}
         org={v.instEn}
+        orgSi={v.instSi}
         meta={
           <>
             {isNew(v) && <NewTag />}

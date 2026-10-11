@@ -19,6 +19,7 @@ export function DetailHeader({
   kicker,
   title,
   titleSi,
+  orgSi,
   org,
   meta,
   closingDate,
@@ -31,6 +32,8 @@ export function DetailHeader({
   kicker?: string | null;
   title: string;
   titleSi?: string;
+  /** The institution as printed in the Sinhala edition. */
+  orgSi?: string;
   org: string;
   /** One line under the organisation, e.g. New + where the notice came from. */
   meta?: React.ReactNode;
@@ -60,6 +63,11 @@ export function DetailHeader({
           </p>
         )}
         <p className="mt-1.5 text-[16px] text-ink-2 md:text-[17px]">{org}</p>
+        {orgSi && (
+          <p lang="si" className="text-[15px] text-ink-3">
+            {orgSi}
+          </p>
+        )}
         {meta && <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">{meta}</div>}
 
         <dl

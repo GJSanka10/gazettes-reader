@@ -9,7 +9,8 @@ tier's 50-a-day quota again) and a multi-day catch-up would never get past day o
 So, before ingest.py runs, this merges the open PR's data/vacancies.json into main's:
 
   - vacancies the PR found that main doesn't have are added; main's own copy wins
-    whenever both have the same vacancy (a reviewer may have corrected it on main);
+    whenever both have the same vacancy (a reviewer may have corrected it on main),
+    except that Sinhala the PR added to a vacancy main has no Sinhala for is kept;
   - a serial that main has since given to a different vacancy is renumbered, so two
     jobs never share one (this happened once, by hand: ING-20, 2026-10-11);
   - Gazette progress (processed issues, chunks still pending, posts already rejected)
@@ -42,13 +43,24 @@ def next_free(prefix, used):
     return f"{prefix}-{n + 1}"
 
 
+SINHALA_FIELDS = ("titleSi", "instSi", "pdfUrlSi", "pdfPagesSi", "_siChecked")
+
+
 def carry_forward(main, review):
-    have = {identity(v) for v in main["vacancies"]}
+    by_identity = {identity(v): v for v in main["vacancies"]}
+    have = set(by_identity)
     used = {v.get("serial") for v in main["vacancies"] if v.get("serial")}
     carried, renumbered = [], []
 
     for v in review.get("vacancies", []):
         if identity(v) in have:
+            # The Sinhala pass fills in existing vacancies; keep its work (and its
+            # "already tried" mark) unless main has Sinhala of its own.
+            mine = by_identity.get(identity(v))
+            if mine is not None and not mine.get("titleSi") and not mine.get("_siChecked"):
+                for field in SINHALA_FIELDS:
+                    if field in v:
+                        mine[field] = v[field]
             continue
         v = dict(v)
         serial = v.get("serial") or ""

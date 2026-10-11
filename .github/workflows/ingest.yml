@@ -72,6 +72,10 @@ jobs:
             `_needsReview: true`: check the extracted fields, the closing date above all,
             against the linked PDF. The notice PDFs themselves are in
             `web/public/gazette-pdfs/`. See job.md §7.1 for why this review step exists.
+
+            Gazette vacancies may also gain `titleSi` / `instSi`: Sinhala copied word for
+            word from the Sinhala edition (never translated). Check each against its
+            `pdfUrlSi` excerpt.
           branch: ingest/weekly-update
           # Merged or closed PRs leave no stale branch behind to block the next run.
           delete-branch: true

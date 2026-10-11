@@ -193,6 +193,11 @@ If a field genuinely isn't in the text, use null. Do not guess or invent values.
 # "never invent a field it can't find real text for" applied to language, not just
 # content: showing a believable-looking but scrambled/invented Sinhala string would be
 # worse than showing nothing.
+# Update 2026-10-11: for the Gazette's own Sinhala editions the scrambling was
+# pdfplumber's, not the PDF's — PyMuPDF plus clean_sinhala() reads them correctly, and
+# Gazette vacancies now get their Sinhala title that way (add_sinhala_to_gazette_vacancies).
+# Institutions' own Sinhala PDFs (gazette.lk) are still linked as-is: several use legacy
+# font encodings or are scans. Showing Sinhala is scoped to Gazette vacancies only.
 STRUCTURING_PROMPT_BILINGUAL = """You are extracting structured data from a real Sri Lankan \
 government job vacancy advertisement, published in both English and Sinhala below. Return \
 ONLY a JSON object (no markdown fences, no commentary) with these exact keys:
@@ -483,10 +488,9 @@ def notice_page_range(raw, chunk_first, last_visible):
 
 def attach_gazette_pdfs(entries, content, urls):
     """Hosts the issue (and its Sinhala edition, when published) and points each entry
-    at an excerpt of just its own pages (entry["pdfPages"]). The Sinhala edition is
-    whole-issue only: each language edition has its own page numbering, and its text
-    layer can't be searched (see STRUCTURING_PROMPT_BILINGUAL), so the notice can't be
-    located in it."""
+    at an excerpt of just its own pages (entry["pdfPages"]). The Sinhala edition starts
+    as the whole issue: its notices are in a different order on different pages, and
+    add_sinhala_to_gazette_vacancies() narrows it to the notice once it has found it."""
     full_url = save_pdf_locally(content, urls["english"])
     si_full_url = None
     if urls.get("sinhala"):
@@ -812,6 +816,254 @@ def compute_status(closing_date_iso):
     return "open", f"{days} days"
 
 
+# ---------------------------------------------------------------------------
+# Sinhala for Gazette vacancies: the post title and institution, COPIED from the
+# Sinhala edition of the same issue, never translated.
+#
+# pdfplumber scrambles this text, but PyMuPDF reads the Gazette's Sinhala editions
+# (IskoolaPota, Unicode) correctly apart from two mechanical faults in what it
+# returns: each dependent vowel sign / al-lakuna / anusvara comes out doubled, and
+# stray glyph codes (Latin Extended-B, IPA, U+FFFD, private use) are scattered in.
+# Sinhala never has the same dependent sign twice in a row, so collapsing repeats
+# and dropping the strays restores the printed text (checked word for word against
+# the rendered pages of Gazettes 2,507, 2,508 and 2,509 on 2026-10-11).
+#
+# The two editions print notices in a DIFFERENT order with different page numbers,
+# so each notice is located in the Sinhala edition first: one LLM call per issue
+# reads every page's bold headings and names the Sinhala page range of each English
+# notice, cross-checked against the numbers (salaries, dates, counts) both editions
+# print. Then one call per notice copies each post's Sinhala title. Any value that
+# isn't found word for word in the Sinhala text is dropped, so a translation or a
+# guess can't get through; a field we can't fill stays empty.
+# ---------------------------------------------------------------------------
+
+SI_SIGNS = "ඁංඃ්ාැෑිීුූෘෙේෛොෝෞෟෲෳ"
+SI_JUNK = re.compile("[ƀ-˿�-]")
+SI_DOUBLED = re.compile("([" + SI_SIGNS + "])\\1+")
+# Spent on Sinhala per run at most, after the English Gazette pass and before
+# gazette.lk, so a Sinhala backlog can't starve new vacancies.
+MAX_SINHALA_CALLS_PER_RUN = 15
+
+
+def clean_sinhala(text):
+    text = SI_JUNK.sub("", text or "")
+    text = SI_DOUBLED.sub(r"\1", text)
+    return re.sub("‍{2,}", "‍", text)
+
+
+def is_sinhala_text(text):
+    """Mostly Sinhala letters, with no stray glyph codes left in."""
+    letters = [c for c in text or "" if c.isalpha()]
+    sinhala = sum(1 for c in letters if "඀" <= c <= "෿")
+    return bool(letters) and sinhala / len(letters) >= 0.6 and not SI_JUNK.search(text)
+
+
+def _squash(text):
+    return re.sub(r"\s+", "", text or "")
+
+
+def sinhala_pages(path):
+    """(page texts, page headings) for a Sinhala edition, both cleaned. Headings are
+    the bold lines of each page minus the running masthead."""
+    import pymupdf
+
+    texts, headings = [], []
+    for page in pymupdf.open(path):
+        texts.append(clean_sinhala(page.get_text()))
+        bold = []
+        for block in page.get_text("dict")["blocks"]:
+            for line in block.get("lines", []):
+                t = "".join(s["text"] for s in line["spans"] if s["flags"] & 16).strip()
+                if len(t) > 6 and "ගැසට්" not in clean_sinhala(t):
+                    bold.append(clean_sinhala(t))
+        headings.append(" | ".join(bold)[:300])
+    return texts, headings
+
+
+def english_pages(path):
+    import pymupdf
+
+    return [page.get_text() for page in pymupdf.open(path)]
+
+
+def number_tokens(text):
+    """Numbers both editions print identically: thousands separators joined, dates
+    split so either order matches; 2+ digits only."""
+    t = re.sub(r"(?<=\d),(?=\d{3}\b)", "", text or "")
+    out = []
+    for tok in re.findall(r"\d[\d./-]*\d", t):
+        out += [p.lstrip("0") for p in re.split(r"[./-]", tok) if len(p.lstrip("0")) >= 2]
+    return out
+
+
+def numbers_agree(en_text, si_text):
+    """Share of the English notice's distinctive numbers also printed in the Sinhala
+    pages. Years are everywhere, so they don't count."""
+    want = {t for t in number_tokens(en_text) if not re.fullmatch(r"20\d\d", t)}
+    if len(want) < 3:
+        return 1.0  # too few numbers to judge either way
+    have = set(number_tokens(si_text))
+    return len(want & have) / len(want)
+
+
+SI_LOCATE_PROMPT = """Below are the bold headings of every page of the SINHALA edition of a Sri \
+Lankan Government Gazette, Part I : Section (IIA), and a list of notices from the ENGLISH edition \
+of the same issue. The two editions print the notices in a different order, with different page \
+numbers. For each English notice, find the same notice in the Sinhala edition: the page its \
+heading starts on and the last page before the next notice begins (include its application \
+form and schedules).
+
+Return ONLY a JSON object (no markdown fences, no commentary) mapping each notice key to \
+[first_page, last_page], or to null when you can't find it with confidence. Never guess.
+
+--- ENGLISH NOTICES ---
+{notices}
+--- END ---
+
+--- SINHALA PAGE HEADINGS ---
+{headings}
+--- END ---
+"""
+
+SI_COPY_PROMPT = """Below is the text of one notice from the SINHALA edition of a Sri Lankan \
+Government Gazette, and the posts the ENGLISH edition of the same notice lists. For each post, \
+copy from the Sinhala text:
+titleSi - the post's title exactly as printed in the Sinhala text
+instSi  - the recruiting institution exactly as printed in the Sinhala text
+
+Copy characters exactly; never translate, paraphrase or correct. If the Sinhala text is not the \
+same notice, or a value is not printed in it, use null. Return ONLY a JSON object (no markdown \
+fences, no commentary) mapping each post key to {{"titleSi": ..., "instSi": ...}}.
+
+--- ENGLISH POSTS ---
+{posts}
+--- END ---
+
+--- SINHALA NOTICE TEXT ---
+{text}
+--- END ---
+"""
+
+
+def call_llm_json(prompt):
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise RuntimeError("OPENROUTER_API_KEY not set")
+    resp = requests.post(
+        OPENROUTER_URL,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://github.com/",
+            "X-Title": "The Living Gazette - ingest",
+        },
+        # Same reasoning-model token budget as structure_batch_with_llm().
+        json={"model": OPENROUTER_MODEL, "messages": [{"role": "user", "content": prompt}], "max_tokens": 16000, "temperature": 0},
+        timeout=300,
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"OpenRouter {resp.status_code}: {resp.text[:300]}")
+    raw = resp.json()["choices"][0]["message"]["content"].strip()
+    raw = re.sub(r"^```(json)?|```$", "", raw, flags=re.MULTILINE).strip()
+    return json.loads(raw)
+
+
+def save_local_excerpt(local_url, first_page, last_page):
+    """An excerpt of a PDF already hosted under PDF_HOST_DIR."""
+    src = PDF_HOST_DIR / Path(local_url).name
+    filename = f"{src.stem}-p{first_page}-{last_page}.pdf"
+    path = PDF_HOST_DIR / filename
+    if not path.exists():
+        reader = PdfReader(str(src))
+        writer = PdfWriter()
+        for i in range(first_page - 1, last_page):
+            writer.add_page(reader.pages[i])
+        with open(path, "wb") as f:
+            writer.write(f)
+    return f"/gazette-pdfs/{filename}"
+
+
+def add_sinhala_to_gazette_vacancies(data, budget):
+    """Fills titleSi / instSi (and a Sinhala excerpt, pdfUrlSi) on Gazette vacancies that
+    don't have them yet, from the hosted Sinhala edition. Each vacancy is tried once
+    (_siChecked); a failed LLM call leaves it untried so the next run retries."""
+    spend = LLMBudget(min(MAX_SINHALA_CALLS_PER_RUN, budget.left))
+    issues = {}
+    for v in data["vacancies"]:
+        if (v.get("sourceKind") == "gazette" and v.get("pdfPages") and v.get("pdfFullUrl")
+                and v.get("pdfFullUrlSi") and not v.get("titleSi") and not v.get("_siChecked")):
+            issues.setdefault((v["pdfFullUrl"], v["pdfFullUrlSi"]), []).append(v)
+
+    for (en_url, si_url), vacancies in issues.items():
+        en_path, si_path = PDF_HOST_DIR / Path(en_url).name, PDF_HOST_DIR / Path(si_url).name
+        if not en_path.exists() or not si_path.exists() or spend.left <= 0:
+            continue
+        en = english_pages(en_path)
+        si, headings = sinhala_pages(si_path)
+        if sum(is_sinhala_text(p) for p in si) < len(si) / 2:
+            print(f"  ! {si_path.name}: Sinhala text layer unusable — skipping this issue")
+            for v in vacancies:
+                v["_siChecked"] = True
+            continue
+
+        notices = {}
+        for v in vacancies:
+            notices.setdefault(f"{v['pdfPages'][0]}-{v['pdfPages'][1]}", []).append(v)
+        listing = "\n".join(
+            f"{key}: {', '.join(sorted({p['titleEn'] for p in posts}))[:200]} — {posts[0].get('instEn')}"
+            f" (closes {posts[0].get('dateEn') or 'n/a'})"
+            for key, posts in notices.items()
+        )
+        if not spend.take() or not budget.take():
+            break
+        try:
+            located = call_llm_json(SI_LOCATE_PROMPT.format(
+                notices=listing, headings="\n".join(f"[{i}] {h}" for i, h in enumerate(headings, start=1))))
+        except Exception as e:
+            print(f"  ! locating notices in {si_path.name} failed: {e}", file=sys.stderr)
+            continue
+
+        for key, posts in notices.items():
+            pages = located.get(key) if isinstance(located, dict) else None
+            first, last = posts[0]["pdfPages"]
+            en_text = "\n".join(en[first - 1:last])
+            ok = (isinstance(pages, list) and len(pages) == 2 and all(isinstance(p, int) for p in pages)
+                  and 1 <= pages[0] <= pages[1] <= len(si) and pages[1] - pages[0] < MAX_NOTICE_PAGES + 3)
+            si_text = "\n".join(si[pages[0] - 1:pages[1]]) if ok else ""
+            if not ok or numbers_agree(en_text, si_text) < 0.5:
+                print(f"  ~ no confident Sinhala match for pages {key} ({posts[0]['titleEn']})")
+                for v in posts:
+                    v["_siChecked"] = True
+                continue
+            if not spend.take() or not budget.take():
+                break
+            try:
+                copied = call_llm_json(SI_COPY_PROMPT.format(
+                    posts="\n".join(f"{v['serial']}: {v['titleEn']} — {v.get('instEn')}" for v in posts),
+                    text=si_text[:14000]))
+            except Exception as e:
+                print(f"  ! copying Sinhala for pages {key} failed: {e}", file=sys.stderr)
+                continue
+            haystack = _squash(si_text)
+            for v in posts:
+                got = copied.get(v["serial"]) if isinstance(copied, dict) else None
+                got = got if isinstance(got, dict) else {}
+                for field in ("titleSi", "instSi"):
+                    value = clean_sinhala(str(got.get(field) or "")).strip()
+                    # Verbatim or nothing: the value must appear in the Sinhala text.
+                    if value and is_sinhala_text(value) and _squash(value) in haystack:
+                        v[field] = re.sub(r"\s+", " ", value)
+                v["_siChecked"] = True
+                print(f"  + {v['serial']} {v['titleEn']}: {v.get('titleSi') or '(no verbatim title found)'}")
+            # A verified title is what confirms these pages are the same notice; only
+            # then does the Sinhala button point at them instead of the whole issue.
+            if any(v.get("titleSi") for v in posts):
+                excerpt = save_local_excerpt(si_url, *pages)
+                for v in posts:
+                    v["pdfUrlSi"] = excerpt
+                    v["pdfPagesSi"] = list(pages)
+
+
 def skip_post(data, post_url, reason):
     """Remembers a gazette.lk post that will never become a vacancy (no PDF, a scan, or
     the model found no real post in it), so later runs don't spend an LLM call on it
@@ -841,6 +1093,12 @@ def main():
             added.append(e)
     except Exception as e:
         print(f"  ! documents.gov.lk pass failed entirely: {e}", file=sys.stderr)
+    # Reads the Sinhala editions the pass above just hosted, as well as earlier ones.
+    print("\n=== Sinhala titles for Gazette vacancies ===")
+    try:
+        add_sinhala_to_gazette_vacancies(data, budget)
+    except Exception as e:
+        print(f"  ! Sinhala pass failed: {e}", file=sys.stderr)
 
     # Pass 2 — discovery index for notices that never reach the Gazette (job.md §11.2).
     print("\n=== gazette.lk (discovery index, not authority) ===")
