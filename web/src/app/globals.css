@@ -101,6 +101,17 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Laptops and desktops get the whole UI at 90%, like one step of browser
+   zoom out, so more of each page fits on screen. Sizes here are mostly px,
+   so a smaller root font-size wouldn't scale them; zoom scales everything
+   evenly. Phones and tablets keep full size for readable text and big tap
+   targets (and 16px inputs, which stop iOS zooming in on focus). */
+@media (min-width: 1024px) {
+  html {
+    zoom: 0.9;
+  }
+}
+
 body {
   background: var(--paper);
   color: var(--ink);
