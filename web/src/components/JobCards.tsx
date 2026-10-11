@@ -2,8 +2,9 @@ import Link from "next/link";
 import type { GovVacancy, PrivateJob } from "@/lib/types";
 import { daysUntil, heatFor, parseClosingDate, shortDate } from "@/lib/dates";
 import { QUALIFICATION_LABEL } from "@/lib/labels";
+import { salaryShort } from "@/lib/salary";
 import { Countdown, DeadlinePill, SourceBadge } from "./JobStatus";
-import { Highlight, NewTag, sourceText } from "./Feed";
+import { CardEdge, Highlight, JOB_CARD, NewTag, sourceText } from "./Feed";
 import { Icon } from "./Icon";
 import { SaveButton } from "./SaveButton";
 
@@ -36,7 +37,8 @@ export function PrivateJobRow({ job: j, terms }: { job: PrivateJob; terms?: stri
   ].filter((f): f is { label: string; value: string } => Boolean(f));
 
   return (
-    <li className="group relative grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 px-4 py-5 transition-colors hover:bg-paper/70 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:gap-x-6 sm:px-6">
+    <li className={`${JOB_CARD} grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 px-4 py-5 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:gap-x-6 sm:px-6`}>
+      <CardEdge closingDate={j.closingDate} />
       <div className="col-start-1 row-start-1">
         <Countdown closingDate={j.closingDate} fallback={monogram(j.employerName)} />
       </div>
@@ -86,7 +88,7 @@ export function SummaryCard({ vacancy: v, isNew, terms }: { vacancy: GovVacancy;
 
   const terms4 = [
     { label: "Closes", value: date ? shortDate(date) : null, hot: heat === "hot" || heat === "warm" },
-    { label: "Salary", value: v.salary, hot: false },
+    { label: "Salary", value: salaryShort(v.salary), hot: false },
     { label: "Age", value: v.age, hot: false },
     { label: "Posts", value: v.quota, hot: false },
   ];
@@ -178,7 +180,7 @@ export function RowGroup({
       {grid ? (
         <ul className="grid gap-4 lg:grid-cols-2">{children}</ul>
       ) : (
-        <ul className="divide-y divide-rule overflow-hidden rounded-2xl border border-rule bg-surface">{children}</ul>
+        <ul className="space-y-3">{children}</ul>
       )}
     </section>
   );

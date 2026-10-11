@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { GovVacancy } from "@/lib/types";
-import { parseClosingDate, shortDate } from "@/lib/dates";
+import { daysUntil, heatFor, parseClosingDate, shortDate } from "@/lib/dates";
 import { QUALIFICATION_LABEL } from "@/lib/labels";
+import { salaryShort } from "@/lib/salary";
 import { SaveButton } from "./SaveButton";
 import { Countdown } from "./JobStatus";
 
@@ -58,7 +59,30 @@ function Fact({ label, value, className = "" }: { label: string; value: string; 
 }
 
 /**
- * One vacancy as a row on the sheet: the countdown on the left, then title,
+ * Each job is its own card, with space between cards, so the eye takes in one
+ * job at a time instead of one long box of ruled rows. The border firms up on
+ * hover, and a highlighter-yellow edge marks the card the pointer is on.
+ */
+export const JOB_CARD =
+  "group relative overflow-hidden rounded-xl border border-rule bg-surface transition-[border-color,box-shadow] duration-150 hover:border-rule-2 hover:shadow-[0_10px_28px_-18px_rgb(20_22_28/0.35)] focus-within:border-ink";
+
+/** The card's left edge: red while the job closes within a week (the same
+ *  rule as the red countdown), otherwise a yellow edge that shows on hover. */
+export function CardEdge({ closingDate, today }: { closingDate?: string | null; today?: string }) {
+  const heat = heatFor(daysUntil(closingDate, today));
+  const urgent = heat === "hot" || heat === "warm";
+  return (
+    <span
+      aria-hidden="true"
+      className={`pointer-events-none absolute inset-y-0 left-0 w-1 transition-opacity duration-150 ${
+        urgent ? "bg-hot" : "bg-mark opacity-0 group-hover:opacity-100"
+      }`}
+    />
+  );
+}
+
+/**
+ * One vacancy as a card: the countdown on the left, then title,
  * institution and a line of labelled facts, with the bookmark on the right.
  * The whole row is the link; the bookmark sits above it and stays separately
  * clickable. On phones the bookmark tucks under the countdown so the title
@@ -82,9 +106,9 @@ export function VacancyRow({
   );
 }
 
-/** The row's own box, for callers that supply an animated <li>. */
+/** The card's own box, for callers that supply an animated <li>. */
 export function vacancyRowClass(v: GovVacancy) {
-  return `group relative grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 px-4 py-5 transition-colors hover:bg-paper/70 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:gap-x-6 sm:px-6 ${
+  return `${JOB_CARD} grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 px-4 py-5 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:gap-x-6 sm:px-6 ${
     v.status === "closed" ? "opacity-65" : ""
   }`;
 }
@@ -107,7 +131,7 @@ export function VacancyRowBody({
   const facts = [
     v.qualificationLevel && { label: "Needs", value: QUALIFICATION_LABEL[v.qualificationLevel] },
     v.age && { label: "Age", value: v.age },
-    v.salary && { label: "Salary", value: v.salary },
+    v.salary && { label: "Salary", value: salaryShort(v.salary)! },
     v.quota && { label: "Posts", value: v.quota },
     v.locations?.length && { label: "Where", value: v.locations.join(", ") },
   ].filter((f): f is { label: string; value: string } => Boolean(f));
@@ -121,6 +145,7 @@ export function VacancyRowBody({
 
   return (
     <>
+      <CardEdge closingDate={closing} today={today} />
       <div className="col-start-1 row-start-1">
         <Countdown closingDate={closing} today={today} />
       </div>
@@ -165,13 +190,9 @@ export function VacancyRowBody({
   );
 }
 
-/** A white sheet on the paper desk: the one container listings sit in. */
-export function Sheet({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <ul className={`divide-y divide-rule overflow-hidden rounded-2xl border border-rule bg-surface ${className}`}>
-      {children}
-    </ul>
-  );
+/** A list of job cards, with room between them. */
+export function JobList({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <ul className={`space-y-3 ${className}`}>{children}</ul>;
 }
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

@@ -8,6 +8,7 @@ import { removeSaved, setSavedStatus, useSavedJobs, type SavedJob, type SavedSta
 import { Icon } from "./Icon";
 import { Countdown } from "./JobStatus";
 import { buttonClass } from "./Chrome";
+import { CardEdge, JOB_CARD } from "./Feed";
 import { EASE_IN, SPRING } from "./MotionProvider";
 
 const TABS = [
@@ -98,7 +99,7 @@ export function SavedList() {
             : "None of your saved jobs close in the next 7 days."}
         </p>
       ) : (
-        <ul role="tabpanel" className="relative mt-5 divide-y divide-rule overflow-hidden rounded-2xl border border-rule bg-surface">
+        <ul role="tabpanel" className="relative mt-5 space-y-3">
           {/* Removing a job lets it fade out while the rest close the gap. */}
           <AnimatePresence initial={false} mode="popLayout">
             {shown.map((j) => {
@@ -112,8 +113,9 @@ export function SavedList() {
                   animate={{ opacity: j.status === "not-interested" ? 0.6 : 1, y: 0 }}
                   exit={{ opacity: 0, x: -24, transition: { duration: 0.16, ease: EASE_IN } }}
                   transition={SPRING}
-                  className="grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-3 px-4 py-5 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:gap-x-6 sm:px-6"
+                  className={`${JOB_CARD} grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-3 px-4 py-5 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:gap-x-6 sm:px-6`}
                 >
+                  <CardEdge closingDate={j.closingDate} />
                   <Countdown closingDate={j.closingDate} />
                   <div className="min-w-0">
                     <p className="text-[13px] font-semibold text-ink-3">{j.kind === "gov" ? "Government job" : "Private job"}</p>

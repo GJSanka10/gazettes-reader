@@ -56,9 +56,9 @@ export function ErrorState({ what }: { what: string }) {
  *  institution, facts), so the page doesn't jump when the data arrives. */
 export function JobListSkeleton({ rows = 4 }: { rows?: number }) {
   return (
-    <div aria-hidden="true" className="divide-y divide-rule overflow-hidden rounded-2xl border border-rule bg-surface">
+    <div aria-hidden="true" className="space-y-3">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 px-4 py-5 sm:grid-cols-[84px_minmax(0,1fr)] sm:gap-x-6 sm:px-6">
+        <div key={i} className="grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 rounded-xl border border-rule bg-surface px-4 py-5 sm:grid-cols-[84px_minmax(0,1fr)] sm:gap-x-6 sm:px-6">
           <div className="space-y-2">
             <div className="skeleton h-10 w-10 rounded" />
             <div className="skeleton h-3 w-12 rounded" />

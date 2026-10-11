@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import type { GovVacancy } from "@/lib/types";
 import { LADDER, rungOf } from "@/lib/labels";
 import { setLevel, useLevel } from "@/lib/level";
-import { Sheet, VacancyRow, VacancyRowBody, vacancyRowClass } from "./Feed";
+import { JobList, VacancyRow, VacancyRowBody, vacancyRowClass } from "./Feed";
 import { EASE_IN, SPRING } from "./MotionProvider";
 import { LevelGlyph, QualificationDialog } from "./QualificationDialog";
 
@@ -168,7 +168,7 @@ export function HomeFeed({
                 )}
               </div>
             ) : (
-              <Sheet className="relative mt-4">
+              <JobList className="relative mt-4">
                 {/* Rows that stop matching fade out; the rest slide to their new
                     places. No motion on first paint (initial={false}). popLayout
                     lifts exiting rows out of flow, hence the `relative` parent. */}
@@ -186,18 +186,18 @@ export function HomeFeed({
                     </m.li>
                   ))}
                 </AnimatePresence>
-              </Sheet>
+              </JobList>
             )}
 
             {rung !== null && unknown.length > 0 && (
               <div className="mt-8">
                 <h3 className="text-[16px] font-bold text-ink">Qualification not captured</h3>
                 <p className="text-[14px] text-ink-2">We couldn&rsquo;t read the level from these notices. Check them yourself.</p>
-                <Sheet className="mt-3">
+                <JobList className="mt-3">
                   {unknown.map(({ v, isNew }) => (
                     <VacancyRow key={v.slug} v={v} isNew={isNew} today={today} />
                   ))}
-                </Sheet>
+                </JobList>
               </div>
             )}
           </section>
