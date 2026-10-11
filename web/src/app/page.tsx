@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { RememberListPage } from "@/components/BackLink";
 import { connection } from "next/server";
+import { randomInt } from "node:crypto";
 import { PrivateJobRow, RowGroup } from "@/components/JobCards";
 import { HomeFeed } from "@/components/HomeFeed";
-import { HiringStrip, HomeHero } from "@/components/HomeHero";
+import { HERO_PHOTOS, HiringStrip, HomeHero } from "@/components/HomeHero";
 import { BrowsePanel, ClosingSoonPanel, HowToApplyPanel, SourcesPanel } from "@/components/Rail";
 import { SavedPanel } from "@/components/SavedPanel";
 import { daysUntil, todayKey } from "@/lib/dates";
@@ -87,6 +88,8 @@ export default async function HomePage() {
             : null
         }
         fields={fields}
+        // A different photo from time to time: one picked per visit.
+        photo={randomInt(HERO_PHOTOS.length)}
       />
       <HiringStrip items={hiring} />
     </>

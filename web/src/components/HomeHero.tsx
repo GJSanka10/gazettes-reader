@@ -1,14 +1,43 @@
 import Image from "next/image";
 import Link from "next/link";
-import heroPhoto from "@/assets/hero-job-seeker.jpg";
+import type { StaticImageData } from "next/image";
+import graduate from "@/assets/hero-graduate.jpg";
+import hiringSign from "@/assets/hero-hiring-sign.jpg";
+import jobSeeker from "@/assets/hero-job-seeker.jpg";
 import { HomeSearch } from "./HomeSearch";
 import { Icon } from "./Icon";
 
-/*
- * Photo: "Smiling woman holds a booklet, looking at the camera" by @90ml_water
- * on Unsplash (unsplash.com/photos/1JKMMf_dOyA), Unsplash License: free for
- * commercial use, no attribution required. Cropped to 4:5.
+/**
+ * The hero photos, one picked per visit. All are from Unsplash under the
+ * Unsplash License (free for commercial use, no attribution required), cropped
+ * to 4:5. Unsplash+ photos are a paid licence: don't add those.
+ * `sign` layout: the sign starts high in the frame, so the open-count card
+ * sits higher, above the arch, clear of the lettering.
  */
+export const HERO_PHOTOS: { src: StaticImageData; alt: string; position: string; layout: "person" | "sign" }[] = [
+  {
+    // unsplash.com/photos/1JKMMf_dOyA by @90ml_water
+    src: jobSeeker,
+    alt: "A smiling young woman in a saree holding a booklet",
+    position: "50% 20%",
+    layout: "person",
+  },
+  {
+    // unsplash.com/photos/1VqHRwxcCCw by @mdesign85
+    src: graduate,
+    alt: "A graduate in cap and gown, seen from behind, facing the graduation crowd",
+    position: "50% 0%",
+    layout: "person",
+  },
+  {
+    // unsplash.com/photos/B3UFXwcVbc4 by @eprouzet
+    src: hiringSign,
+    alt: "Signs in a window reading We are hiring and Apply today",
+    // Nudged left so "Apply today" clears the closing-soon card.
+    position: "85% 0%",
+    layout: "sign",
+  },
+];
 
 export interface HeroStats {
   total: number;
@@ -36,6 +65,7 @@ export function HomeHero({
   stats,
   latest,
   fields,
+  photo = 0,
 }: {
   /** "11 Oct": when the listings last changed, Sri Lanka time. */
   updated: string | null;
@@ -43,6 +73,8 @@ export function HomeHero({
   stats: HeroStats;
   latest: HeroJob | null;
   fields: { value: string; count: number }[];
+  /** Which of HERO_PHOTOS to show. */
+  photo?: number;
 }) {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[minmax(0,1fr)_470px] xl:gap-14">
@@ -74,7 +106,7 @@ export function HomeHero({
         </ul>
       </div>
 
-      <HeroArt stats={stats} latest={latest} />
+      <HeroArt stats={stats} latest={latest} photo={HERO_PHOTOS[photo] ?? HERO_PHOTOS[0]} />
     </div>
   );
 }
@@ -107,7 +139,15 @@ function Sparkle({ className = "" }: { className?: string }) {
   );
 }
 
-function HeroArt({ stats, latest }: { stats: HeroStats; latest: HeroJob | null }) {
+function HeroArt({
+  stats,
+  latest,
+  photo,
+}: {
+  stats: HeroStats;
+  latest: HeroJob | null;
+  photo: (typeof HERO_PHOTOS)[number];
+}) {
   const share = stats.total > 0 ? stats.closingThisWeek / stats.total : 0;
   const R = 22;
   const C = 2 * Math.PI * R;
@@ -121,7 +161,11 @@ function HeroArt({ stats, latest }: { stats: HeroStats; latest: HeroJob | null }
         aria-hidden="true"
         className="hero-orbit absolute right-[-12px] top-[16px] h-[480px] w-[480px] rounded-full border-2 border-dashed border-ink/15"
       />
-      <Sparkle className="hero-pop absolute left-[18px] top-[10px] h-9 w-9 fill-mark stroke-ink stroke-[1.2]" />
+      <Sparkle
+        className={`hero-pop absolute h-9 w-9 fill-mark stroke-ink stroke-[1.2] ${
+          photo.layout === "sign" ? "left-[250px] top-[2px]" : "left-[18px] top-[10px]"
+        }`}
+      />
       <Sparkle className="hero-pop absolute right-[2px] top-[150px] h-5 w-5 fill-ink [animation-delay:1.1s]" />
       <Sparkle className="hero-pop absolute bottom-[30px] right-[34px] h-7 w-7 fill-ink [animation-delay:1.3s]" />
       <span aria-hidden="true" className="absolute left-[78px] top-[120px] h-2.5 w-2.5 rounded-full bg-hot" />
@@ -130,17 +174,20 @@ function HeroArt({ stats, latest }: { stats: HeroStats; latest: HeroJob | null }
       {/* The person: an arch frame, like a doorway into a job. */}
       <div className="absolute bottom-0 right-[58px] h-[480px] w-[350px] overflow-hidden rounded-b-[28px] rounded-t-full border-[6px] border-surface bg-sunk shadow-lift">
         <Image
-          src={heroPhoto}
-          alt="A smiling young woman in a saree holding a booklet"
+          src={photo.src}
+          alt={photo.alt}
           fill
           sizes="350px"
           placeholder="blur"
-          className="object-cover object-[50%_20%]"
+          className="object-cover"
+          style={{ objectPosition: photo.position }}
         />
       </div>
 
       {/* Floating cards, all real data. */}
-      <div className="hero-float absolute left-0 top-[86px] flex items-center gap-3 rounded-2xl bg-surface py-3 pl-3 pr-4 shadow-lift [animation-delay:.35s]">
+      <div
+        className={`hero-float absolute ${photo.layout === "sign" ? "left-0 top-[14px]" : "left-0 top-[86px]"} flex items-center gap-3 rounded-2xl bg-surface py-3 pl-3 pr-4 shadow-lift [animation-delay:.35s]`}
+      >
         <span className="grid h-11 w-11 place-items-center rounded-xl bg-mark text-on-mark">
           <Icon name="work" filled className="text-[24px]" />
         </span>
