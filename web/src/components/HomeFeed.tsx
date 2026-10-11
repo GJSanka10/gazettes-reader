@@ -90,8 +90,8 @@ export function HomeFeed({
 
   return (
     <>
-      <div className="border-b-2 border-ink bg-surface">
-        <div className="mx-auto max-w-[1240px] px-4 pb-10 pt-10 md:px-8 md:pb-12 md:pt-14">{intro}</div>
+      <div className="hero-wash border-b border-rule">
+        <div className="mx-auto max-w-[1240px] px-4 pb-6 pt-8 md:px-8 md:pt-12">{intro}</div>
       </div>
 
       <div className="mx-auto mt-8 grid grid-cols-[minmax(0,1fr)] max-w-[1240px] gap-10 px-4 md:mt-10 md:px-8 lg:grid-cols-[minmax(0,1fr)_340px]">
