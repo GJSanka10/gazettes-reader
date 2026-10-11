@@ -195,6 +195,13 @@ export function LatestBlock({
   closingThisWeek: number;
 }) {
   const date = issue ? parseClosingDate(issue.date) : updatedAt ? new Date(updatedAt) : null;
+  const updatedDate = updatedAt ? new Date(updatedAt) : null;
+  // In Sri Lanka time: a 13:37 UTC update is still the same day in Colombo, but
+  // anything after 18:30 UTC is the next day there.
+  const updated =
+    updatedDate && !Number.isNaN(updatedDate.getTime())
+      ? updatedDate.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Asia/Colombo" }).replace("Sept", "Sep")
+      : null;
 
   return (
     <section aria-labelledby="latest-title" className="flex gap-5">
@@ -207,7 +214,7 @@ export function LatestBlock({
       )}
       <div className="min-w-0">
         <h2 id="latest-title" className="text-[15px] font-bold text-ink">
-          {issue ? `Latest Gazette${issue.number ? `, No. ${issue.number}` : ""}` : "Latest update"}
+          {issue ? `Latest Gazette read${issue.number ? `, No. ${issue.number}` : ""}` : "Latest update"}
           {date && (
             <span className="sr-only">
               {" "}
@@ -216,14 +223,16 @@ export function LatestBlock({
           )}
         </h2>
         {date && (
-          <p className="text-[14px] text-ink-3">{date.toLocaleDateString("en-GB", { weekday: "long" })}</p>
+          <p className="text-[14px] text-ink-3">
+            {issue ? "Published " : ""}
+            {date.toLocaleDateString("en-GB", { weekday: "long" })}
+          </p>
         )}
         <ul className="mt-2.5 space-y-0.5 text-[15px] leading-snug text-ink-2">
           <li>
-            <strong className="nums font-bold text-ink">{issue ? issue.count : total}</strong>{" "}
-            {issue
-              ? `${issue.count === 1 ? "vacancy" : "vacancies"} in this issue`
-              : `open government ${total === 1 ? "vacancy" : "vacancies"}`}
+            <strong className="nums font-bold text-ink">{total}</strong> open government{" "}
+            {total === 1 ? "vacancy" : "vacancies"}
+            {issue && issue.count > 0 && <span className="text-ink-3">, {issue.count} from this issue</span>}
           </li>
           {newCount > 0 && (
             <li>
@@ -236,6 +245,14 @@ export function LatestBlock({
             </li>
           )}
         </ul>
+        {updated && (
+          // The issue date alone reads as stale: the English edition of a Friday
+          // Gazette is often published days later, so say when we last updated too.
+          <p className="mt-2.5 max-w-[34ch] text-[13px] leading-snug text-ink-3">
+            Site updated {updated}.{" "}
+            {issue && "Each Gazette is added once its English edition is published, usually a few days after the Friday issue."}
+          </p>
+        )}
       </div>
     </section>
   );
