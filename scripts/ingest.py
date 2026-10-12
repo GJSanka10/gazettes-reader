@@ -1126,11 +1126,15 @@ def add_sinhala_to_gazette_vacancies(data, budget):
                 print(f"  + {v['serial']} {v['titleEn']}: {v.get('titleSi') or '(no title found)'}")
             # A verified title is what confirms these pages are the same notice; only
             # then does the Sinhala button point at them instead of the whole issue.
+            # The numbers can sit a page inside the notice's real edges (its heading
+            # page has few; its application form may have none), so the excerpt takes
+            # one page either side: a sliver of a neighbour beats a missing heading.
             if any(v.get("titleSi") for v in posts):
-                excerpt = save_local_excerpt(si_url, *pages)
+                span = (max(1, pages[0] - 1), min(len(si), pages[1] + 1))
+                excerpt = save_local_excerpt(si_url, *span)
                 for v in posts:
                     v["pdfUrlSi"] = excerpt
-                    v["pdfPagesSi"] = list(pages)
+                    v["pdfPagesSi"] = list(span)
 
 
 def skip_post(data, post_url, reason):
