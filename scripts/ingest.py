@@ -846,6 +846,9 @@ SI_DOUBLED = re.compile("([" + SI_SIGNS + "])\\1+")
 # Spent on Sinhala per run at most, after the English Gazette pass and before
 # gazette.lk, so a Sinhala backlog can't starve new vacancies.
 MAX_SINHALA_CALLS_PER_RUN = 15
+# Bump when the Sinhala method changes, so vacancies an older method gave up on are
+# tried again. "lines-v1": the model answers with line numbers (2026-10-12).
+SI_METHOD = "lines-v1"
 
 
 def clean_sinhala(text):
@@ -859,10 +862,6 @@ def is_sinhala_text(text):
     letters = [c for c in text or "" if c.isalpha()]
     sinhala = sum(1 for c in letters if "඀" <= c <= "෿")
     return bool(letters) and sinhala / len(letters) >= 0.6 and not SI_JUNK.search(text)
-
-
-def _squash(text):
-    return re.sub(r"\s+", "", text or "")
 
 
 def sinhala_pages(path):
@@ -944,31 +943,54 @@ def locate_notices(notices, en, si):
 
 
 SI_COPY_PROMPT = """Below is the text of one notice from the SINHALA edition of a Sri Lankan \
-Government Gazette, and the posts the ENGLISH edition of the same notice lists. For each post, \
-copy from the Sinhala text:
-titleSi - the post's title exactly as printed in the Sinhala text
-instSi  - the recruiting institution exactly as printed in the Sinhala text
+Government Gazette, with numbered lines, and the posts the ENGLISH edition of the same notice \
+lists. For each post, give:
+title - the line numbers [first, last] where this post's own title is printed (a table row, \
+or the heading that names the post); use the fewest lines that hold the whole title
+inst  - the line numbers [first, last] where the recruiting institution's name is printed
 
-Copy characters exactly; never translate, paraphrase or correct. If the Sinhala text is not the \
-same notice (for example a different post, or a 1st examination where the English says 2nd), or \
-a value is not printed in it, use null. Return ONLY a JSON object (no markdown fences, no \
-commentary) mapping each post key to {{"titleSi": ..., "instSi": ...}}.
+Answer with LINE NUMBERS only; never write out, translate or correct the Sinhala. If the Sinhala \
+text is not the same notice (for example a different post, or a 1st examination where the English \
+says 2nd), or a value is not printed in it, use null. Return ONLY a JSON object, mapping each post \
+key to {{"title": [first, last] or null, "inst": [first, last] or null}}. Example: \
+{{"GOVLK-7": {{"title": [12, 13], "inst": [3, 3]}}}}
 
 --- ENGLISH POSTS ---
 {posts}
 --- END ---
 
---- SINHALA NOTICE TEXT ---
+--- SINHALA NOTICE TEXT (numbered lines) ---
 {text}
 --- END ---
 """
 
+# All free OpenRouter models are reasoning models now (2026-10-12). The Sinhala
+# lookup needs no reasoning; Gemma handles Sinhala well, lets reasoning be switched
+# off and supports a JSON response format. The run's main model is the fallback.
+OPENROUTER_SINHALA_MODEL = os.environ.get("OPENROUTER_SINHALA_MODEL", "google/gemma-4-31b-it:free")
 
-def call_llm_json(prompt):
-    """One JSON object from the model. Asks for low reasoning effort: the first live
-    run (2026-10-12) got empty replies to long Sinhala prompts, consistent with the
-    reasoning model spending its whole token budget thinking. Tolerates JSON wrapped
-    in prose, and says why when there's no answer at all."""
+
+def extract_json_object(raw, expect=()):
+    """The JSON object in a reply, even when the model wrote prose around it (some
+    write their working, with {...}-shaped examples, into the reply itself): the last
+    object that parses, preferring one keyed by the expected post keys."""
+    decoder, found = json.JSONDecoder(), []
+    for i, ch in enumerate(raw):
+        if ch != "{":
+            continue
+        try:
+            obj, _ = decoder.raw_decode(raw, i)
+        except ValueError:
+            continue
+        if isinstance(obj, dict):
+            found.append(obj)
+    keyed = [o for o in found if set(o) & set(expect)]
+    return (keyed or found or [None])[-1]
+
+
+def call_llm_json(prompt, model=None, expect=()):
+    """One JSON object from the model, or an error that says why there wasn't one
+    (finish_reason and token usage) so the log shows what went wrong."""
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
         raise RuntimeError("OPENROUTER_API_KEY not set")
@@ -981,11 +1003,12 @@ def call_llm_json(prompt):
             "X-Title": "The Living Gazette - ingest",
         },
         json={
-            "model": OPENROUTER_MODEL,
+            "model": model or OPENROUTER_MODEL,
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": 16000,
             "temperature": 0,
-            "reasoning": {"effort": "low"},
+            "reasoning": {"enabled": False} if model else {"effort": "low"},
+            **({"response_format": {"type": "json_object"}} if model else {}),
         },
         timeout=300,
     )
@@ -994,11 +1017,26 @@ def call_llm_json(prompt):
     body = resp.json()
     choice = (body.get("choices") or [{}])[0]
     raw = ((choice.get("message") or {}).get("content") or "").strip()
-    match = re.search(r"\{.*\}", raw, re.DOTALL)
-    if not match:
+    obj = extract_json_object(raw, expect)
+    if obj is None:
         raise RuntimeError(f"no JSON in reply (finish_reason={choice.get('finish_reason')},"
-                           f" usage={body.get('usage')}, content={raw[:120]!r})")
-    return json.loads(match.group(0))
+                           f" usage={(body.get('usage') or {}).get('completion_tokens')} completion tokens,"
+                           f" content={raw[:120]!r})")
+    return obj
+
+
+def lines_text(lines, span):
+    """The text of numbered lines [first, last] (1-based), joined; None if the span
+    isn't a short, valid range. Leading list markers like "1." or "(අ)" are dropped."""
+    if not (isinstance(span, list) and len(span) == 2 and all(isinstance(n, int) for n in span)):
+        return None
+    first, last = span
+    if not 1 <= first <= last <= len(lines) or last - first > 3:
+        return None
+    text = " ".join(lines[first - 1:last])
+    text = re.sub(r"^\s*(?:\(?[\dIVXivx]{1,4}[.)]|\([^\s)]{1,3}\))\s*", "", text)
+    text = re.sub(r"\s+", " ", text).strip(" :-–")
+    return text if 2 <= len(text) <= 250 else None
 
 
 def save_local_excerpt(local_url, first_page, last_page):
@@ -1019,12 +1057,13 @@ def save_local_excerpt(local_url, first_page, last_page):
 def add_sinhala_to_gazette_vacancies(data, budget):
     """Fills titleSi / instSi (and a Sinhala excerpt, pdfUrlSi) on Gazette vacancies that
     don't have them yet, from the hosted Sinhala edition. Each vacancy is tried once
-    (_siChecked); a failed LLM call leaves it untried so the next run retries."""
+    by each method (_siChecked = SI_METHOD), so a better method retries what an older
+    one missed; a failed LLM call leaves it untried so the next run retries."""
     spend = LLMBudget(min(MAX_SINHALA_CALLS_PER_RUN, budget.left))
     issues = {}
     for v in data["vacancies"]:
         if (v.get("sourceKind") == "gazette" and v.get("pdfPages") and v.get("pdfFullUrl")
-                and v.get("pdfFullUrlSi") and not v.get("titleSi") and not v.get("_siChecked")):
+                and v.get("pdfFullUrlSi") and not v.get("titleSi") and v.get("_siChecked") != SI_METHOD):
             issues.setdefault((v["pdfFullUrl"], v["pdfFullUrlSi"]), []).append(v)
 
     for (en_url, si_url), vacancies in issues.items():
@@ -1035,7 +1074,7 @@ def add_sinhala_to_gazette_vacancies(data, budget):
         if sum(is_sinhala_text(p) for p in si) < len(si) / 2:
             print(f"  ! {si_path.name}: Sinhala text layer unusable — skipping this issue")
             for v in vacancies:
-                v["_siChecked"] = True
+                v["_siChecked"] = SI_METHOD
             continue
 
         notices = {}
@@ -1049,28 +1088,42 @@ def add_sinhala_to_gazette_vacancies(data, budget):
             if not pages or numbers_agree("\n".join(en[key[0] - 1:key[1]]), si_text) < 0.5:
                 print(f"  ~ no confident Sinhala match for pages {key[0]}-{key[1]} ({posts[0]['titleEn']})")
                 for v in posts:
-                    v["_siChecked"] = True
+                    v["_siChecked"] = SI_METHOD
                 continue
-            if not spend.take() or not budget.take():
-                break
-            try:
-                copied = call_llm_json(SI_COPY_PROMPT.format(
-                    posts="\n".join(f"{v['serial']}: {v['titleEn']} — {v.get('instEn')}" for v in posts),
-                    text=si_text[:10000]))
-            except Exception as e:
-                print(f"  ! copying Sinhala for pages {key[0]}-{key[1]} failed: {e}", file=sys.stderr)
-                continue
-            haystack = _squash(si_text)
+            # The model answers with line numbers and the text is cut from the PDF's own
+            # lines here, so what's stored is the Sinhala as printed, by construction.
+            lines = [ln.strip() for ln in si_text.splitlines() if ln.strip()]
+            numbered, size = [], 0
+            for n, ln in enumerate(lines, start=1):
+                size += len(ln) + 8
+                if size > 10000:
+                    break
+                numbered.append(f"L{n}: {ln}")
+            prompt = SI_COPY_PROMPT.format(
+                posts="\n".join(f"{v['serial']}: {v['titleEn']} — {v.get('instEn')}" for v in posts),
+                text="\n".join(numbered))
+            expect = [v["serial"] for v in posts]
+            answer = None
+            for model in (OPENROUTER_SINHALA_MODEL, None):
+                if not spend.take() or not budget.take():
+                    break
+                try:
+                    answer = call_llm_json(prompt, model=model, expect=expect)
+                    break
+                except Exception as e:
+                    print(f"  ! Sinhala lookup for pages {key[0]}-{key[1]} failed"
+                          f" ({model or OPENROUTER_MODEL}): {e}", file=sys.stderr)
+            if answer is None:
+                continue  # left untried: the next run retries
             for v in posts:
-                got = copied.get(v["serial"]) if isinstance(copied, dict) else None
+                got = answer.get(v["serial"]) if isinstance(answer, dict) else None
                 got = got if isinstance(got, dict) else {}
-                for field in ("titleSi", "instSi"):
-                    value = clean_sinhala(str(got.get(field) or "")).strip()
-                    # Verbatim or nothing: the value must appear in the Sinhala text.
-                    if value and is_sinhala_text(value) and _squash(value) in haystack:
-                        v[field] = re.sub(r"\s+", " ", value)
-                v["_siChecked"] = True
-                print(f"  + {v['serial']} {v['titleEn']}: {v.get('titleSi') or '(no verbatim title found)'}")
+                for field, span in (("titleSi", got.get("title")), ("instSi", got.get("inst"))):
+                    value = lines_text(lines, span)
+                    if value and is_sinhala_text(value):
+                        v[field] = value
+                v["_siChecked"] = SI_METHOD
+                print(f"  + {v['serial']} {v['titleEn']}: {v.get('titleSi') or '(no title found)'}")
             # A verified title is what confirms these pages are the same notice; only
             # then does the Sinhala button point at them instead of the whole issue.
             if any(v.get("titleSi") for v in posts):

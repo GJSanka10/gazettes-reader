@@ -55,9 +55,10 @@ def carry_forward(main, review):
     for v in review.get("vacancies", []):
         if identity(v) in have:
             # The Sinhala pass fills in existing vacancies; keep its work (and its
-            # "already tried" mark) unless main has Sinhala of its own.
+            # "tried by method X" mark) unless main has a Sinhala title of its own.
             mine = by_identity.get(identity(v))
-            if mine is not None and not mine.get("titleSi") and not mine.get("_siChecked"):
+            if (mine is not None and not mine.get("titleSi")
+                    and v.get("_siChecked") and v.get("_siChecked") != mine.get("_siChecked")):
                 for field in SINHALA_FIELDS:
                     if field in v:
                         mine[field] = v[field]
