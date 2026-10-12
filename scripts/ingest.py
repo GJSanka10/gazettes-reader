@@ -28,9 +28,11 @@ those get confirmed to work (see job.md §11.1/§11.2 for what's been verified s
 import hashlib
 import io
 import json
+import math
 import os
 import re
 import sys
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
@@ -829,10 +831,11 @@ def compute_status(closing_date_iso):
 # the rendered pages of Gazettes 2,507, 2,508 and 2,509 on 2026-10-11).
 #
 # The two editions print notices in a DIFFERENT order with different page numbers,
-# so each notice is located in the Sinhala edition first: one LLM call per issue
-# reads every page's bold headings and names the Sinhala page range of each English
-# notice, cross-checked against the numbers (salaries, dates, counts) both editions
-# print. Then one call per notice copies each post's Sinhala title. Any value that
+# so each notice is located in the Sinhala edition first, by the numbers both editions
+# print (salaries, dates, counts; see locate_notices). Then one LLM call per notice
+# copies each post's Sinhala title, or null if the pages are a different notice; an
+# earlier version asked the LLM to locate notices from page headings, and its replies
+# came back empty on the first live run (2026-10-12). Any value that
 # isn't found word for word in the Sinhala text is dropped, so a translation or a
 # guess can't get through; a field we can't fill stays empty.
 # ---------------------------------------------------------------------------
@@ -863,21 +866,10 @@ def _squash(text):
 
 
 def sinhala_pages(path):
-    """(page texts, page headings) for a Sinhala edition, both cleaned. Headings are
-    the bold lines of each page minus the running masthead."""
+    """A Sinhala edition's page texts, cleaned."""
     import pymupdf
 
-    texts, headings = [], []
-    for page in pymupdf.open(path):
-        texts.append(clean_sinhala(page.get_text()))
-        bold = []
-        for block in page.get_text("dict")["blocks"]:
-            for line in block.get("lines", []):
-                t = "".join(s["text"] for s in line["spans"] if s["flags"] & 16).strip()
-                if len(t) > 6 and "ගැසට්" not in clean_sinhala(t):
-                    bold.append(clean_sinhala(t))
-        headings.append(" | ".join(bold)[:300])
-    return texts, headings
+    return [clean_sinhala(page.get_text()) for page in pymupdf.open(path)]
 
 
 def english_pages(path):
@@ -906,24 +898,50 @@ def numbers_agree(en_text, si_text):
     return len(want & have) / len(want)
 
 
-SI_LOCATE_PROMPT = """Below are the bold headings of every page of the SINHALA edition of a Sri \
-Lankan Government Gazette, Part I : Section (IIA), and a list of notices from the ENGLISH edition \
-of the same issue. The two editions print the notices in a different order, with different page \
-numbers. For each English notice, find the same notice in the Sinhala edition: the page its \
-heading starts on and the last page before the next notice begins (include its application \
-form and schedules).
+def locate_notices(notices, en, si):
+    """Finds each English notice's pages in the Sinhala edition by the numbers both
+    print (salaries, dates, counts, reference numbers), weighted by how rare each is in
+    the issue. Every candidate range gets an F1 score: recall is how much of the
+    notice's numbers it holds, precision how much of the range's numbers belong to the
+    notice, so a long range can't win just by being long. Most confident first, and
+    two notices never claim the same pages (they may share a boundary page).
+    notices: {(first, last): ...} in English pages. Returns {(first, last): (a, b)}.
+    Not every guess is right; the copy step confirms it's the same notice."""
+    pages_tok = [number_tokens(p) for p in si]
+    df = Counter(t for toks in pages_tok for t in set(toks))
+    idf = {t: math.log(len(si) / c) for t, c in df.items()}
 
-Return ONLY a JSON object (no markdown fences, no commentary) mapping each notice key to \
-[first_page, last_page], or to null when you can't find it with confidence. Never guess.
+    def weight(counter):
+        return sum(idf.get(t, 0) * c for t, c in counter.items())
 
---- ENGLISH NOTICES ---
-{notices}
---- END ---
+    candidates = {}
+    for first, last in notices:
+        want = Counter(number_tokens("\n".join(en[first - 1:last])))
+        want_w = weight(want) or 1
+        length, scored = last - first + 1, []
+        for size in range(max(1, length - 3), length + 4):
+            for start in range(0, len(si) - size + 1):
+                have = Counter()
+                for toks in pages_tok[start:start + size]:
+                    have.update(toks)
+                shared = weight(want & have)
+                recall, precision = shared / want_w, shared / (weight(have) or 1)
+                f1 = 2 * recall * precision / (recall + precision) if shared else 0
+                scored.append((f1, start + 1, start + size))
+        candidates[(first, last)] = sorted(scored, reverse=True)
 
---- SINHALA PAGE HEADINGS ---
-{headings}
---- END ---
-"""
+    taken, found = [], {}
+    for key in sorted(candidates, key=lambda k: -(candidates[k][0][0] if candidates[k] else 0)):
+        for f1, a, b in candidates[key]:
+            if f1 < 0.4:
+                break
+            if any(set(range(a + 1, b)) & set(range(x, y + 1)) or (a, b) == (x, y) for x, y in taken):
+                continue
+            found[key] = (a, b)
+            taken.append((a, b))
+            break
+    return found
+
 
 SI_COPY_PROMPT = """Below is the text of one notice from the SINHALA edition of a Sri Lankan \
 Government Gazette, and the posts the ENGLISH edition of the same notice lists. For each post, \
@@ -932,8 +950,9 @@ titleSi - the post's title exactly as printed in the Sinhala text
 instSi  - the recruiting institution exactly as printed in the Sinhala text
 
 Copy characters exactly; never translate, paraphrase or correct. If the Sinhala text is not the \
-same notice, or a value is not printed in it, use null. Return ONLY a JSON object (no markdown \
-fences, no commentary) mapping each post key to {{"titleSi": ..., "instSi": ...}}.
+same notice (for example a different post, or a 1st examination where the English says 2nd), or \
+a value is not printed in it, use null. Return ONLY a JSON object (no markdown fences, no \
+commentary) mapping each post key to {{"titleSi": ..., "instSi": ...}}.
 
 --- ENGLISH POSTS ---
 {posts}
@@ -946,6 +965,10 @@ fences, no commentary) mapping each post key to {{"titleSi": ..., "instSi": ...}
 
 
 def call_llm_json(prompt):
+    """One JSON object from the model. Asks for low reasoning effort: the first live
+    run (2026-10-12) got empty replies to long Sinhala prompts, consistent with the
+    reasoning model spending its whole token budget thinking. Tolerates JSON wrapped
+    in prose, and says why when there's no answer at all."""
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
         raise RuntimeError("OPENROUTER_API_KEY not set")
@@ -957,15 +980,25 @@ def call_llm_json(prompt):
             "HTTP-Referer": "https://github.com/",
             "X-Title": "The Living Gazette - ingest",
         },
-        # Same reasoning-model token budget as structure_batch_with_llm().
-        json={"model": OPENROUTER_MODEL, "messages": [{"role": "user", "content": prompt}], "max_tokens": 16000, "temperature": 0},
+        json={
+            "model": OPENROUTER_MODEL,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": 16000,
+            "temperature": 0,
+            "reasoning": {"effort": "low"},
+        },
         timeout=300,
     )
     if resp.status_code != 200:
         raise RuntimeError(f"OpenRouter {resp.status_code}: {resp.text[:300]}")
-    raw = resp.json()["choices"][0]["message"]["content"].strip()
-    raw = re.sub(r"^```(json)?|```$", "", raw, flags=re.MULTILINE).strip()
-    return json.loads(raw)
+    body = resp.json()
+    choice = (body.get("choices") or [{}])[0]
+    raw = ((choice.get("message") or {}).get("content") or "").strip()
+    match = re.search(r"\{.*\}", raw, re.DOTALL)
+    if not match:
+        raise RuntimeError(f"no JSON in reply (finish_reason={choice.get('finish_reason')},"
+                           f" usage={body.get('usage')}, content={raw[:120]!r})")
+    return json.loads(match.group(0))
 
 
 def save_local_excerpt(local_url, first_page, last_page):
@@ -998,8 +1031,7 @@ def add_sinhala_to_gazette_vacancies(data, budget):
         en_path, si_path = PDF_HOST_DIR / Path(en_url).name, PDF_HOST_DIR / Path(si_url).name
         if not en_path.exists() or not si_path.exists() or spend.left <= 0:
             continue
-        en = english_pages(en_path)
-        si, headings = sinhala_pages(si_path)
+        en, si = english_pages(en_path), sinhala_pages(si_path)
         if sum(is_sinhala_text(p) for p in si) < len(si) / 2:
             print(f"  ! {si_path.name}: Sinhala text layer unusable — skipping this issue")
             for v in vacancies:
@@ -1008,30 +1040,14 @@ def add_sinhala_to_gazette_vacancies(data, budget):
 
         notices = {}
         for v in vacancies:
-            notices.setdefault(f"{v['pdfPages'][0]}-{v['pdfPages'][1]}", []).append(v)
-        listing = "\n".join(
-            f"{key}: {', '.join(sorted({p['titleEn'] for p in posts}))[:200]} — {posts[0].get('instEn')}"
-            f" (closes {posts[0].get('dateEn') or 'n/a'})"
-            for key, posts in notices.items()
-        )
-        if not spend.take() or not budget.take():
-            break
-        try:
-            located = call_llm_json(SI_LOCATE_PROMPT.format(
-                notices=listing, headings="\n".join(f"[{i}] {h}" for i, h in enumerate(headings, start=1))))
-        except Exception as e:
-            print(f"  ! locating notices in {si_path.name} failed: {e}", file=sys.stderr)
-            continue
+            notices.setdefault(tuple(v["pdfPages"]), []).append(v)
+        located = locate_notices(notices, en, si)
 
         for key, posts in notices.items():
-            pages = located.get(key) if isinstance(located, dict) else None
-            first, last = posts[0]["pdfPages"]
-            en_text = "\n".join(en[first - 1:last])
-            ok = (isinstance(pages, list) and len(pages) == 2 and all(isinstance(p, int) for p in pages)
-                  and 1 <= pages[0] <= pages[1] <= len(si) and pages[1] - pages[0] < MAX_NOTICE_PAGES + 3)
-            si_text = "\n".join(si[pages[0] - 1:pages[1]]) if ok else ""
-            if not ok or numbers_agree(en_text, si_text) < 0.5:
-                print(f"  ~ no confident Sinhala match for pages {key} ({posts[0]['titleEn']})")
+            pages = located.get(key)
+            si_text = "\n".join(si[pages[0] - 1:pages[1]]) if pages else ""
+            if not pages or numbers_agree("\n".join(en[key[0] - 1:key[1]]), si_text) < 0.5:
+                print(f"  ~ no confident Sinhala match for pages {key[0]}-{key[1]} ({posts[0]['titleEn']})")
                 for v in posts:
                     v["_siChecked"] = True
                 continue
@@ -1040,9 +1056,9 @@ def add_sinhala_to_gazette_vacancies(data, budget):
             try:
                 copied = call_llm_json(SI_COPY_PROMPT.format(
                     posts="\n".join(f"{v['serial']}: {v['titleEn']} — {v.get('instEn')}" for v in posts),
-                    text=si_text[:14000]))
+                    text=si_text[:10000]))
             except Exception as e:
-                print(f"  ! copying Sinhala for pages {key} failed: {e}", file=sys.stderr)
+                print(f"  ! copying Sinhala for pages {key[0]}-{key[1]} failed: {e}", file=sys.stderr)
                 continue
             haystack = _squash(si_text)
             for v in posts:
