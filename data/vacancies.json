@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T13:44:06.988249+00:00",
+  "updatedAt": "2026-10-12T08:43:22.001227+00:00",
   "vacancies": [
     {
       "real": true,
@@ -3548,6 +3548,22 @@
     "https://www.gazette.lk/2026/10/temporary-research-assistant-university-of-sri-jayewardenepura-job-vacancies-2026.html": {
       "reason": "scanned PDF, no text layer",
       "at": "2026-10-11T13:43:39.052863+00:00"
+    },
+    "https://www.gazette.lk/2026/10/accounts-executive-litro-gas-limited-job-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-12T08:43:19.471561+00:00"
+    },
+    "https://www.gazette.lk/2026/10/assistant-manager-litro-gas-limited-job-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-12T08:43:20.374385+00:00"
+    },
+    "https://www.gazette.lk/2026/10/director-national-engineering-research-development-centre-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-12T08:43:21.206119+00:00"
+    },
+    "https://www.gazette.lk/2026/10/chief-executive-officer-national-agri-market-services-limited-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-12T08:43:21.999690+00:00"
     }
   }
 }
