@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T08:43:22.001227+00:00",
+  "updatedAt": "2026-10-12T09:54:30.000865+00:00",
   "vacancies": [
     {
       "real": true,
@@ -696,7 +696,9 @@
       "_sourceKey": "govlk-2026-09-18-Assistant Director of Agriculture (Agricultural Development)-Department of Agriculture",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p18-25.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
+      "_siChecked": true
     },
     {
       "serial": "GOVLK-8",
@@ -745,7 +747,9 @@
       "_sourceKey": "govlk-2026-09-18-Assistant Director of Agriculture (Agricultural Research)-Department of Agriculture",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p18-25.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
+      "_siChecked": true
     },
     {
       "serial": "GOVLK-9",
@@ -794,7 +798,9 @@
       "_sourceKey": "govlk-2026-09-18-Assistant Director of Agriculture (Agricultural Economics)-Department of Agriculture",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p18-25.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
+      "_siChecked": true
     },
     {
       "serial": "GOVLK-10",
@@ -849,7 +855,15 @@
       "_sourceKey": "govlk-2026-09-25-Legal Officer in Grade III of Executive Service Category-Department of Agrarian Development, Ministry of Agriculture, Livestock, Land and Irrigation",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p9-17.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "titleSi": "විධායක සේවා ගණයේ III ශ්‍රේණියේ නීති නිලධාරී",
+      "instSi": "කෘෂිකර්ම, පශු සම්පත්, ඉඩම් සහ වාරිමාර්ග අමාත්‍යාංශය යටතේ වන ගොවිජන සංවර්ධන දෙපාර්තමේන්තුවේ",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p26-35.pdf",
+      "pdfPagesSi": [
+        26,
+        35
+      ]
     },
     {
       "serial": "ING-21",
@@ -1043,7 +1057,15 @@
       "_sourceKey": "govlk-2026-09-25-Driver (Grade III)-Commission to Investigate Allegations of Bribery or Corruption",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p4-8.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "titleSi": "රියදුරු තනතුරේ III ශ්‍රේණිය",
+      "instSi": "අල්ලස් හෝ දූෂණ චෝදනා විමර්ශන කොමිෂන් සභාව",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p21-26.pdf",
+      "pdfPagesSi": [
+        21,
+        26
+      ]
     },
     {
       "serial": "GOVLK-13",
@@ -1198,7 +1220,14 @@
       "_sourceKey": "govlk-2026-09-25-Deputy Director / Assistant Director (Provincial)-National Dangerous Drugs Control Board",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p19-21.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩල‍යේ",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p36-39.pdf",
+      "pdfPagesSi": [
+        36,
+        39
+      ]
     },
     {
       "serial": "GOVLK-16",
@@ -1253,7 +1282,15 @@
       "_sourceKey": "govlk-2026-09-25-Scientific Officer-National Dangerous Drugs Control Board",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p19-21.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "titleSi": "විද්‍යාත්මක නිලධාරි",
+      "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලයේ",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p36-39.pdf",
+      "pdfPagesSi": [
+        36,
+        39
+      ]
     },
     {
       "serial": "GOVLK-17",
@@ -1308,7 +1345,14 @@
       "_sourceKey": "govlk-2026-09-25-Assistant Scientific Officer-National Dangerous Drugs Control Board",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p19-21.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලයේ",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p36-39.pdf",
+      "pdfPagesSi": [
+        36,
+        39
+      ]
     },
     {
       "serial": "GOVLK-18",
@@ -2029,7 +2073,8 @@
       "_sourceKey": "govlk-2026-09-25-Veterinary Research Officer-Sri Lanka Animal Production and Health Service",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p41-46.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "_siChecked": true
     },
     {
       "serial": "GOVLK-34",
@@ -2081,7 +2126,8 @@
       "_sourceKey": "govlk-2026-09-25-Research Officer-Sri Lanka Animal Production and Health Service",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p41-46.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "_siChecked": true
     },
     {
       "serial": "GOVLK-35",
@@ -2127,7 +2173,15 @@
       "_sourceKey": "govlk-2026-09-25-2nd Efficiency Bar Examination for Officers of the Sri Lanka Principals Service - 2026-Ministry of Education, Higher Education and Vocational Education",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p46-49.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "titleSi": "ශ්‍රී ලංකා විදුහල්පති සේවයේ නිලධාරීන් සඳහා වන II වන කාර්යක්‍ෂමතා කඩඉම් විභාගය - 2026",
+      "instSi": "අධ්‍යාපන, උසස් අධ්‍යාපන සහ වෘත්තීය අධ්‍යාපන අමාත්‍යාංශය",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p49-53.pdf",
+      "pdfPagesSi": [
+        49,
+        53
+      ]
     },
     {
       "serial": "GOVLK-36",
@@ -2177,7 +2231,15 @@
       "_sourceKey": "govlk-2026-09-25-1st Efficiency Bar Examination for Officers of the Sri Lanka Principals Service - 2026-Ministry of Education, Higher Education and Vocational Education",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p49-51.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "titleSi": "ශ්‍රී ලංකා විදුහල්පති සේවයේ නිලධාරින් සඳහා වන I වන කාර්යක්‍ෂමතා කඩඉම් විභාගය - 2026",
+      "instSi": "අධ්‍යාපන, උසස් අධ්‍යාපන සහ වෘත්තීය අධ්‍යාපන අමාත්‍යාංශය",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p51-54.pdf",
+      "pdfPagesSi": [
+        51,
+        54
+      ]
     },
     {
       "serial": "GOVLK-37",
@@ -2228,7 +2290,15 @@
       "_sourceKey": "govlk-2026-10-02-Registrar of Muslim Marriages - Mee Ella area of Kandabada Patthuwa-Registrar General’s Department",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p4-5.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "කන්දබඩ පත්තුව මී ඇල්ල ප්‍රදේශයේ මුස්ලිම් විවාහ රෙජිස්ට්‍රාර් ධුරය",
+      "instSi": "රෙජිස්ට‍්‍රාර් ජනරාල් දෙපාර්තමේන්තුව",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p10-13.pdf",
+      "pdfPagesSi": [
+        10,
+        13
+      ]
     },
     {
       "serial": "GOVLK-38",
@@ -2279,7 +2349,15 @@
       "_sourceKey": "govlk-2026-10-02-Registrar of Muslim Marriages - Galbokka Division-Registrar General’s Department",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p4-5.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "ගල්බොක්ක කොට්ඨාසයේ මුස්ලිම් විවාහ රෙජිස්ට්‍රාර් ධුරය",
+      "instSi": "රෙජිස්ට‍්‍රාර් ජනරාල් දෙපාර්තමේන්තුව",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p10-13.pdf",
+      "pdfPagesSi": [
+        10,
+        13
+      ]
     },
     {
       "serial": "GOVLK-39",
@@ -2330,7 +2408,15 @@
       "_sourceKey": "govlk-2026-10-02-Registrar of Births, Deaths and Marriages/Additional Marriages (General) - Agulugaha Division & Marriages Registrar (General) of Thalpepaththuwa Division-Registrar General’s Department",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p5-6.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "අඟුළුගහ කොට්ඨාසයේ උප්පැන්න, මරණ හා තල්පෙපත්තුව කොට්ඨාසයේ විවාහ (සාමාන්‍යය) රෙජිස්ට්‍රාර් ධුරය",
+      "instSi": "රෙජිස්ට‍්‍රාර් ජනරාල් දෙපාර්තමේන්තුව",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p11-14.pdf",
+      "pdfPagesSi": [
+        11,
+        14
+      ]
     },
     {
       "serial": "GOVLK-40",
@@ -2381,7 +2467,15 @@
       "_sourceKey": "govlk-2026-10-02-Registrar of Births, Deaths and Marriages/Additional Marriages (General) - Wattahena Division & Marriages Registrar (General) of Benthara Walallawita Koralaya Division-Registrar General’s Department",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p5-6.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "වත්තහේන කොට්ඨාසයේ උප්පැන්න, මරණ හා බෙන්තර වලල්ලාවිට කෝරළය කොට්ඨාසයේ විවාහ (සාමාන්‍යය) රෙජිස්ට්‍රාර් ධුරය",
+      "instSi": "රෙජිස්ට‍්‍රාර් ජනරාල් දෙපාර්තමේන්තුව",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p11-14.pdf",
+      "pdfPagesSi": [
+        11,
+        14
+      ]
     },
     {
       "serial": "GOVLK-41",
@@ -2432,7 +2526,15 @@
       "_sourceKey": "govlk-2026-10-02-Registrar of Births, Deaths and Marriages/Additional Marriages (General) - Nagoda Division & Marriages Registrar (General) of Wallabadapaththuwa Division-Registrar General’s Department",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p5-6.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "නාගොඩ කොට්ඨාසයේ උප්පැන්න, මරණ හා වැල්ලබඩ පත්තුව කොට්ඨාසයේ විවාහ (සාමාන්‍යය) රෙජිස්ට්‍රාර් ධුරය",
+      "instSi": "රෙජිස්ට‍්‍රාර් ජනරාල් දෙපාර්තමේන්තුව",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p11-14.pdf",
+      "pdfPagesSi": [
+        11,
+        14
+      ]
     },
     {
       "serial": "GOVLK-42",
@@ -2483,7 +2585,15 @@
       "_sourceKey": "govlk-2026-10-02-Registrar of Marriages (General) - Wallabadapaththuwa Division (Ambalangoda)-Registrar General’s Department",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p5-6.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "වැල්ලබඩ පත්තුව කොට්ඨාසයේ (අම්බලන්ගොඩ) විවාහ (සාමාන්‍යය) රෙජිස්ට්‍රාර් ධුරය",
+      "instSi": "රෙජිස්ට‍්‍රාර් ජනරාල් දෙපාර්තමේන්තුව",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p11-14.pdf",
+      "pdfPagesSi": [
+        11,
+        14
+      ]
     },
     {
       "serial": "GOVLK-43",
@@ -2534,7 +2644,15 @@
       "_sourceKey": "govlk-2026-10-02-Registrar of Additional Marriages (General) - Wallabadapaththuwa Ambalangoda Division-Registrar General’s Department",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p5-6.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "වැල්ලබඩ පත්තුව අම්බලන්ගොඩ අතිරේක විවාහ (සාමාන්‍යය) රෙජිස්ට්‍රාර් ධුරය",
+      "instSi": "රෙජිස්ට‍්‍රාර් ජනරාල් දෙපාර්තමේන්තුව",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p11-14.pdf",
+      "pdfPagesSi": [
+        11,
+        14
+      ]
     },
     {
       "serial": "GOVLK-44",
@@ -2582,7 +2700,14 @@
       "_sourceKey": "govlk-2026-10-02-Member of the Commission to Investigate Allegations of Bribery or Corruption (CIABOC)-Constitutional Council",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p9-9.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "අල්ලස් හෝ දූෂණ චෝදනා විමර්ශනය කිරීමේ කොමිෂන් සභාවේ සාමාජික ධුරයට නිර්දේශ කිරීම",
+      "_siChecked": true,
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p13-15.pdf",
+      "pdfPagesSi": [
+        13,
+        15
+      ]
     },
     {
       "serial": "GOVLK-45",
