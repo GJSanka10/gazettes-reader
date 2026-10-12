@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-11T07:06:04.790508+00:00",
+  "updatedAt": "2026-10-11T13:44:06.988249+00:00",
   "vacancies": [
     {
       "real": true,
@@ -3082,17 +3082,452 @@
       ],
       "verifiedAt": null,
       "_needsReview": true
+    },
+    {
+      "serial": "GOVLK-55",
+      "real": true,
+      "titleEn": "Post of Birth & Deaths registrar of Agulugaha Division & Marriages Registrar (General) of Thalpepaththuwa Division",
+      "instEn": "Registrar General's Department",
+      "dateEn": "2026-11-02",
+      "status": "open",
+      "days": "21 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Gazette No. 3404, 02.10.2026",
+      "citationType": "gazette",
+      "sourceKind": "gazette",
+      "gazetteNumber": "2,509",
+      "publishedDate": "2026-10-02",
+      "firstSeenAt": "2026-10-11T13:16:45.450256+00:00",
+      "sourceUrl": "https://documents.gov.lk/web/Gazette?date=2026-10-02",
+      "pdfPages": [
+        6,
+        6
+      ],
+      "descEn": "Applications invited for the post of Birth & Deaths Registrar and Marriages Registrar in Agulugaha Division and Thalpepaththuwa Division of Galle District. Applications to be submitted by registered post to the respective District Secretariat.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": null,
+      "confidence": 0.8,
+      "qualificationLevel": null,
+      "locations": [
+        "Agulugaha Division",
+        "Thalpepaththuwa Division"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Obtain application from District Secretariat, Divisional Secretariat, or download from www.rgd.gov.lk",
+        "Fill application and Annex-01",
+        "Send by registered post to the address in schedule (District Secretary/Additional Registrar General, District Secretariat, Galle) on or before 02 November 2026"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_sourceKey": "govlk-2026-10-02-Post of Birth & Deaths registrar of Agulugaha Division & Marriages Registrar (General) of Thalpepaththuwa Division-Registrar General's Department",
+      "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p6-6.pdf",
+      "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+    },
+    {
+      "serial": "GOVLK-56",
+      "real": true,
+      "titleEn": "Post of Birth & Deaths registrar of Wattahena Division & marriages Registrar (General) of Benthara Walallawita Koralaya Division",
+      "instEn": "Registrar General's Department",
+      "dateEn": "2026-11-02",
+      "status": "open",
+      "days": "21 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Gazette No. 3404, 02.10.2026",
+      "citationType": "gazette",
+      "sourceKind": "gazette",
+      "gazetteNumber": "2,509",
+      "publishedDate": "2026-10-02",
+      "firstSeenAt": "2026-10-11T13:16:45.450556+00:00",
+      "sourceUrl": "https://documents.gov.lk/web/Gazette?date=2026-10-02",
+      "pdfPages": [
+        6,
+        6
+      ],
+      "descEn": "Applications invited for the post of Birth & Deaths Registrar and Marriages Registrar in Wattahena Division and Benthara Walallawita Koralaya Division of Galle District. Applications to be submitted by registered post to the respective District Secretariat.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": null,
+      "confidence": 0.8,
+      "qualificationLevel": null,
+      "locations": [
+        "Wattahena Division",
+        "Benthara Walallawita Koralaya Division"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Obtain application from District Secretariat, Divisional Secretariat, or download from www.rgd.gov.lk",
+        "Fill application and Annex-01",
+        "Send by registered post to the address in schedule (District Secretary/Additional Registrar General, District Secretariat, Galle) on or before 02 November 2026"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_sourceKey": "govlk-2026-10-02-Post of Birth & Deaths registrar of Wattahena Division & marriages Registrar (General) of Benthara Walallawita Koralaya Division-Registrar General's Department",
+      "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p6-6.pdf",
+      "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+    },
+    {
+      "serial": "GOVLK-57",
+      "real": true,
+      "titleEn": "Post of Birth & Deaths registrar of Nagoda Division & marriages Registrar (General) of Wallabadapaththuwa Division",
+      "instEn": "Registrar General's Department",
+      "dateEn": "2026-11-02",
+      "status": "open",
+      "days": "21 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Gazette No. 3404, 02.10.2026",
+      "citationType": "gazette",
+      "sourceKind": "gazette",
+      "gazetteNumber": "2,509",
+      "publishedDate": "2026-10-02",
+      "firstSeenAt": "2026-10-11T13:16:45.450802+00:00",
+      "sourceUrl": "https://documents.gov.lk/web/Gazette?date=2026-10-02",
+      "pdfPages": [
+        6,
+        6
+      ],
+      "descEn": "Applications invited for the post of Birth & Deaths Registrar and Marriages Registrar in Nagoda Division and Wallabadapaththuwa Division of Galle District. Applications to be submitted by registered post to the respective District Secretariat.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": null,
+      "confidence": 0.8,
+      "qualificationLevel": null,
+      "locations": [
+        "Nagoda Division",
+        "Wallabadapaththuwa Division"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Obtain application from District Secretariat, Divisional Secretariat, or download from www.rgd.gov.lk",
+        "Fill application and Annex-01",
+        "Send by registered post to the address in schedule (District Secretary/Additional Registrar General, District Secretariat, Galle) on or before 02 November 2026"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_sourceKey": "govlk-2026-10-02-Post of Birth & Deaths registrar of Nagoda Division & marriages Registrar (General) of Wallabadapaththuwa Division-Registrar General's Department",
+      "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p6-6.pdf",
+      "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+    },
+    {
+      "serial": "GOVLK-58",
+      "real": true,
+      "titleEn": "Post of Registrar of Marriages (General) of Wallabadapaththuwa Division (Ambalangoda)",
+      "instEn": "Registrar General's Department",
+      "dateEn": "2026-11-02",
+      "status": "open",
+      "days": "21 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Gazette No. 3404, 02.10.2026",
+      "citationType": "gazette",
+      "sourceKind": "gazette",
+      "gazetteNumber": "2,509",
+      "publishedDate": "2026-10-02",
+      "firstSeenAt": "2026-10-11T13:16:45.451043+00:00",
+      "sourceUrl": "https://documents.gov.lk/web/Gazette?date=2026-10-02",
+      "pdfPages": [
+        6,
+        6
+      ],
+      "descEn": "Applications invited for the post of Registrar of Marriages (General) in Wallabadapaththuwa Division (Ambalangoda) of Galle District. Applications to be submitted by registered post to the respective District Secretariat.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": null,
+      "confidence": 0.8,
+      "qualificationLevel": null,
+      "locations": [
+        "Wallabadapaththuwa Division (Ambalangoda)"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Obtain application from District Secretariat, Divisional Secretariat, or download from www.rgd.gov.lk",
+        "Fill application and Annex-01",
+        "Send by registered post to the address in schedule (District Secretary/Additional Registrar General, District Secretariat, Galle) on or before 02 November 2026"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_sourceKey": "govlk-2026-10-02-Post of Registrar of Marriages (General) of Wallabadapaththuwa Division (Ambalangoda)-Registrar General's Department",
+      "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p6-6.pdf",
+      "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+    },
+    {
+      "serial": "GOVLK-59",
+      "real": true,
+      "titleEn": "Post of Registrar of Additional marriages (General) of Wallabadapaththuwa Division Ambalangoda",
+      "instEn": "Registrar General's Department",
+      "dateEn": "2026-11-02",
+      "status": "open",
+      "days": "21 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Gazette No. 3404, 02.10.2026",
+      "citationType": "gazette",
+      "sourceKind": "gazette",
+      "gazetteNumber": "2,509",
+      "publishedDate": "2026-10-02",
+      "firstSeenAt": "2026-10-11T13:16:45.451286+00:00",
+      "sourceUrl": "https://documents.gov.lk/web/Gazette?date=2026-10-02",
+      "pdfPages": [
+        6,
+        6
+      ],
+      "descEn": "Applications invited for the post of Registrar of Additional Marriages (General) in Wallabadapaththuwa Division Ambalangoda of Galle District. Applications to be submitted by registered post to the respective District Secretariat.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": null,
+      "confidence": 0.8,
+      "qualificationLevel": null,
+      "locations": [
+        "Wallabadapaththuwa Division Ambalangoda"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Obtain application from District Secretariat, Divisional Secretariat, or download from www.rgd.gov.lk",
+        "Fill application and Annex-01",
+        "Send by registered post to the address in schedule (District Secretary/Additional Registrar General, District Secretariat, Galle) on or before 02 November 2026"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_sourceKey": "govlk-2026-10-02-Post of Registrar of Additional marriages (General) of Wallabadapaththuwa Division Ambalangoda-Registrar General's Department",
+      "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p6-6.pdf",
+      "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+    },
+    {
+      "serial": "GOVLK-60",
+      "real": true,
+      "titleEn": "Administrative Officer",
+      "instEn": "National Institute of Social Development",
+      "dateEn": "2026-10-16",
+      "status": "soon",
+      "days": "4 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Gazette No. 3405, 02.10.2026",
+      "citationType": "gazette",
+      "sourceKind": "gazette",
+      "gazetteNumber": "2,509",
+      "publishedDate": "2026-10-02",
+      "firstSeenAt": "2026-10-11T13:16:45.451564+00:00",
+      "sourceUrl": "https://documents.gov.lk/web/Gazette?date=2026-10-02",
+      "pdfPages": [
+        7,
+        8
+      ],
+      "descEn": "Recruitment for Administrative Officer at National Institute of Social Development under Ministry of Rural Development, Social Security and Community Empowerment. Selection via structured interview based on merit.",
+      "age": "22-45 years (max age limit not applicable to internal applicants)",
+      "quota": null,
+      "salary": "JM 1-1-2025-72,650-10x1360-18x2040-122,970/- (effective 01.01.2027); basic salary Rs. 65,633/- up to 31.12.2026",
+      "qualEn": "External: Degree in Human Resource Management/Commerce/Public Administration/Public Management/Management recognized by UGC. Internal: Same degree or 5 years satisfactory service as Management Assistant Non-Technical (MA 1) Grade II.",
+      "confidence": 0.9,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Island-wide"
+      ],
+      "employmentTerm": null,
+      "examType": "none",
+      "selectionMethod": "Structured interview, merit-based",
+      "howToApply": [
+        "Prepare application with complete bio-data",
+        "Send by registered post to Director General, National Institute of Social Development, Liyanagemulla, Seeduwa",
+        "Mark 'Post applied for' at top left corner of envelope",
+        "Ensure application reaches on or before 16.10.2026",
+        "Public sector officers must apply through Head of Department/Institution"
+      ],
+      "requiredDocuments": [
+        "Complete bio-data"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_sourceKey": "govlk-2026-10-02-Administrative Officer-National Institute of Social Development",
+      "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p7-8.pdf",
+      "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+    },
+    {
+      "serial": "GOVLK-61",
+      "real": true,
+      "titleEn": "English Instructor",
+      "instEn": "National Institute of Social Development",
+      "dateEn": "2026-10-16",
+      "status": "soon",
+      "days": "4 days",
+      "elig": "check",
+      "match": null,
+      "category": "Education & Language Services",
+      "citation": "Gazette No. 3405, 02.10.2026",
+      "citationType": "gazette",
+      "sourceKind": "gazette",
+      "gazetteNumber": "2,509",
+      "publishedDate": "2026-10-02",
+      "firstSeenAt": "2026-10-11T13:16:45.451820+00:00",
+      "sourceUrl": "https://documents.gov.lk/web/Gazette?date=2026-10-02",
+      "pdfPages": [
+        7,
+        8
+      ],
+      "descEn": "Recruitment for English Instructor at National Institute of Social Development. Selection via structured interview based on merit.",
+      "age": "22-45 years (max age limit not applicable to internal applicants)",
+      "quota": null,
+      "salary": "MA 4-2025-64,320-10x1,360-15x1,670-5x2,040-113,170/- (effective 01.01.2027); basic salary Rs. 58,598/- up to 31.12.2026",
+      "qualEn": "External: (1) Bachelor's Degree in Teaching of English/English Language recognized by UGC; OR (2) Vocational Certificate NVQ 06 from recognized institute with 5 years experience in government/statutory institute; OR (3) Vocational Certificate NVQ 05 with 10 years experience. Internal: Same qualifications.",
+      "confidence": 0.9,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Island-wide"
+      ],
+      "employmentTerm": null,
+      "examType": "none",
+      "selectionMethod": "Structured interview, merit-based",
+      "howToApply": [
+        "Prepare application with complete bio-data",
+        "Send by registered post to Director General, National Institute of Social Development, Liyanagemulla, Seeduwa",
+        "Mark 'Post applied for' at top left corner of envelope",
+        "Ensure application reaches on or before 16.10.2026",
+        "Public sector officers must apply through Head of Department/Institution"
+      ],
+      "requiredDocuments": [
+        "Complete bio-data"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_sourceKey": "govlk-2026-10-02-English Instructor-National Institute of Social Development",
+      "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p7-8.pdf",
+      "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+    },
+    {
+      "serial": "ING-29",
+      "titleEn": "Post of Temporary Lecturers",
+      "instEn": "Uva Wellassa University of Sri Lanka",
+      "dateEn": "2026-10-15",
+      "status": "soon",
+      "days": "3 days",
+      "elig": "check",
+      "match": null,
+      "category": "Education & Language Services",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-11T13:43:37.899696+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/temporary-lecturer-department-of-english-language-teaching-uva-wellassa-university-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/e15f53af-Temporary-Lecturer-Department-of-English-Language-.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "The Department of English Language Teaching invites applications for Temporary Lecturer positions in three subject areas: English, Linguistics, and Translation and Interpretations. Candidates must hold a relevant Bachelor of Arts (Hons) degree with a class from a recognized university. Shortlisted candidates will be interviewed on 19th October 2026 at the university in Badulla.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": "1. English - Candidates Should possess a Bachelor of Arts (Hons) Degree in English/TESL with a class obtained from a recognized university. 2. Linguistics - Candidates Should possess a Bachelor of Arts (Hons) Degree in English/TESL/Linguistics (English Medium) with a class obtained from a recognized university. 3. Translation and Interpretations - Candidates Should possess a Bachelor of Arts (Hons) Degree in Translation Studies with a class obtained from a recognized university.",
+      "confidence": 0.95,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Badulla"
+      ],
+      "employmentTerm": "temporary",
+      "examType": "none",
+      "selectionMethod": "Interview",
+      "howToApply": [
+        "Prepare completed application and supporting documents in PDF format.",
+        "Submit via email to delt@uwu.ac.lk on or before 15th October 2026."
+      ],
+      "requiredDocuments": [
+        "National Identity card",
+        "Curriculum Vitae and Reference letters",
+        "All relevant academic certificates (originals and copies)",
+        "Research Publications (if any)"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-30",
+      "titleEn": "Qualitative Researcher",
+      "instEn": "Faculty of Medical Sciences, University of Sri Jayewardenepura",
+      "dateEn": "2026-10-15",
+      "status": "soon",
+      "days": "3 days",
+      "elig": "check",
+      "match": null,
+      "category": "Health & Scientific",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": "2026-09-30",
+      "firstSeenAt": "2026-10-11T13:44:06.985932+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/qualitative-researcher-university-of-sri-jayewardenepura-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/0625dfda-Qualitative-Researcher-USJ.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "The role involves traveling within the Galle district to conduct focus group discussions and in-depth interviews, transcribing and translating the transcripts from Sinhala to English. It is a fixed-term contract for four months, working six days per week including weekends, with an all-inclusive monthly allowance of Rs.600,000 for 30 FGDs and IDIs.",
+      "age": null,
+      "quota": "1 post",
+      "salary": "All inclusive monthly allowance of Rs.600,000.00 for 30 FGDs and IDIs",
+      "qualEn": "A PhD using qualitative research in Medicine or nursing or an equivalent qualification. Proven track record of publications in qualitative research. Experience working successfully towards deadlines under pressure. Experience of successful teamwork. Ability to transcribe and translate from Sinhala to English. Excellent written and verbal communication skills in English and Sinhala (Tamil an added advantage). Excellent organizational and prioritizing skills.",
+      "confidence": 0.95,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Galle District"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Shortlisting and interview",
+      "howToApply": [
+        "Obtain prescribed application via social media",
+        "Prepare application with copies of educational and professional certificates and a CV with 2 non-related referees",
+        "Email to critic.sl2024@gmail.com on or before 15.10.2026"
+      ],
+      "requiredDocuments": [
+        "Copies of relevant educational and professional certificates",
+        "CV with 2 non-related referees"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
     }
   ],
   "processedGazetteDates": [
     "2026-09-18",
-    "2026-09-25"
+    "2026-09-25",
+    "2026-10-02"
   ],
-  "gazettePendingChunks": {
-    "2026-10-02": [
-      6
-    ]
-  },
+  "gazettePendingChunks": {},
   "skippedSourceUrls": {
     "https://www.gazette.lk/2026/10/chief-editor-department-of-cultural-affairs-vacancies-2026.html": {
       "reason": "duplicate: gazette.lk copy of Gazette 2,508's Chief Editor notice (GOVLK-13/14)",
@@ -3105,6 +3540,14 @@
     "https://www.gazette.lk/2026/10/assistant-director-of-agriculture-ministry-of-agriculture-livestock-lands-and-irrigation-vacancies-2026.html": {
       "reason": "duplicate: gazette.lk copy of Gazette 2,507's Agricultural Service exam (GOVLK-7..9)",
       "at": "2026-10-11T07:19:08.309900+00:00"
+    },
+    "https://www.gazette.lk/2026/10/legal-officer-manager-state-pharmaceuticals-corporation-spc-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-11T13:43:00.789486+00:00"
+    },
+    "https://www.gazette.lk/2026/10/temporary-research-assistant-university-of-sri-jayewardenepura-job-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-11T13:43:39.052863+00:00"
     }
   }
 }
