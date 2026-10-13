@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T09:54:30.000865+00:00",
+  "updatedAt": "2026-10-13T14:57:28.228949+00:00",
   "vacancies": [
     {
       "real": true,
@@ -392,7 +392,15 @@
       "_sourceKey": "govlk-2026-09-18-1st Efficiency Bar Examination in Associate Officers’ Service- 2025-II (2026)-Ministry of Education, Higher Education and Vocational Education",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p4-6.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "titleSi": "ආශ්‍රිත නිලධාරි සේවයේ I වන කාර්යක්ෂමතා කඩඉම් විභාගය - 2025-II (2026)",
+      "instSi": "අධ්‍යාපන, උසස් අධ්‍යාපන සහ වෘත්තීය අධ්‍යාපන අමාත්‍යාංශය",
+      "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p6-10.pdf",
+      "pdfPagesSi": [
+        6,
+        10
+      ],
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-2",
@@ -443,7 +451,15 @@
       "_sourceKey": "govlk-2026-09-18-2nd Efficiency Bar Examination in Associate Officers’ Service- 2025-II (2026)-Ministry of Education, Higher Education and Vocational Education",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p4-6.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "titleSi": "ආශ්‍රිත නිලධාරි සේවයේ II වන කාර්යක්ෂමතා කඩඉම් විභාගය - 2025-II (2026)",
+      "instSi": "අධ්‍යාපන, උසස් අධ්‍යාපන සහ වෘත්තීය අධ්‍යාපන අමාත්‍යාංශය",
+      "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p6-10.pdf",
+      "pdfPagesSi": [
+        6,
+        10
+      ],
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-3",
@@ -494,7 +510,15 @@
       "_sourceKey": "govlk-2026-09-18-3rd Efficiency Bar Examination in Associate Officers’ Service- 2025-II (2026)-Ministry of Education, Higher Education and Vocational Education",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p4-6.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "titleSi": "ආශ්‍රිත නිලධාරි සේවයේ III වන කාර්යක්ෂමතා කඩඉම් විභාගය - 2025-II (2026)",
+      "instSi": "අධ්‍යාපන, උසස් අධ්‍යාපන සහ වෘත්තීය අධ්‍යාපන අමාත්‍යාංශය",
+      "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p6-10.pdf",
+      "pdfPagesSi": [
+        6,
+        10
+      ],
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-4",
@@ -545,7 +569,15 @@
       "_sourceKey": "govlk-2026-09-18-Agricultural Assistant (Agricultural Development)-Ministry of Agriculture, Livestock, Land and Irrigation",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p17-19.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "titleSi": "කෘෂි සංවර්ධනසහකා ාර",
+      "instSi": "කෘෂිකර්ම , පශුසම්පත්,ඉඩම් හා වාරිමාර්ග අමාත්‍යාංශය",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p18-22.pdf",
+      "pdfPagesSi": [
+        18,
+        22
+      ]
     },
     {
       "serial": "GOVLK-5",
@@ -596,7 +628,15 @@
       "_sourceKey": "govlk-2026-09-18-Agricultural Assistant (Research)-Ministry of Agriculture, Livestock, Land and Irrigation",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p17-19.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "titleSi": "කෘෂි පර්යේෂණ සහකා ාර",
+      "instSi": "කෘෂිකර්ම , පශුසම්පත්,ඉඩම් හා වාරිමාර්ග අමාත්‍යාංශය",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p18-22.pdf",
+      "pdfPagesSi": [
+        18,
+        22
+      ]
     },
     {
       "serial": "GOVLK-6",
@@ -647,7 +687,15 @@
       "_sourceKey": "govlk-2026-09-18-Agricultural Assistant (Agricultural Economics)-Ministry of Agriculture, Livestock, Land and Irrigation",
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p17-19.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
+      "titleSi": "කෘෂි ආර්ථික විද්‍යා සහකා ාර",
+      "instSi": "කෘෂිකර්ම , පශුසම්පත්,ඉඩම් හා වාරිමාර්ග අමාත්‍යාංශය",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p18-22.pdf",
+      "pdfPagesSi": [
+        18,
+        22
+      ]
     },
     {
       "serial": "GOVLK-7",
@@ -698,7 +746,7 @@
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
       "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
-      "_siChecked": true
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-8",
@@ -749,7 +797,7 @@
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
       "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
-      "_siChecked": true
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-9",
@@ -800,7 +848,7 @@
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
       "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
-      "_siChecked": true
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-10",
@@ -1115,7 +1163,15 @@
       "_sourceKey": "govlk-2026-09-25-Chief Editor - Sinhala Dictionary Office-Department of Cultural Affairs",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p17-19.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "titleSi": "සිංහල ශබ්දකෝෂ කාර්යාලයේ ප්‍රධාන කර්තෘ තනතුර;",
+      "instSi": "සංස්කෘතික කටයුතු දෙපාර්තමේන්තුවේ සිංහල ශබ්දකෝෂ",
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p18-21.pdf",
+      "pdfPagesSi": [
+        18,
+        21
+      ],
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-14",
@@ -1165,7 +1221,15 @@
       "_sourceKey": "govlk-2026-09-25-Chief Editor - Sinhala Encyclopaedia Office-Department of Cultural Affairs",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p17-19.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "titleSi": "සිංහල විශ්වකෝෂ කාර්යාලයේ ප්‍රධාන කර්තෘ තනතුර.",
+      "instSi": "සංස්කෘතික කටයුතු දෙපාර්තමේන්තුවේ සිංහල ශබ්දකෝෂ",
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p18-21.pdf",
+      "pdfPagesSi": [
+        18,
+        21
+      ],
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-15",
@@ -1221,13 +1285,14 @@
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p19-21.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
-      "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩල‍යේ",
-      "_siChecked": true,
+      "instSi": "සෑම අයදුම්කරුවෙකුම ඉංග්‍රීසි මාධ්‍යයයෙන් පමණක් තම අයදුම්පත් සම්පූර්ණ කළ යුතු ය. අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලයේ",
+      "_siChecked": "lines-v1",
       "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p36-39.pdf",
       "pdfPagesSi": [
         36,
         39
-      ]
+      ],
+      "titleSi": "1. තනතුරු නාමය - සහකා ාර විද්‍යාත්මක නිලධාරි"
     },
     {
       "serial": "GOVLK-16",
@@ -1346,13 +1411,14 @@
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p19-21.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
-      "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලයේ",
-      "_siChecked": true,
+      "instSi": "සෑම අයදුම්කරුවෙකුම ඉංග්‍රීසි මාධ්‍යයයෙන් පමණක් තම අයදුම්පත් සම්පූර්ණ කළ යුතු ය. අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලයේ",
+      "_siChecked": "lines-v1",
       "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p36-39.pdf",
       "pdfPagesSi": [
         36,
         39
-      ]
+      ],
+      "titleSi": "තනතුරු නාමය - විද්‍යාත්මක නිලධාරි"
     },
     {
       "serial": "GOVLK-18",
@@ -1396,7 +1462,9 @@
       "_sourceKey": "govlk-2026-09-25-Core Maker-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-19",
@@ -1440,7 +1508,9 @@
       "_sourceKey": "govlk-2026-09-25-Fabricator (Metal)-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-20",
@@ -1484,7 +1554,9 @@
       "_sourceKey": "govlk-2026-09-25-Furnaceman-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-21",
@@ -1528,7 +1600,9 @@
       "_sourceKey": "govlk-2026-09-25-Fitter (General)-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-22",
@@ -1572,7 +1646,9 @@
       "_sourceKey": "govlk-2026-09-25-Heavy Vehicle Operator-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-23",
@@ -1616,7 +1692,9 @@
       "_sourceKey": "govlk-2026-09-25-Pipe Fitter-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-24",
@@ -1660,7 +1738,9 @@
       "_sourceKey": "govlk-2026-09-25-Machine Operator (Production)-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-25",
@@ -1704,7 +1784,9 @@
       "_sourceKey": "govlk-2026-09-25-Machinist-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-26",
@@ -1748,7 +1830,9 @@
       "_sourceKey": "govlk-2026-09-25-Machinist (Wood)-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-27",
@@ -1792,7 +1876,9 @@
       "_sourceKey": "govlk-2026-09-25-Foundry Man-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-28",
@@ -1836,7 +1922,9 @@
       "_sourceKey": "govlk-2026-09-25-Pattern Maker-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-29",
@@ -1880,7 +1968,9 @@
       "_sourceKey": "govlk-2026-09-25-Plumber-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-30",
@@ -1924,7 +2014,9 @@
       "_sourceKey": "govlk-2026-09-25-Welder-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-31",
@@ -1968,7 +2060,9 @@
       "_sourceKey": "govlk-2026-09-25-Carpenter (Furniture)-Department of Government Factory",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p23-31.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-32",
@@ -2021,7 +2115,15 @@
       "_sourceKey": "govlk-2026-09-25-Assistant Commissioner of Labour (Departmental) Executive Service Category (Grade III)-Department of Labour, Ministry of Labour",
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p37-40.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
+      "titleSi": "කම්කරු දෙපාර්තමේන්තුවේ විධායක සේවා ගණයේ III ශ්‍රේණියේ සහකා ාර කම්කරු කොමසාරිස් (දෙපාර්තමේන්තුමය)",
+      "instSi": "කම්කරු අමාත්‍යාංශය කම්කරු දෙපාර්තමේන්තුව",
+      "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p44-48.pdf",
+      "pdfPagesSi": [
+        44,
+        48
+      ],
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-33",
@@ -2074,7 +2176,7 @@
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p41-46.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
-      "_siChecked": true
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-34",
@@ -2127,7 +2229,7 @@
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p41-46.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
-      "_siChecked": true
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-35",
@@ -2760,7 +2862,15 @@
       "_sourceKey": "govlk-2026-10-02-Director (Finance)-National Dangerous Drugs Control Board",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p9-10.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "අධ්‍යයක්ෂ - මූල්‍යය - ( HM 1-1)",
+      "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලය",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p13-16.pdf",
+      "pdfPagesSi": [
+        13,
+        16
+      ]
     },
     {
       "serial": "GOVLK-47",
@@ -2833,7 +2943,15 @@
       "_sourceKey": "govlk-2026-10-02-Field Assistant (Laborer) in the Primary - Non-Skilled Service Category, Grade III-Department of Technical Education and Training",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p11-14.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "කාර්මික අධ්‍යාපන හා පුහුණු කිරීමේ දෙපාර්තමේන්තුවේ ප්‍රාථමික - ශිල්පීය නොවන සේවා ගණයේ III ශ්‍රේණියේ ක්ෂේත්‍ර",
+      "instSi": "වෘත්තීය අධ්‍යාපන අංශය",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p3-7.pdf",
+      "pdfPagesSi": [
+        3,
+        7
+      ]
     },
     {
       "serial": "GOVLK-48",
@@ -2886,7 +3004,15 @@
       "_sourceKey": "govlk-2026-10-02-Assistant Superintendent of Hostels Grade III-Ministry of Education, Higher Education and Vocational Education",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p18-20.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "සුදුසුකම් : සහකා ාර ශිෂ්‍යය නිවාස අධිකාරි III ශ්‍රේණියට",
+      "instSi": "කොන්දේසිවලට ද අධ්‍යාපන, උසස් අධ්‍යාපන සහ වෘත්තීය අධ්‍යාපන අමාත්‍යාංශයේ සමාන්‍යය අධ්‍යාපන",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p25-28.pdf",
+      "pdfPagesSi": [
+        25,
+        28
+      ]
     },
     {
       "serial": "GOVLK-49",
@@ -2938,7 +3064,15 @@
       "_sourceKey": "govlk-2026-10-02-Assistant Hostel Warden Grade III-Ministry of Education, Higher Education and Vocational Education",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p19-22.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "සහකා ාර ශිෂ්‍යය නිවාස අධිකාරි (පිරිමි) / සහකා ාර ශිෂ්‍යය නිවාස අධිකාරි (ගැහැනු) තනතුරට අදාළ රාජකාරි",
+      "instSi": "අධ්‍යාපන, උසස් අධ්‍යාපන සහ වෘත්තීය අධ්‍යාපන අමාත්‍යාංශයේ ලේකම් විසින් පත් කරනු ලබන",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p26-31.pdf",
+      "pdfPagesSi": [
+        26,
+        31
+      ]
     },
     {
       "serial": "GOVLK-50",
@@ -2994,7 +3128,15 @@
       "_sourceKey": "govlk-2026-10-02-Grade III Dispenser (Male)-Ministry of Justice and National Integration, Department of Prisons",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p23-26.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "(III ශ්‍රේණියේ ඖෂධ සංයෝජක (පිරිමි) 19 ක් සහ III",
+      "instSi": "අධිකරණ සහ ජාතික ඒකාබද්ධතා අමාත්‍යාංශය බන්ධනාගාර දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p31-36.pdf",
+      "pdfPagesSi": [
+        31,
+        36
+      ]
     },
     {
       "serial": "GOVLK-51",
@@ -3050,7 +3192,15 @@
       "_sourceKey": "govlk-2026-10-02-Grade III Dispenser (Female)-Ministry of Justice and National Integration, Department of Prisons",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p23-26.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "titleSi": "ශ්‍රේණියේ ඖෂධ සංයෝජක (කාන්තා) 08කි. අවසාන",
+      "instSi": "අධිකරණ සහ ජාතික ඒකාබද්ධතා අමාත්‍යාංශය බන්ධනාගාර දෙපාර්තමේන්තුව",
+      "_siChecked": "lines-v1",
+      "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p31-36.pdf",
+      "pdfPagesSi": [
+        31,
+        36
+      ]
     },
     {
       "serial": "GOVLK-54",
@@ -3645,6 +3795,365 @@
       ],
       "verifiedAt": null,
       "_needsReview": true
+    },
+    {
+      "serial": "ING-31",
+      "titleEn": "Resident Engineer",
+      "instEn": "Ministry of Plantation and Community Infrastructure, Rubber Research Institute of Sri Lanka",
+      "dateEn": "2026-10-30",
+      "status": "open",
+      "days": "17 days",
+      "elig": "check",
+      "match": null,
+      "category": "Engineering & Technical",
+      "citation": "DMS Circular No. 1/2025 dated 25.03.2025",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": "2026-10-07",
+      "firstSeenAt": "2026-10-12T16:07:50.635394+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/resident-engineer-rubber-research-institute-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/f357e255-Resident-Engineer-RRISL-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/7c18ed2d-Resident-Engineer-RRISL-S.pdf",
+      "sourceLabel": null,
+      "descEn": "The Resident Engineer is responsible for overall planning, supervision, estimation, and management/maintenance of all civil, electrical, and mechanical works including institute infrastructure, vehicle fleet, building and laboratory refurbishment, internal roads, serving on technical committees, and certification of payments.",
+      "age": "22-45 yrs (upper age limit not applicable to internal candidates)",
+      "quota": "1 post",
+      "salary": "Rs.94,170 – 10 x 2,480 – 15 x 3,450 – Rs.170,720",
+      "qualEn": "External Candidates: A Degree in Engineering (Civil/Mechanical) recognized by the UGC AND a minimum of one (01) year post-qualifying experience in the relevant field in a Public Service, Corporation, Statutory Board/Institution or a Reputed Private Institution. Internal Candidates: Having obtained the qualifications required by the external candidates above.",
+      "confidence": 0.95,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Island-wide"
+      ],
+      "employmentTerm": null,
+      "examType": "open",
+      "selectionMethod": "Written competitive examination (Language Proficiency, Aptitude Test) and/or a structured interview",
+      "howToApply": [
+        "Prepare a signed application with certified copies of birth certificate, educational certificates, and other relevant certificates.",
+        "Obtain two testimonials (one from the Grama Niladhari) and names, addresses, and telephone numbers of two non-related referees.",
+        "Send the application by registered post to reach the Chairman, Rubber Research Board, Telawala Road, Rathmalana, on or before 30.10.2026.",
+        "Mark the post applied for on the top left-hand corner of the envelope.",
+        "Government officers must forward applications through their respective Heads (a copy may be sent directly)."
+      ],
+      "requiredDocuments": [
+        "Signed application",
+        "Certified copy of birth certificate",
+        "Certified copies of educational certificates",
+        "Certified copies of other relevant certificates",
+        "Two testimonials (one from Grama Niladhari)",
+        "Names, addresses, and telephone numbers of two non-related referees"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-32",
+      "titleEn": "Accountant",
+      "instEn": "Ministry of Industry and Entrepreneurship Development, National Enterprise Development Authority (NEDA)",
+      "dateEn": "2026-10-26",
+      "status": "soon",
+      "days": "13 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-12T16:08:54.332516+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/accountant-national-enterprise-development-authority-job-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/8dfe84d2-Accountant-NEDA.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "The Accountant is responsible for all aspects of financial management including planning, forecasting, controlling, monitoring and evaluation of financial performance, ensuring best accounting practices, budgeting, statutory accounts, taxation, project costing, inventory management, liaison with the Chief Accountant, Auditor General, banks, suppliers and customers, preparation of financial statements and management reports, and supervision of accounting staff.",
+      "age": "18-45 yrs (internal candidates exempt from upper limit)",
+      "quota": "1 post",
+      "salary": "Salary Scale – Rs. 81,710 + 17,800 (COL) + government approved allowance",
+      "qualEn": "External Candidates: A Bachelor's Degree in Accountancy / Management / Business Administration / Commerce recognized by the U.G.C. OR Intermediate level qualification of ICASL OR Intermediate level qualification of CIMA OR Intermediate level qualification of ACCA AND at least three years experience in accounting and finance in a Government Department/ Corporation / Board or a reputed Mercantile Establishment after obtaining above qualification. Internal Candidates: 1. Having obtained the qualifications required by external candidates above, OR 2. Completion of minimum five years satisfactory service in a post in the Junior Manager (JM) Category in the subject area relevant to the post.",
+      "confidence": 0.95,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Colombo"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Structured interview conducted by a panel appointed by NEDA. Shortlisted applicants based on higher qualifications and relevant experience will be invited for interview. Final selection determined by performance at interview.",
+      "howToApply": [
+        "Complete the specimen application form.",
+        "Attach copies of all educational and experience certificates.",
+        "Send the application to Chairman/Director General, National Enterprise Development Authority, No. 561/3, Elvitigala Mawatha, Colombo 05.",
+        "Ensure the application is received on or before 26th October 2026 at 2.30 p.m.",
+        "Clearly indicate the post applied for on the top left-hand corner of the envelope.",
+        "Applicants currently employed in Government Institutions, State Corporations, or Statutory Boards must submit applications through their respective Heads of Institutions with recommendation."
+      ],
+      "requiredDocuments": [
+        "Completed specimen application form",
+        "Copies of educational certificates",
+        "Copies of experience certificates",
+        "Recommendation from Head of Institution (for government employees)"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-33",
+      "titleEn": "Engineer (Civil), Engineer (Mechanical), Engineer (Electrical), Engineering Assistant (Civil)",
+      "instEn": "National Water Supply and Drainage Board, Ministry of Housing, Construction and Water Supply",
+      "dateEn": "2026-10-30",
+      "status": "open",
+      "days": "17 days",
+      "elig": "check",
+      "match": null,
+      "category": "Engineering & Technical",
+      "citation": "MSD Circular 02/2026",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-12T16:10:38.964602+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/engineer-engineering-assistant-national-water-supply-and-drainage-board-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/8eda8f60-Engineer-Engineering-Assistant-NWSDB.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "The National Water Supply and Drainage Board invites applications for contract positions in the Kundasale Haragama Water Supply Project. Vacancies include Engineer (Civil) (2 posts), Engineer (Mechanical) (1 post), Engineer (Electrical) (1 post), and Engineering Assistant (Civil) (2 posts). Appointments are on a one-year contract basis renewable annually, with selection via interview.",
+      "age": "Below 64 years",
+      "quota": "Engineer (Civil): 2 posts, Engineer (Mechanical): 1 post, Engineer (Electrical): 1 post, Engineering Assistant (Civil): 2 posts",
+      "salary": "Engineer posts: Rs.180,000/= + COL; Engineering Assistant: Rs.110,000/- + COL",
+      "qualEn": "Engineer (Civil/Mechanical/Electrical): Bachelor's Degree or equivalent recognized by UGC in relevant field AND Associate Membership/similar Professional Qualification from recognized professional body. Engineering Assistant (Civil): Option 1) Bachelor's Degree or equivalent recognized by UGC in relevant field; Option 2) NVQ Level 7 certificate from TVEC-accepted institute in Civil field; Option 3) NVQ Level 6 certificate from TVEC-accepted institute in Civil field with at least 3 years experience; Option 4) NVQ Level 5 certificate from TVEC-accepted institute in Civil field with at least 6 years experience.",
+      "confidence": 0.95,
+      "qualificationLevel": "professional",
+      "locations": [
+        "Kundasale Haragama Water Supply Project"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Short listed applicants based on the qualifications and experience, will be called for an interview and selection will be based on the performance at the interview.",
+      "howToApply": [
+        "Prepare application with bio-data, copies of educational and professional qualifications, experience, and past services.",
+        "Send under registered post to: Additional General Manager (Water Supply Projects), Water Supply Projects Section, National Water Supply & Drainage Board, Galle Road, Ratmalana.",
+        "Ensure application reaches on or before 30th October 2026.",
+        "Mark the post applied for on the top left-hand corner of the envelope.",
+        "Applicants from public/corporate sector organizations should channel applications through the respective Head of Organizations."
+      ],
+      "requiredDocuments": [
+        "Bio-data",
+        "Copies of educational qualifications",
+        "Copies of professional qualifications",
+        "Experience certificates",
+        "Past service records"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-34",
+      "titleEn": "Engineer (Mechanical)",
+      "instEn": "National Water Supply and Drainage Board",
+      "dateEn": "2026-10-30",
+      "status": "open",
+      "days": "17 days",
+      "elig": "check",
+      "match": null,
+      "category": "Engineering & Technical",
+      "citation": "MSD Circular 02/2026",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-12T16:12:30.061737+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/management-assistant-engineer-national-water-supply-and-drainage-board-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/8b7e6b60-Management-Assistant-Engineer-NWSDB.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "The Ruwanwella Water Supply Project is recruiting an Engineer (Mechanical) on a project contract basis. The position requires a recognized engineering degree and professional qualifications with relevant experience. Selection is based on qualifications, experience, and interview.",
+      "age": "Below 64 years by the closing date of applications.",
+      "quota": "1 post",
+      "salary": "Option 01: Rs. 240,000/= + COL Allowance; Option 02: Rs. 190,000/= + COL Allowance; Option 03: Rs. 180,000/= + COL Allowance (per MSD Circular 02/2026)",
+      "qualEn": "Option 01: Bachelor's Degree recognized by UGC as equivalent to degree in relevant field and Associate membership/similar professional qualification from recognized professional body, with at least 5 years experience. Option 02: Class II/III or above officer of a government All-Island Services or similar status in relevant field, with at least 5 years experience in Class II/III post. Option 03: Bachelor's Degree recognized by UGC as equivalent to degree in relevant field and Associate membership/similar professional qualification from recognized professional body, possessing all educational requirements to obtain Associate Membership.",
+      "confidence": 0.9,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Ruwanwella"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Shortlisting based on qualifications and experience, followed by interview.",
+      "howToApply": [
+        "Prepare application with bio-data and copies of educational/professional qualifications, experience, and past services.",
+        "Send by registered post to Project Director, Ruwanwella Water Supply Project, National Water Supply & Drainage Board, No. 7/1, Warawala, Kannanthota.",
+        "Mark the post applied for on the top left-hand corner of the envelope.",
+        "Ensure application reaches on or before 30th October 2026.",
+        "Public/corporate sector applicants must channel applications through their Head of Organization."
+      ],
+      "requiredDocuments": [
+        "Bio-data",
+        "Copies of educational qualifications",
+        "Copies of professional qualifications",
+        "Experience certificates",
+        "Past service records"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-35",
+      "titleEn": "Additional Director-General",
+      "instEn": "Commission to Investigate Allegations of Bribery or Corruption",
+      "dateEn": null,
+      "status": "open",
+      "days": "—",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-12T16:13:14.987264+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/additional-director-general-commission-to-investigate-allegations-of-bribery-or-corruption-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/f293b8cc-Additional-Director-General-Application-CIABOC-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/201aba7e-Additional-Director-General-CIABOC-S.pdf",
+      "sourceLabel": null,
+      "descEn": "Application form for open recruitment to the post of Additional Director-General at the Commission to Investigate Allegations of Bribery or Corruption. The form requires details of postgraduate degree, professional qualifications, experience, English language proficiency, and other qualifications.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": "Postgraduate degree (subject area, university/institution, class, effective date); Professional qualifications; Experience (subject area, institution, duration); English language proficiency documents; Additional educational qualifications; Other qualifications",
+      "confidence": 0.3,
+      "qualificationLevel": "masters",
+      "locations": [],
+      "employmentTerm": null,
+      "examType": "open",
+      "selectionMethod": null,
+      "howToApply": [],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-36",
+      "titleEn": "Assistant Director Supervision",
+      "instEn": "Insurance Regulatory Commission of Sri Lanka",
+      "dateEn": "2026-10-25",
+      "status": "soon",
+      "days": "11 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-13T14:54:37.980532+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/driver-executive-office-aide-assistant-director-insurance-regulatory-commission-of-sri-lanka-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/9717de7b-Driver-Executive-Office-Aide-Assistant-Director-IR.pdf",
+      "pdfUrlSi": "/gazette-pdfs/825595b2-Driver-Office-Aide-IRCSL-S.pdf",
+      "sourceLabel": null,
+      "descEn": "Support the Division to carry out effective and efficient supervisory system conducting onsite inspection & offsite monitoring of the Insurance Industry; monitor financial stability and operational performance of Insurance Companies; disseminate information through analyzing data and recommending policy advice; review & identify potential risks; macro prudential supervision, migration to IFRS 17, development of supervisory framework; train and guide subordinates.",
+      "age": "Below 40 yrs (Govt exempt)",
+      "quota": null,
+      "salary": "Rs. 225,050.00 + vehicle allowance Rs. 25,000.00 + communication allowance Rs. 2,000.00 per month",
+      "qualEn": "Bachelor’s Degree from a recognized university in Insurance/Finance/Accountancy/Business Administration/Actuarial or similar discipline OR a Professional qualification equivalent to a Bachelor’s Degree in the relevant fields from a recognized institution; AND 6 years post-qualifying managerial experience in a reputed organization.",
+      "confidence": 0.85,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Colombo"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Fill in the prescribed Google Form for the post on the IRCSL website (www.ircsl.gov.lk)",
+        "Submit before the closing date (25th October 2026)",
+        "Hard copies or email applications are not accepted"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-37",
+      "titleEn": "Senior Communication Officer and Project Officer (Finance)",
+      "instEn": "Ministry of Finance, Planning and Economic Development, Welfare Benefits Board",
+      "dateEn": "2026-10-26",
+      "status": "soon",
+      "days": "12 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Management Services Circular No. 02/2026",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-13T14:55:39.752592+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/senior-communication-officer-project-officer-welfare-benefits-board-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/b15bb739-Senior-Communication-Officer-Project-Officer-WBB.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "Applications are invited for Senior Communication Officer and Project Officer (Finance) positions in the Social Protection Project under the Welfare Benefits Board. Appointments are on contract basis for external applicants or secondment for civil servants, initially until 30 September 2027. Selection is by interview after shortlisting based on qualifications and experience.",
+      "age": null,
+      "quota": "2 posts (1 Senior Communication Officer, 1 Project Officer (Finance))",
+      "salary": "Category E: Rs. 180,000 + allowances; Category F: Rs. 150,000 + allowances",
+      "qualEn": "Senior Communication Officer: (1) Bachelor's degree or equivalent, 3 years experience; (2) NVQ Level 7, 6 years experience; (3) NVQ Level 5, 9 years experience. Project Officer (Finance): (1) Bachelor's degree or equivalent, 2 years experience; (2) NVQ Level 7, 5 years experience; (3) NVQ Level 5, 8 years experience.",
+      "confidence": 0.95,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Colombo"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Interview after shortlisting based on qualifications and experience",
+      "howToApply": [
+        "Download application form from http://www.treasury.gov.lk/web/ministry-of-finance/Vacancies or https://www.wbb.gov.lk",
+        "Send completed application by registered post or deliver by hand on or before 26 October 2026 to Project Director, Social Protection Project, Welfare Benefits Board, J.R.Jayawardana Centre, No.191, Dharmapala Mawatha, Colombo 07",
+        "Alternatively email to dpd.spp.wbb@gmail.com",
+        "Public/corporate sector applicants must channel applications through respective Heads of organization",
+        "Mark envelope with post applied on left hand corner; mention post applied in email subject line"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-38",
+      "titleEn": "Medical Officer - Grade I",
+      "instEn": "General Sir John Kotelawala Defence University Hospital",
+      "dateEn": null,
+      "status": "open",
+      "days": "—",
+      "elig": "check",
+      "match": null,
+      "category": "Health & Scientific",
+      "citation": "1883/17",
+      "citationType": "gazette",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-13T14:57:24.484946+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/university-hospital-kdu-job-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/59bfeb30-University-Hospital-KDU-Vacancies-2026-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/91185554-University-Hospital-KDU-Vacancies-2026-S.pdf",
+      "sourceLabel": null,
+      "descEn": "Permanent, full-time Medical Officer Grade I position requiring SLMC registration, 6 years experience as Grade II Medical Officer, recognized postgraduate qualification, and certificate of good standing.",
+      "age": "25-45 years",
+      "quota": null,
+      "salary": "MO 1-1 - Rs. (101,610 - 3 « 2,480 - 7 « 2,490 - 2 « 3,450 - 10 « 4,100 - 174,380); Medical Officer Grade I will be placed on MO 1-1 Step 14 - Rs. 137,480.00 + Other approved allowances.",
+      "qualEn": "Medical Officer with valid full registration of Sri Lanka Medical Council (SLMC) to practice as a Medical Officer. AND Should have a minimum of six (06) years of experience as a Grade II Medical Officer in institutions coming under the Ministry of Health or Hospitals registered with private Health Services Regulatory Council of Ministry of Health, Sri Lanka under the category of “Private Hospitals, Nursing Homes and Maternity Homes”. AND A recognized post graduate qualification mentioned in Appendix II of the Extraordinary Gazette No: 1883/17 dated 11.10.2014 of the Democratic Socialist Republic of Sri Lanka. AND Certificate of good standing from the Sri Lanka Medical Council (SLMC).",
+      "confidence": 0.85,
+      "qualificationLevel": "masters",
+      "locations": [],
+      "employmentTerm": "permanent",
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true
     }
   ],
   "processedGazetteDates": [
@@ -3689,6 +4198,34 @@
     "https://www.gazette.lk/2026/10/chief-executive-officer-national-agri-market-services-limited-vacancies-2026.html": {
       "reason": "scanned PDF, no text layer",
       "at": "2026-10-12T08:43:21.999690+00:00"
+    },
+    "https://www.gazette.lk/2026/10/chief-manager-risk-management-state-mortgage-investment-bank-smib-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-12T16:12:30.937958+00:00"
+    },
+    "https://www.gazette.lk/2026/10/management-assistant-legal-officer-internal-audit-officer-assistant-director-legal-aid-commission-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-13T14:53:12.076873+00:00"
+    },
+    "https://www.gazette.lk/2026/10/assistant-registrar-national-institute-of-business-management-nibm-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-13T14:55:42.953040+00:00"
+    },
+    "https://www.gazette.lk/2026/10/sub-warden-kotelawala-defense-university-kdu-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-13T14:57:25.570870+00:00"
+    },
+    "https://www.gazette.lk/2026/10/management-assistant-quantity-surveyor-draughtsman-engineer-accountant-more-vacancies-ministry-of-agriculture-livestock-lands-and-irrigation-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-13T14:57:26.557843+00:00"
+    },
+    "https://www.gazette.lk/2026/10/youth-entrepreneurship-development-specialist-ministry-of-agriculture-livestock-lands-and-irrigation-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-13T14:57:27.353865+00:00"
+    },
+    "https://www.gazette.lk/2026/10/internal-auditor-sri-lanka-state-plantation-corporation-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-13T14:57:28.226192+00:00"
     }
   }
 }
