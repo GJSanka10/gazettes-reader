@@ -3234,7 +3234,8 @@
       "_sourceKey": "govlk-2026-10-02-Procurement Officer - Grade III-Sri Lanka Railway Department",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p30-32.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "ING-24",
@@ -3626,7 +3627,8 @@
       "_sourceKey": "govlk-2026-10-02-Administrative Officer-National Institute of Social Development",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p7-8.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "GOVLK-61",
@@ -3678,7 +3680,8 @@
       "_sourceKey": "govlk-2026-10-02-English Instructor-National Institute of Social Development",
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p7-8.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
-      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf"
+      "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
+      "_siChecked": "lines-v1"
     },
     {
       "serial": "ING-29",
@@ -4129,6 +4132,159 @@
       "requiredDocuments": [],
       "verifiedAt": null,
       "_needsReview": true
+    },
+    {
+      "serial": "ING-39",
+      "titleEn": "Accountant (MM 1-1)",
+      "instEn": "Sri Lanka Council for Agricultural Research Policy, Ministry of Agriculture, Livestock, Land and Irrigation",
+      "dateEn": "2026-10-27",
+      "status": "soon",
+      "days": "12 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Department of Management Services Circular 01/2025",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-14T12:40:31.946276+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/accountant-sri-lanka-council-for-agricultural-research-policy-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/341a5507-Accountant-SLCARP-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/4ce8c8e8-Accountant-SLCARP-S.pdf",
+      "sourceLabel": null,
+      "descEn": "The Sri Lanka Council for Agricultural Research Policy seeks an Accountant to handle accounting and finance duties. The role requires a recognized degree or professional qualification in commerce/accountancy plus at least three years of relevant experience. The position may require service anywhere in Sri Lanka.",
+      "age": "22-45 yrs (upper age limit not applicable to internal candidates)",
+      "quota": "1 post",
+      "salary": "MM 1-1- 2025 Rs.[91,690- 10x2,480- 15x3,450-Rs.168,240] (Salary pay based on the Department of Management Services Circular 01/2025)",
+      "qualEn": "External: A bachelor's degree of Commerce or Accountancy from a university recognized by the U.G.C OR Intermediate level qualification of the Institute of Chartered Accountants of Sri Lanka (ICASL) OR Higher National Diploma in Accounts AND At least three (03) years post qualifying experience in Accounting and Finance in a Government Department/Public Corporation/Board or a reputed Mercantile Establishment. Note: Experience in computerized environment is a distinct advantage.",
+      "confidence": 0.95,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Island-wide"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Write a covering letter addressed to the Chairman, Sri Lanka Council for Agricultural Research Policy, No.114/9, Wijerama Mawatha, Colombo 07.",
+        "Include a CV or application with necessary information.",
+        "Attach certified copies of certificates for academic, professional qualifications and work experience.",
+        "Provide names and addresses of two non-related referees.",
+        "Send by registered post to reach SLCARP on or before 27.10.2026.",
+        "Mark the envelope top left corner with \"Application for the post of Accountant\".",
+        "State sector employees must apply through proper channels indicating releasability if selected."
+      ],
+      "requiredDocuments": [
+        "Certified copies of academic certificates",
+        "Certified copies of professional qualification certificates",
+        "Certified copies of work experience certificates",
+        "Names and addresses of two non-related referees"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-40",
+      "titleEn": "Deputy Commissioner of Welfare Benefits (Monitoring & Evaluation) and Assistant Commissioner of Welfare Benefits (Development & Research)",
+      "instEn": "Welfare Benefits Board, Ministry of Finance, Planning and Economic Development",
+      "dateEn": "2026-10-26",
+      "status": "soon",
+      "days": "11 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "DMS Circular No. 01/2025",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-14T12:41:54.229863+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/deputy-commissioner-assistant-commissioner-welfare-benefits-board-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/a96998d9-Deputy-Commissioner-Assistant-Commissioner-WBB-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/e5350532-Deputy-Commissioner-Assistant-Commissioner-WBB-S.pdf",
+      "sourceLabel": null,
+      "descEn": "The Welfare Benefits Board under the Ministry of Finance is recruiting for two permanent positions at its Colombo Head Office: one Deputy Commissioner (Monitoring & Evaluation) and two Assistant Commissioners (Development & Research). Candidates must hold a relevant degree recognized by the UGC and have post-qualifying experience (4 years for Deputy Commissioner, 1 year for Assistant Commissioner). Selection is based on interview merit.",
+      "age": "22-45 yrs (upper age limit not applicable to internal candidates)",
+      "quota": "1 post for Deputy Commissioner (Monitoring & Evaluation), 2 posts for Assistant Commissioner (Development & Research)",
+      "salary": "Deputy Commissioner: Rs. 96,650 - 10 x 2,480 - 15 x 3,450 – 173,200 (MM 1-3), basic salary step Rs. 85,896; Assistant Commissioner: Rs. 91,690 - 10 x 2,480 - 15 x 3,450 - 168,240 (MM 1-1), basic salary step Rs. 81,710 (as per Schedule 11 of DMS Circular No. 01/2025) plus approved allowances",
+      "qualEn": "Deputy Commissioner: A degree in Economics, Project Management, Business Administration, Development Studies, Data Science or any other relevant degree recognized by the University Grants Commission AND minimum 4 years post-qualifying experience. Assistant Commissioner: A degree in Economics/Statistics/Finance/Public Administration/Business Administration or any other relevant degree recognized by the University Grants Commission AND minimum 1 year post-qualifying experience. Internal candidates must meet external qualifications plus service requirements.",
+      "confidence": 0.95,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Colombo"
+      ],
+      "employmentTerm": "permanent",
+      "examType": "none",
+      "selectionMethod": "Interview only (appointments made purely in order of merit at interview)",
+      "howToApply": [
+        "Download application form from https://www.wbb.gov.lk/web/si/jobs or https://www.treasury.gov.lk >> Vacancies",
+        "Write the post applied for on the top left-hand corner of the envelope",
+        "Send by registered post to Commissioner, Welfare Benefits Board, J.R. Jayewardene Center, No 191, Dharmapala Mawatha, Colombo 07",
+        "Applications from public/corporate sector must be channeled through respective Heads of organizations",
+        "If applying for more than one post, submit separate envelopes with copies of certificates for each post",
+        "Applications must be received on or before 2026-10-26"
+      ],
+      "requiredDocuments": [
+        "Copies of educational and professional certificates"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-41",
+      "titleEn": "Recruitment of Graduates to Grade 3-I (a) of the Sri Lanka Teachers' Service for Sinhala, Tamil and English Medium Teacher Vacancies in National and Provincial Schools of the Island – 2026",
+      "instEn": "Ministry of Education, Higher Education and Vocational Education",
+      "dateEn": null,
+      "status": "open",
+      "days": "—",
+      "elig": "check",
+      "match": null,
+      "category": "Education & Language Services",
+      "citation": "Extraordinary Gazette Notification No. 2474/19 dated 02.02.2026",
+      "citationType": "gazette",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-14T12:43:15.889215+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/graduate-teaching-exam-results-2026-release-date-latest-update.html",
+      "pdfUrl": "/gazette-pdfs/6e0c4851-Graduate-Teaching-Exam-2026-G1-Instruction-Form-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/ac64d10e-Graduate-Teaching-Exam-2026-G1-Instruction-Form-S.pdf",
+      "sourceLabel": null,
+      "descEn": "This notice announces the results of written competitive examinations held on 24 May 2026 for graduate teacher recruitment (Grade 3-I (a) of Sri Lanka Teachers' Service) in Sinhala, Tamil, and English mediums across national and provincial schools island-wide. Lists of candidates qualified for interviews are published on ministry and provincial websites. Interviews will be scheduled between 15 October and 30 October 2026.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": "Degree qualifications relevant to the subject applied for, as per relevant Gazette notifications (No. 2474/18, 2474/19, 2476/18).",
+      "confidence": 0.85,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Western Province",
+        "Central Province",
+        "Southern Province",
+        "Northern Province",
+        "Eastern Province",
+        "North Western Province",
+        "North Central Province",
+        "Uva Province",
+        "Sabaragamuwa Province"
+      ],
+      "employmentTerm": null,
+      "examType": "open",
+      "selectionMethod": "Written competitive examination and interview",
+      "howToApply": [
+        "Check interview qualification using NIC or Index Number on ministry/provincial websites",
+        "Await interview call letter sent to registered address",
+        "Check interview schedule on ministry/provincial websites from 15.10.2026 to 30.10.2026",
+        "Attend interview at specified date, time, and venue",
+        "Present degree information per G2 instructions at interview"
+      ],
+      "requiredDocuments": [
+        "Degree information as per G2 instructions",
+        "Other documents as specified in interview call letter"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
     }
   ],
   "processedGazetteDates": [
@@ -4201,6 +4357,22 @@
     "https://www.gazette.lk/2026/10/internal-auditor-sri-lanka-state-plantation-corporation-vacancies-2026.html": {
       "reason": "scanned PDF, no text layer",
       "at": "2026-10-13T14:57:28.226192+00:00"
+    },
+    "https://www.gazette.lk/2026/10/management-assistant-junior-civil-engineer-ministry-of-agriculture-livestock-lands-and-irrigation-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-14T12:39:20.786761+00:00"
+    },
+    "https://www.gazette.lk/2026/10/receptionist-lake-house-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-14T12:40:32.655554+00:00"
+    },
+    "https://www.gazette.lk/2026/10/journalist-grade-iv-lake-house-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-14T12:40:33.515022+00:00"
+    },
+    "https://www.gazette.lk/2026/10/independent-television-network-limited-itn-vacancies-2026.html": {
+      "reason": "scanned PDF, no text layer",
+      "at": "2026-10-14T12:40:34.205034+00:00"
     }
   }
 }
