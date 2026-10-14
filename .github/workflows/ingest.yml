@@ -30,6 +30,10 @@ jobs:
         with:
           python-version: "3.12"
 
+      # Tesseract reads institutions' scanned adverts (English); see ocr_page_texts().
+      - name: Install Tesseract OCR
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends tesseract-ocr tesseract-ocr-eng
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
@@ -70,7 +74,8 @@ jobs:
 
             Nothing here is public until merged. Each new entry is marked
             `_needsReview: true`: check the extracted fields, the closing date above all,
-            against the linked PDF. The notice PDFs themselves are in
+            against the linked PDF. Entries marked `_ocr: true` were read from a scanned
+            advert by OCR: check every date and number in those twice. The notice PDFs are in
             `web/public/gazette-pdfs/`. See job.md §7.1 for why this review step exists.
 
             Gazette vacancies may also get a Sinhala title SUGGESTION (`_siPending`),

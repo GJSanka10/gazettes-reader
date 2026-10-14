@@ -31,6 +31,8 @@ import json
 import math
 import os
 import re
+import shutil
+import subprocess
 import sys
 import time
 from collections import Counter
@@ -759,6 +761,44 @@ def looks_scanned(pages):
     return len("".join(pages).strip()) < 200
 
 
+# Many institutions post their advert as a scanned image in a PDF (Litro, Lake House,
+# ITN, NERDC... 13 skipped in October 2026). Those are read with Tesseract, installed
+# on the GitHub runner (see ingest.yml); without it, scans are skipped as before.
+# English only: these are the English adverts, and the site only needs Sinhala for
+# Gazette vacancies, which have a real text layer.
+OCR_MAX_PAGES = 6
+OCR_DPI = 300
+SCANNED_SKIP_REASON = "scanned PDF, no text layer"
+OCR_NOTE = (
+    "[This text was read from a scanned image by OCR, so letters and digits can be "
+    "misread. If a date, number or amount is unclear or implausible, use null for it.]\n\n"
+)
+
+
+def ocr_available():
+    return shutil.which("tesseract") is not None
+
+
+def ocr_page_texts(content):
+    """A scanned PDF's text, page by page, read by Tesseract from 300 dpi greyscale
+    renders of its first OCR_MAX_PAGES pages; [] if Tesseract isn't installed."""
+    import pymupdf
+
+    if not ocr_available():
+        return []
+    texts = []
+    for page in list(pymupdf.open(stream=content, filetype="pdf"))[:OCR_MAX_PAGES]:
+        png = page.get_pixmap(dpi=OCR_DPI, colorspace=pymupdf.csGRAY).tobytes("png")
+        try:
+            result = subprocess.run(["tesseract", "stdin", "stdout", "-l", "eng", "--psm", "3"],
+                                    input=png, capture_output=True, timeout=180)
+        except subprocess.TimeoutExpired:
+            texts.append("")
+            continue
+        texts.append(result.stdout.decode("utf-8", "replace") if result.returncode == 0 else "")
+    return texts
+
+
 def structure_with_llm(raw_text, sinhala_text=None):
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
@@ -1162,6 +1202,14 @@ def skip_post(data, post_url, reason):
 def main():
     data = load_data()
     budget = LLMBudget(MAX_LLM_CALLS_PER_RUN)
+    # Scans skipped before OCR was available get one more go now that it is.
+    skipped = data.get("skippedSourceUrls", {})
+    if ocr_available():
+        retry = [u for u, s in skipped.items() if s.get("reason") == SCANNED_SKIP_REASON]
+        for u in retry:
+            del skipped[u]
+        if retry:
+            print(f"OCR available: retrying {len(retry)} scanned notice(s) skipped earlier.")
     existing_urls = {v.get("sourceUrl") for v in data["vacancies"] if v.get("sourceUrl")}
     existing_urls |= set(data.get("skippedSourceUrls", {}))
     existing_keys = {v.get("_sourceKey") for v in data["vacancies"] if v.get("_sourceKey")}
@@ -1207,17 +1255,25 @@ def main():
         if content is None:
             continue
         pages = pdf_page_texts(content)
+        via_ocr = False
         if looks_scanned(pages):
-            print("  ! looks like a scanned PDF (no OCR configured in this script yet) — skipping."
-                  " See job.md §7.1 step 2 for the Tesseract fallback this needs.")
-            skip_post(data, post_url, "scanned PDF, no text layer")
-            continue
+            if not ocr_available():
+                print("  ! looks like a scanned PDF and Tesseract isn't installed — skipping.")
+                skip_post(data, post_url, SCANNED_SKIP_REASON)
+                continue
+            pages = ocr_page_texts(content)
+            if looks_scanned(pages):
+                print("  ! scanned PDF, and OCR found no usable text — skipping.")
+                skip_post(data, post_url, "scanned PDF, OCR found no usable text")
+                continue
+            via_ocr = True
+            print(f"  (scanned PDF: read {len(''.join(pages))} characters by OCR)")
 
         if not budget.take():
             print("  (LLM budget for this run used up — remaining posts wait for the next run)")
             break
         try:
-            structured = structure_with_llm("\n".join(pages).strip())
+            structured = structure_with_llm((OCR_NOTE if via_ocr else "") + "\n".join(pages).strip())
         except Exception as e:
             print(f"  ! LLM structuring failed: {e}", file=sys.stderr)
             continue
@@ -1272,10 +1328,13 @@ def main():
             **detail_fields(structured),
             "verifiedAt": None,
             "_needsReview": True,
+            # Read from a scan: check every date and number against the PDF in review.
+            **({"_ocr": True} if via_ocr else {}),
         }
         data["vacancies"].append(entry)
         added.append(entry)
-        print(f"  + added: {entry['titleEn']} @ {entry['instEn']} (confidence {entry['confidence']})")
+        print(f"  + added{' (OCR — check dates and numbers)' if via_ocr else ''}: {entry['titleEn']}"
+              f" @ {entry['instEn']} (confidence {entry['confidence']})")
 
     if json.dumps(data, sort_keys=True) == snapshot:
         print("\nNothing new this run.")
