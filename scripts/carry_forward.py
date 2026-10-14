@@ -10,7 +10,8 @@ So, before ingest.py runs, this merges the open PR's data/vacancies.json into ma
 
   - vacancies the PR found that main doesn't have are added; main's own copy wins
     whenever both have the same vacancy (a reviewer may have corrected it on main),
-    except that Sinhala the PR added to a vacancy main has no Sinhala for is kept;
+    except that a Sinhala suggestion the PR made for a vacancy main has no Sinhala
+    for is kept (as a suggestion: Sinhala goes live only via approve_sinhala.py);
   - a serial that main has since given to a different vacancy is renumbered, so two
     jobs never share one (this happened once, by hand: ING-20, 2026-10-11);
   - Gazette progress (processed issues, chunks still pending, posts already rejected)
@@ -43,7 +44,10 @@ def next_free(prefix, used):
     return f"{prefix}-{n + 1}"
 
 
-SINHALA_FIELDS = ("titleSi", "instSi", "pdfUrlSi", "pdfPagesSi", "_siChecked")
+# Only the ingest's own Sinhala bookkeeping: a suggestion waiting for review and the
+# "tried by method X" mark. Live Sinhala is never carried from a review branch; it
+# only goes live through scripts/approve_sinhala.py.
+SINHALA_FIELDS = ("_siPending", "_siChecked")
 
 
 def carry_forward(main, review):
@@ -54,10 +58,10 @@ def carry_forward(main, review):
 
     for v in review.get("vacancies", []):
         if identity(v) in have:
-            # The Sinhala pass fills in existing vacancies; keep its work (and its
-            # "tried by method X" mark) unless main has a Sinhala title of its own.
+            # The Sinhala pass works on existing vacancies; keep its suggestion and
+            # its "tried" mark unless main has Sinhala, or a suggestion, of its own.
             mine = by_identity.get(identity(v))
-            if (mine is not None and not mine.get("titleSi")
+            if (mine is not None and not mine.get("titleSi") and not mine.get("_siPending")
                     and v.get("_siChecked") and v.get("_siChecked") != mine.get("_siChecked")):
                 for field in SINHALA_FIELDS:
                     if field in v:

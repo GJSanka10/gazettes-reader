@@ -73,9 +73,11 @@ jobs:
             against the linked PDF. The notice PDFs themselves are in
             `web/public/gazette-pdfs/`. See job.md §7.1 for why this review step exists.
 
-            Gazette vacancies may also gain `titleSi` / `instSi`: Sinhala copied word for
-            word from the Sinhala edition (never translated). Check each against its
-            `pdfUrlSi` excerpt.
+            Gazette vacancies may also get a Sinhala title SUGGESTION (`_siPending`),
+            copied word for word from the Sinhala edition, never translated. Suggestions
+            are not shown on the site. After merging, check each against its excerpt PDF
+            and put the correct ones live: `python scripts/approve_sinhala.py` lists them,
+            `python scripts/approve_sinhala.py GOVLK-1 GOVLK-2` approves.
           branch: ingest/weekly-update
           # Merged or closed PRs leave no stale branch behind to block the next run.
           delete-branch: true

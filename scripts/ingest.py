@@ -32,6 +32,7 @@ import math
 import os
 import re
 import sys
+import time
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -511,6 +512,9 @@ def remove_unreferenced_pdfs(data):
     when a notice's page range was extended."""
     used = {Path(v[f]).name for v in data["vacancies"]
             for f in ("pdfUrl", "pdfUrlSi", "pdfFullUrl", "pdfFullUrlSi") if v.get(f)}
+    # A Sinhala excerpt waiting for review is in use too.
+    used |= {Path(v["_siPending"]["pdfUrlSi"]).name for v in data["vacancies"]
+             if (v.get("_siPending") or {}).get("pdfUrlSi")}
     for path in PDF_HOST_DIR.glob("*.pdf"):
         if path.name not in used:
             path.unlink()
@@ -843,16 +847,22 @@ def compute_status(closing_date_iso):
 SI_SIGNS = "ඁංඃ්ාැෑිීුූෘෙේෛොෝෞෟෲෳ"
 SI_JUNK = re.compile("[ƀ-˿�-]")
 SI_DOUBLED = re.compile("([" + SI_SIGNS + "])\\1+")
+# The repeat can land after a space or line break ("සහකා\nාර" for සහකාර, 18/09/2026
+# issue). No word starts with a dependent sign, so one right after whitespace that
+# repeats the sign before it is the duplicate, whitespace included.
+SI_SPLIT_DOUBLE = re.compile("([" + SI_SIGNS + "])\\s+\\1")
 # Spent on Sinhala per run at most, after the English Gazette pass and before
 # gazette.lk, so a Sinhala backlog can't starve new vacancies.
 MAX_SINHALA_CALLS_PER_RUN = 15
 # Bump when the Sinhala method changes, so vacancies an older method gave up on are
-# tried again. "lines-v1": the model answers with line numbers (2026-10-12).
-SI_METHOD = "lines-v1"
+# tried again. "lines-v1" (2026-10-12) answered with line numbers, which took whole
+# lines with labels and counts in them; "text-v2" copies just the name, and only suggests.
+SI_METHOD = "text-v2"
 
 
 def clean_sinhala(text):
     text = SI_JUNK.sub("", text or "")
+    text = SI_SPLIT_DOUBLE.sub(r"\1", text)
     text = SI_DOUBLED.sub(r"\1", text)
     return re.sub("‍{2,}", "‍", text)
 
@@ -943,23 +953,22 @@ def locate_notices(notices, en, si):
 
 
 SI_COPY_PROMPT = """Below is the text of one notice from the SINHALA edition of a Sri Lankan \
-Government Gazette, with numbered lines, and the posts the ENGLISH edition of the same notice \
-lists. For each post, give:
-title - the line numbers [first, last] where this post's own title is printed (a table row, \
-or the heading that names the post); use the fewest lines that hold the whole title
-inst  - the line numbers [first, last] where the recruiting institution's name is printed
+Government Gazette, and the posts the ENGLISH edition of the same notice lists. For each post, \
+copy from the Sinhala text:
+title - just this post's name as printed (e.g. the table cell or the heading words that name the \
+post), nothing before or after it: no "post name:" label, no number of vacancies, no duties
+inst  - just the recruiting institution's name as printed
 
-Answer with LINE NUMBERS only; never write out, translate or correct the Sinhala. If the Sinhala \
+Copy characters exactly; never translate, paraphrase or correct. Keep it short. If the Sinhala \
 text is not the same notice (for example a different post, or a 1st examination where the English \
-says 2nd), or a value is not printed in it, use null. Return ONLY a JSON object, mapping each post \
-key to {{"title": [first, last] or null, "inst": [first, last] or null}}. Example: \
-{{"GOVLK-7": {{"title": [12, 13], "inst": [3, 3]}}}}
+says 2nd), or you are not sure which words are this post's name, use null. Return ONLY a JSON \
+object mapping each post key to {{"title": ... or null, "inst": ... or null}}.
 
 --- ENGLISH POSTS ---
 {posts}
 --- END ---
 
---- SINHALA NOTICE TEXT (numbered lines) ---
+--- SINHALA NOTICE TEXT ---
 {text}
 --- END ---
 """
@@ -1025,18 +1034,23 @@ def call_llm_json(prompt, model=None, expect=()):
     return obj
 
 
-def lines_text(lines, span):
-    """The text of numbered lines [first, last] (1-based), joined; None if the span
-    isn't a short, valid range. Leading list markers like "1." or "(අ)" are dropped."""
-    if not (isinstance(span, list) and len(span) == 2 and all(isinstance(n, int) for n in span)):
+def tidy_sinhala_name(value, notice_text):
+    """A post or institution name the model copied, tidied and checked; None if it
+    isn't fit to show. It must appear in the notice's Sinhala text word for word
+    (whitespace aside), so it can't be a translation or a guess. Trailing vacancy
+    counts ("පරිපාලන නිලධාරි 01") and edge punctuation are trimmed; labels ("…: "),
+    fragments that start mid-word, and long passages are refused."""
+    value = clean_sinhala(str(value or "")).strip()
+    value = re.sub(r"\s+", " ", value)
+    value = re.sub(r"\s+\(?\d{1,3}\)?\s*(?:ක්|කි)?\.?$", "", value)  # "… 01", "… (19)", "… 08කි."
+    value = value.strip(" .;,:-–")
+    if not 2 <= len(value) <= 160 or ":" in value or not is_sinhala_text(value):
         return None
-    first, last = span
-    if not 1 <= first <= last <= len(lines) or last - first > 3:
+    if value[0] in SI_SIGNS:  # starts on a vowel sign: cut mid-word
         return None
-    text = " ".join(lines[first - 1:last])
-    text = re.sub(r"^\s*(?:\(?[\dIVXivx]{1,4}[.)]|\([^\s)]{1,3}\))\s*", "", text)
-    text = re.sub(r"\s+", " ", text).strip(" :-–")
-    return text if 2 <= len(text) <= 250 else None
+    if re.sub(r"\s+", "", value) not in re.sub(r"\s+", "", notice_text):
+        return None
+    return value
 
 
 def save_local_excerpt(local_url, first_page, last_page):
@@ -1055,15 +1069,22 @@ def save_local_excerpt(local_url, first_page, last_page):
 
 
 def add_sinhala_to_gazette_vacancies(data, budget):
-    """Fills titleSi / instSi (and a Sinhala excerpt, pdfUrlSi) on Gazette vacancies that
-    don't have them yet, from the hosted Sinhala edition. Each vacancy is tried once
-    by each method (_siChecked = SI_METHOD), so a better method retries what an older
-    one missed; a failed LLM call leaves it untried so the next run retries."""
+    """Suggests a Sinhala title and institution (and a Sinhala excerpt) for Gazette
+    vacancies that don't have them, from the hosted Sinhala edition.
+
+    Suggestions go into v["_siPending"], which the site never shows. They only go
+    live once someone has checked them against the Sinhala PDF and run
+    scripts/approve_sinhala.py: early runs put live a title from the wrong post, one
+    from the wrong notice and some fragments (2026-10-12/13), and review PRs get
+    merged without a Sinhala reader looking. Each vacancy is tried once per method
+    (_siChecked = SI_METHOD); a failed LLM call leaves it untried so the next run
+    retries."""
     spend = LLMBudget(min(MAX_SINHALA_CALLS_PER_RUN, budget.left))
     issues = {}
     for v in data["vacancies"]:
         if (v.get("sourceKind") == "gazette" and v.get("pdfPages") and v.get("pdfFullUrl")
-                and v.get("pdfFullUrlSi") and not v.get("titleSi") and v.get("_siChecked") != SI_METHOD):
+                and v.get("pdfFullUrlSi") and not v.get("titleSi") and not v.get("_siPending")
+                and v.get("_siChecked") != SI_METHOD):
             issues.setdefault((v["pdfFullUrl"], v["pdfFullUrlSi"]), []).append(v)
 
     for (en_url, si_url), vacancies in issues.items():
@@ -1090,51 +1111,45 @@ def add_sinhala_to_gazette_vacancies(data, budget):
                 for v in posts:
                     v["_siChecked"] = SI_METHOD
                 continue
-            # The model answers with line numbers and the text is cut from the PDF's own
-            # lines here, so what's stored is the Sinhala as printed, by construction.
-            lines = [ln.strip() for ln in si_text.splitlines() if ln.strip()]
-            numbered, size = [], 0
-            for n, ln in enumerate(lines, start=1):
-                size += len(ln) + 8
-                if size > 10000:
-                    break
-                numbered.append(f"L{n}: {ln}")
             prompt = SI_COPY_PROMPT.format(
                 posts="\n".join(f"{v['serial']}: {v['titleEn']} — {v.get('instEn')}" for v in posts),
-                text="\n".join(numbered))
+                text=si_text[:10000])
             expect = [v["serial"] for v in posts]
             answer = None
-            for model in (OPENROUTER_SINHALA_MODEL, None):
+            # Gemma's free tier is often briefly rate-limited upstream (429): wait and
+            # retry it once before falling back to the main model.
+            rate_limited = False
+            for model, wait in ((OPENROUTER_SINHALA_MODEL, 0), (OPENROUTER_SINHALA_MODEL, 30), (None, 0)):
+                if wait and not rate_limited:
+                    continue  # only a rate limit is worth waiting out
                 if not spend.take() or not budget.take():
                     break
+                time.sleep(wait)
                 try:
                     answer = call_llm_json(prompt, model=model, expect=expect)
                     break
                 except Exception as e:
+                    rate_limited = " 429" in str(e)
                     print(f"  ! Sinhala lookup for pages {key[0]}-{key[1]} failed"
-                          f" ({model or OPENROUTER_MODEL}): {e}", file=sys.stderr)
+                          f" ({model or OPENROUTER_MODEL}): {str(e)[:200]}", file=sys.stderr)
             if answer is None:
                 continue  # left untried: the next run retries
+            span = (max(1, pages[0] - 1), min(len(si), pages[1] + 1))
+            excerpt = None
             for v in posts:
                 got = answer.get(v["serial"]) if isinstance(answer, dict) else None
                 got = got if isinstance(got, dict) else {}
-                for field, span in (("titleSi", got.get("title")), ("instSi", got.get("inst"))):
-                    value = lines_text(lines, span)
-                    if value and is_sinhala_text(value):
-                        v[field] = value
+                title = tidy_sinhala_name(got.get("title"), si_text)
+                inst = tidy_sinhala_name(got.get("inst"), si_text)
                 v["_siChecked"] = SI_METHOD
-                print(f"  + {v['serial']} {v['titleEn']}: {v.get('titleSi') or '(no title found)'}")
-            # A verified title is what confirms these pages are the same notice; only
-            # then does the Sinhala button point at them instead of the whole issue.
-            # The numbers can sit a page inside the notice's real edges (its heading
-            # page has few; its application form may have none), so the excerpt takes
-            # one page either side: a sliver of a neighbour beats a missing heading.
-            if any(v.get("titleSi") for v in posts):
-                span = (max(1, pages[0] - 1), min(len(si), pages[1] + 1))
-                excerpt = save_local_excerpt(si_url, *span)
-                for v in posts:
-                    v["pdfUrlSi"] = excerpt
-                    v["pdfPagesSi"] = list(span)
+                if title:
+                    # The numbers can sit a page inside the notice's real edges, so
+                    # the excerpt takes one page either side.
+                    excerpt = excerpt or save_local_excerpt(si_url, *span)
+                    v["_siPending"] = {"titleSi": title, "instSi": inst, "pdfUrlSi": excerpt,
+                                       "pdfPagesSi": list(span)}
+                print(f"  ? {v['serial']} {v['titleEn']}: {title or '(no title found)'}"
+                      f"{f' — {inst}' if title and inst else ''}  [Sinhala pages {span[0]}-{span[1]}]")
 
 
 def skip_post(data, post_url, reason):
