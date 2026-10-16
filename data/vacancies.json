@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T14:57:28.228949+00:00",
+  "updatedAt": "2026-10-16T14:19:28.359308+00:00",
   "vacancies": [
     {
       "real": true,
@@ -570,7 +570,16 @@
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p17-19.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2",
+      "_siPending": {
+        "titleSi": "කෘෂි සංවර්ධන සහකාර",
+        "instSi": "කෘෂිකර්ම , පශුසම්පත්,ඉඩම් හා වාරිමාර්ග අමාත්‍යාංශය",
+        "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p18-22.pdf",
+        "pdfPagesSi": [
+          18,
+          22
+        ]
+      }
     },
     {
       "serial": "GOVLK-5",
@@ -622,7 +631,16 @@
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p17-19.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2",
+      "_siPending": {
+        "titleSi": "කෘෂි පර්යේෂණ සහකාර",
+        "instSi": "කෘෂිකර්ම , පශුසම්පත්,ඉඩම් හා වාරිමාර්ග අමාත්‍යාංශය",
+        "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p18-22.pdf",
+        "pdfPagesSi": [
+          18,
+          22
+        ]
+      }
     },
     {
       "serial": "GOVLK-6",
@@ -674,7 +692,16 @@
       "pdfUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994-p17-19.pdf",
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2",
+      "_siPending": {
+        "titleSi": "කෘෂි ආර්ථික විද්‍යා සහකාර",
+        "instSi": "කෘෂිකර්ම , පශුසම්පත්,ඉඩම් හා වාරිමාර්ග අමාත්‍යාංශය",
+        "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p18-22.pdf",
+        "pdfPagesSi": [
+          18,
+          22
+        ]
+      }
     },
     {
       "serial": "GOVLK-7",
@@ -725,7 +752,16 @@
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
       "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2",
+      "_siPending": {
+        "titleSi": "සහකාර කෘෂිකර්ම අධ්‍යයක්ෂ (කෘෂි සංවර්ධන)",
+        "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
+        "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p20-29.pdf",
+        "pdfPagesSi": [
+          20,
+          29
+        ]
+      }
     },
     {
       "serial": "GOVLK-8",
@@ -776,7 +812,16 @@
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
       "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2",
+      "_siPending": {
+        "titleSi": "සහකාර කෘෂිකර්ම අධ්‍යයක්ෂ (කෘෂි පර්යේෂණ)",
+        "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
+        "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p20-29.pdf",
+        "pdfPagesSi": [
+          20,
+          29
+        ]
+      }
     },
     {
       "serial": "GOVLK-9",
@@ -827,7 +872,16 @@
       "pdfFullUrl": "/gazette-pdfs/25808d67-I-II-A---E-18.09.2026---Press-1790593994.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247.pdf",
       "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2",
+      "_siPending": {
+        "titleSi": "සහකාර කෘෂිකර්ම අධ්‍යයක්ෂ (කෘෂි ආර්ථික විද්‍යා)",
+        "instSi": "කෘෂිකර්ම දෙපාර්තමේන්තුව",
+        "pdfUrlSi": "/gazette-pdfs/58e0bcac-2026.09.18-Part-I-II-A-S-press-1790337247-p20-29.pdf",
+        "pdfPagesSi": [
+          20,
+          29
+        ]
+      }
     },
     {
       "serial": "GOVLK-10",
@@ -1265,7 +1319,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලය",
-      "_siChecked": "lines-v1",
+      "_siChecked": "text-v2",
       "pdfUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179-p36-39.pdf",
       "pdfPagesSi": [
         36,
@@ -1442,7 +1496,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-19",
@@ -1488,7 +1542,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-20",
@@ -1534,7 +1588,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-21",
@@ -1580,7 +1634,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-22",
@@ -1626,7 +1680,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-23",
@@ -1672,7 +1726,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-24",
@@ -1718,7 +1772,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-25",
@@ -1764,7 +1818,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-26",
@@ -1810,7 +1864,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-27",
@@ -1856,7 +1910,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-28",
@@ -1902,7 +1956,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-29",
@@ -1948,7 +2002,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-30",
@@ -1994,7 +2048,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-31",
@@ -2040,7 +2094,7 @@
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
       "instSi": "රජයේ කර්මාන්තශාලා දෙපාර්තමේන්තුව",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-32",
@@ -2154,7 +2208,7 @@
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p41-46.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-34",
@@ -2207,7 +2261,7 @@
       "pdfUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164-p41-46.pdf",
       "pdfFullUrl": "/gazette-pdfs/0d02593a-I-II-A---25.09.2026---E-Press-1791345164.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/9c2faffa-2026.09.25-Part-I-II-A-S-Gazettes--------------179.pdf",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2"
     },
     {
       "serial": "GOVLK-35",
@@ -2842,12 +2896,21 @@
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
       "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලය",
-      "_siChecked": "lines-v1",
+      "_siChecked": "text-v2",
       "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p13-16.pdf",
       "pdfPagesSi": [
         13,
         16
-      ]
+      ],
+      "_siPending": {
+        "titleSi": "අධ්‍යයක්ෂ - මූල්‍යය - ( HM 1-1)",
+        "instSi": "අන්තරායකර ඖෂධ පාලක ජාතික මණ්ඩලය",
+        "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p13-16.pdf",
+        "pdfPagesSi": [
+          13,
+          16
+        ]
+      }
     },
     {
       "serial": "GOVLK-47",
@@ -3235,7 +3298,16 @@
       "pdfUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787-p30-32.pdf",
       "pdfFullUrl": "/gazette-pdfs/f92c1c33-I-II-A---02.10.2026---E-Press-1791541787.pdf",
       "pdfFullUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048.pdf",
-      "_siChecked": "lines-v1"
+      "_siChecked": "text-v2",
+      "_siPending": {
+        "titleSi": "ප්‍රසම්පාදන නිලධාරි - III ශ්‍රේණිය",
+        "instSi": "ශ්‍රී ලංකා දුම්රිය දෙපාර්තමේන්තුව",
+        "pdfUrlSi": "/gazette-pdfs/32353920-2026.10.02-Part-I-II-A-S-Gazettes-1791444048-p17-21.pdf",
+        "pdfPagesSi": [
+          17,
+          21
+        ]
+      }
     },
     {
       "serial": "ING-24",
@@ -4275,6 +4347,468 @@
       ],
       "verifiedAt": null,
       "_needsReview": true
+    },
+    {
+      "serial": "ING-43",
+      "titleEn": "Junior Civil Engineer (II) and Management Assistant",
+      "instEn": "Ministry of Agriculture, Livestock, Lands and Irrigation",
+      "dateEn": "2026-10-27",
+      "status": "soon",
+      "days": "12 days",
+      "elig": "check",
+      "match": null,
+      "category": "Engineering & Technical",
+      "citation": "MSD Circular Number 02/2026",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-14T13:39:56.230058+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/management-assistant-junior-civil-engineer-ministry-of-agriculture-livestock-lands-and-irrigation-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/76b0146f-Management-Assistant-Junior-Civil-Engineer-MOALLI-.pdf",
+      "pdfUrlSi": "/gazette-pdfs/5423152f-Management-Assistant-Junior-Civil-Engineer-MOALLI-.pdf",
+      "sourceLabel": null,
+      "descEn": "Recruitment of project staff on contract basis for the Implementation of Pilot Demonstration Models Aimed at Enhancing Food Security Through Climate Resilient and Modernized Irrigated Agriculture Project. Positions include Junior Civil Engineer (II) and Management Assistant. Applications invited from Sri Lankan citizens below 64 years.",
+      "age": "Below 64 years",
+      "quota": null,
+      "salary": "As per MSD Circular 02/2026 Annexure 02 and Public Administration Circular 10/2025",
+      "qualEn": "Basic qualifications and experience as per Column 01 of Annexure 1 of MSD Circular No 02/2026 dated 28.03.2026. Proficiency in English, familiarity with government regulations, and computer literacy are essential. Work experience in foreign funded projects in Sri Lanka is an added advantage.",
+      "confidence": 0.85,
+      "qualificationLevel": null,
+      "locations": [],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Shortlisting and interview",
+      "howToApply": [
+        "Prepare application indicating the post applied for on the top left-hand corner of the envelope.",
+        "Send by registered post to Project Director, Implementation of Pilot Demonstration Models Aimed at Enhancing Food Security Through Climate Resilient and Modernized Irrigated Agriculture Project, Project Director Office, No 26, Land Use Building, Jawatta Road, Colombo 05.",
+        "Ensure application reaches on or before 27 October 2026.",
+        "Government/semi-government employees must apply through their respective Head of Department."
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_ocr": true
+    },
+    {
+      "serial": "ING-44",
+      "titleEn": "Receptionist",
+      "instEn": "The Associated Newspapers of Ceylon Limited (ANCL) / Lake House",
+      "dateEn": null,
+      "status": "open",
+      "days": "—",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-14T13:40:47.617517+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/receptionist-lake-house-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/311b6e9f-Receptionist-Lake-House.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "Receptionist position requiring GCE Advanced Level qualification with one year relevant experience in reception, front office or customer service. Must have excellent verbal communication skills in English and Sinhala; Tamil proficiency is an advantage. Duties include handling visitors, telephone calls and general reception duties professionally.",
+      "age": null,
+      "quota": null,
+      "salary": null,
+      "qualEn": "Passed G.C.E. (A/L) examination with 1 year of relevant experience as a Receptionist/Front office or customer service; Excellent verbal communication skills in English and Sinhala; Proficiency in Tamil language will be an added advantage; Ability to handle visitors, telephone calls and general reception duties in a professional manner; Pleasant, courteous and friendly personality with good interpersonal skills; Good organizational skills with a customer-focused approach",
+      "confidence": 0.9,
+      "qualificationLevel": "al",
+      "locations": [
+        "Colombo 10"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Apply with detailed resume within 07 days of this advertisement to careers@lakehouse.lk",
+        "Address application to THE HUMAN RESOURCES DEPARTMENT, THE ASSOCIATED NEWSPAPERS OF CEYLON LTD., HOUSE NO. 35, D.R. WISEWARDENE MAWATHA, COLOMBO 10"
+      ],
+      "requiredDocuments": [
+        "detailed resume"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_ocr": true
+    },
+    {
+      "serial": "ING-45",
+      "titleEn": "Assistant Director (Finance)",
+      "instEn": "Legal Aid Commission of Sri Lanka",
+      "dateEn": "2026-10-26",
+      "status": "soon",
+      "days": "11 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-14T13:43:33.964032+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/management-assistant-legal-officer-internal-audit-officer-assistant-director-legal-aid-commission-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/78205ff3-Management-Assistant-Legal-Officer-Internal-Audit-.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "The Assistant Director (Finance) is responsible for the administration and supervision of all financial affairs of the Legal Aid Commission.",
+      "age": "32-45 yrs as at 01.10.2026",
+      "quota": "1 post",
+      "salary": "MM 1-3: Rs. 96,650 - 173,200 + allowances + EPF/ETF",
+      "qualEn": "External Candidates: 1. A Degree in Finance, Accountancy, or Management recognized by the UGC, with a minimum of five (05) years post-qualifying experience in the relevant field in a managerial capacity in Government, a State Corporation, Statutory Board, or a recognized reputed institution. OR 2. Intermediate level qualification from a recognized professional body (ICASL, CIMA, ACCA, CMA) with a minimum of five (05) years experience in financial management at a managerial level in Government, a State Corporation, Statutory Board, or a recognized institution. Internal Candidates: 1. Completion of the qualifications specified for external candidates above. OR 2. A minimum of two (02) years of satisfactory service in Grade I of the relevant field under the JM 1-1 service category.",
+      "confidence": 0.9,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Head Office"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Forward application through head of institution if currently employed in government/state sector",
+        "Send completed application by registered post to Chairman, Legal Aid Commission of Sri Lanka, No. 129, High Court Complex, Hulftsdorp, Colombo 12",
+        "Ensure application reaches on or before 26 October 2026",
+        "Mark envelope with post applied for and province on top left corner"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_ocr": true
+    },
+    {
+      "serial": "ING-46",
+      "titleEn": "Assistant Registrar, Examination Division",
+      "instEn": "NIBM",
+      "dateEn": "2026-10-22",
+      "status": "soon",
+      "days": "7 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-14T13:44:44.306680+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/assistant-registrar-national-institute-of-business-management-nibm-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/ae77eaf7-Assistant-Registrar-NIBM.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "Responsible for coordinating and administering examinations, including examination papers, answer scripts and related documents; managing invigilators; ensuring compliance with examination regulations; supervising examinations; and performing other duties assigned by the Registrar and Directors.",
+      "age": "21-45 yrs",
+      "quota": null,
+      "salary": null,
+      "qualEn": "Bachelor Degree in Management / Art / Science field from a university recognized by the U.G.C. With minimum of four years post qualifying administrative experience in the relevant field in a Government Department / Government Institution / University or in a reputed educational Institute.",
+      "confidence": 0.85,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Island-wide"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Scan the QR code to apply",
+        "Submit application on or before 22 October 2026"
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_ocr": true
+    },
+    {
+      "serial": "ING-47",
+      "titleEn": "Project Staff Vacancies",
+      "instEn": "Ministry of Transport, Highways and Urban Development, Project Management Unit of the Colombo Suburban Railway Project",
+      "dateEn": "2026-10-22",
+      "status": "soon",
+      "days": "6 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Circular No. 02/2026",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": "2026-10-08",
+      "firstSeenAt": "2026-10-15T12:01:03.816625+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/project-secretary-project-director-ministry-of-transport-highways-and-urban-development-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/11faec6f-Project-Secretary-Project-Director-MOTHUD-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/38eb5732-Project-Secretary-Project-Director-MOTHUD-S.pdf",
+      "sourceLabel": null,
+      "descEn": "The Project Management Unit of the Colombo Suburban Railway Project (funded by the Asian Development Bank) is recruiting three contract positions: Deputy Project Director (Procurement), Assistant Project Director (Finance), and Project Secretary. Appointments are made under Circular No. 02/2026 of the Department of Management Services.",
+      "age": "Under 64 years",
+      "quota": "3 posts (1 each for Deputy Project Director (Procurement), Assistant Project Director (Finance), Project Secretary)",
+      "salary": "Salary Code B: 370,000 – 390,000; Salary Code D: 260,000 – 280,000; Salary Code F: 160,000 – 175,000 (monthly, LKR)",
+      "qualEn": "Deputy Project Director (Procurement) - Salary Code B: One of: (1) Degree in relevant field + postgraduate degree/professional qualification + 11 years management experience (5 years senior); (2) Membership of recognized professional institution + 9 years management experience (4 years senior); (3) Class I officer in All-island public service + postgraduate/professional qualification + 4 years Class I experience. Assistant Project Director (Finance) - Salary Code D: One of: (1) Relevant degree/UGC equivalent + CA Sri Lanka Licentiate II/Intermediate/Certificate II or higher + 7 years experience; (2) Associate Membership of recognized professional body + 4 years experience; (3) Class II/III officer in All-island public service + 7 years experience in such post. Project Secretary - Salary Code F: One of: (1) 4 Credit passes at GCE O/L (including English and Sinhala/Tamil) + 3 passes at GCE A/L (excluding General Test) + Secretarial course/Chartered Secretary studies + 4 years experience; (2) Chartered Secretary professional qualification + 4 years experience.",
+      "confidence": 0.95,
+      "qualificationLevel": "masters",
+      "locations": [
+        "Colombo"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Shortlisting based on highest qualifications and experience, followed by interview; final selection based on skills.",
+      "howToApply": [
+        "Prepare a covering letter highlighting suitability/qualifications for the specific position.",
+        "Prepare a completed Curriculum Vitae (CV) with names and contact details of two non-related referees.",
+        "Attach certified copies of relevant educational, professional, and experience certificates.",
+        "Send separate applications for each position via registered post to: Project Director, Project Management Unit, Colombo Suburban Railway Project, Cotta Road, Colombo 08.",
+        "Mark the position applied for on the top left-hand corner of the envelope.",
+        "Ensure applications are received on or before 22nd October 2026."
+      ],
+      "requiredDocuments": [
+        "Covering letter",
+        "Curriculum Vitae (CV) with two non-related referees",
+        "Certified copies of educational certificates",
+        "Certified copies of professional certificates",
+        "Certified copies of experience certificates"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-48",
+      "titleEn": "Procurement Specialist (Category C)",
+      "instEn": "Ministry of Transport, Highways and Urban Development",
+      "dateEn": "2026-10-21",
+      "status": "soon",
+      "days": "5 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Management Services Circular No. 02/2026",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-15T12:03:14.996283+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/procurement-specialist-ministry-of-transport-highways-and-urban-development-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/644eb7e7-Procurement-Specialist-MOTHUD.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "The Ministry of Transport, Highways and Urban Development invites applications for Procurement Specialist (Category C) positions across four projects (Ruwanpura Expressway Phase I, Central Expressway Phase III, Central Expressway Project 04, and Disaster Rebuild and Rural Road Project). Appointments are on a contract basis per Management Services Circular No. 02/2026, with selection via structured interview.",
+      "age": "Below 60 (Govt) / 64 (Others)",
+      "quota": "1 post per project (4 projects)",
+      "salary": "As per Management Services Circular No. 02/2026",
+      "qualEn": "Minimum Qualifications & Experience [(1) or (2) below]\n1.\n• A Bachelor’s Degree in the relevant field.\nAnd\n• A Postgraduate Degree (Masters) Qualification in the relevant field/An Associate Membership or a similar professional qualification obtained from a recognized professional body in the relevant field.\nWith\n• At least 10 years of experience in the relevant field at a managerial level.\n2.\n• Class I officer of a government All-island Services or a similar status in the relevant field.\nAnd\n• A Postgraduate Degree (Masters) qualification in the relevant field.\nWith\n• At least 03 years of experience in the Class I post or a similar status in the relevant field.\nApplicant should have experiences in the posts in Procurement Field.",
+      "confidence": 0.95,
+      "qualificationLevel": "masters",
+      "locations": [
+        "Island-wide"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Structured interview",
+      "howToApply": [
+        "Fill application according to the given format (Annexure I).",
+        "Attach copies of academic qualifications, transcript of basic degree, work experience certificates, and other relevant documents.",
+        "Send by registered post or hand deliver to Secretary, Ministry of Highways, “Maganeguma Mahamedura”, No.216, Denzil Kobbekaduwa Mawatha, Koswatta, Battaramulla, or hand over to Ministry Administration Division.",
+        "Mark the envelope with the name of the post and project as appearing in the advertisement on the top left corner.",
+        "Submit on or before 21.10.2026.",
+        "If applying for more than one post, submit separate applications for each post."
+      ],
+      "requiredDocuments": [
+        "Academic qualifications certificates",
+        "Transcript of basic degree",
+        "Work experience certificates",
+        "Other relevant documents"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-49",
+      "titleEn": "Management Assistant",
+      "instEn": "Ministry of Health & Mass Media",
+      "dateEn": "2026-11-02",
+      "status": "open",
+      "days": "17 days",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": "Circular No. 02/2026",
+      "citationType": "circular",
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": "2026-09-14",
+      "firstSeenAt": "2026-10-15T12:05:20.268745+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/management-assistant-phsep-ministry-of-health-mass-media-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/3708e44b-Management-Assistant-PHSEP.pdf",
+      "pdfUrlSi": null,
+      "sourceLabel": null,
+      "descEn": "The Management Assistant will work in the Project Management Unit (PMU) of the Primary Healthcare System Enhancing Project (PHSEP) on a contract basis for one year, extendable annually up to project end. Duties involve office accounts, administration, procurement, and project administration support.",
+      "age": null,
+      "quota": "1 post",
+      "salary": "As per Circular No. 02/2026, Para 3.2.3 dated 28.03.2026",
+      "qualEn": "External Applicants: G.C.E. (A/L) – 03 subjects; G.C.E. (O/L) – 06 subjects in one sitting with at least 04 Credit passes including Sinhala/Tamil, English and Mathematics; Having a BSc. Degree will be preferred. Internal Applicants (Government Service): Above A/L & O/L qualifications; Minimum 05 years satisfactory service in a permanent post; Recommendation of Head of Department; Having a BSc. Degree will be preferred. Experience: Minimum 02 years in office accounts/administration/procurement/project administration or related field preferable; Experience in Government or donor-funded projects an added advantage. Other Requirements: Computer literacy (MS Office), general IT applications, good communication skills (Sinhala/Tamil & English), ability to work in a team, good character, physical & mental fitness. Hands-on experience in computerized accounting packages & experience in foreign funded projects an added advantage.",
+      "confidence": 0.95,
+      "qualificationLevel": "al",
+      "locations": [
+        "Colombo 07"
+      ],
+      "employmentTerm": "contract",
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Prepare a detailed Curriculum Vitae or Bio Data (no specific format required).",
+        "Attach copies of educational certificates, experience certificates, and other qualifications.",
+        "Include contact telephone, fax, and email address.",
+        "Send the application via registered post only to the Project Director, PHSEP, 191 A, J. R. Jayawardena Centre, \"The Bungalow\", Dharmapala Mawatha, Colombo 07.",
+        "Mark the envelope with \"APPLICATION FOR THE POST OF MANAGEMENT ASSISTANT\".",
+        "Ensure the application reaches on or before 2nd November 2026."
+      ],
+      "requiredDocuments": [
+        "Curriculum Vitae or Bio Data",
+        "Copies of educational certificates",
+        "Copies of experience certificates",
+        "Copies of other qualifications"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true
+    },
+    {
+      "serial": "ING-50",
+      "titleEn": "Vocational Training Instructor (External)",
+      "instEn": "Colombo Municipal Council",
+      "dateEn": null,
+      "status": "open",
+      "days": "—",
+      "elig": "check",
+      "match": null,
+      "category": "Education & Language Services",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": "2026-10-08",
+      "firstSeenAt": "2026-10-15T12:06:31.276483+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/vocational-training-instructor-colombo-municipal-council-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/a106ef74-Vocational-Training-Instructor-CMC-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/1b430333-Vocational-Training-Instructor-CMC-S.pdf",
+      "sourceLabel": null,
+      "descEn": "The Colombo Municipal Council invites applications for Vocational Training Instructors (External) to conduct various training courses including ICT Technician, Pre-School Teacher, Bakery and Pastry, Tailoring, Handicrafts, Air-Conditioning and Refrigeration, Welding, Electrician, and Elder Care. Instructors will impart knowledge and practical skills, require relevant diplomas or NVQ Level 4/5 qualifications, at least two years of experience, and will be selected via interview and a short presentation.",
+      "age": "21-65 yrs",
+      "quota": null,
+      "salary": "Rs. 3,800 per day (7 hours per day)",
+      "qualEn": "Passed GCE Ordinary Level in one sitting with passes in six subjects including a language (Sinhala/Tamil/English) and Mathematics, with proficiency in two other subjects; and Passed GCE Advanced Level with a minimum of three subjects at a single sitting, excluding General Knowledge Test. Possess a Diploma Certificate or qualification at NVQ Level 4, Level 5, or equivalent/higher level relevant to the respective training course, awarded by a Government recognized institution. Not less than two years of relevant work experience. Must be a Sri Lankan citizen, of good character, physically and mentally fit, with good personality and ability to teach effectively.",
+      "confidence": 0.85,
+      "qualificationLevel": "diploma",
+      "locations": [
+        "Colombo"
+      ],
+      "employmentTerm": "contract",
+      "examType": "none",
+      "selectionMethod": "Interview and short presentation",
+      "howToApply": [
+        "Complete the application form as per the specimen form attached.",
+        "Place the completed application in an envelope marked \"Vocational Training Instructor (External)\" on the top left-hand corner.",
+        "Send by registered post to the Municipal Commissioner, Colombo Municipal Council, Town Hall, Colombo 07 before the closing date."
+      ],
+      "requiredDocuments": [],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_ocr": true
+    },
+    {
+      "serial": "ING-51",
+      "titleEn": "Director (Administration & Human Resources) (HM 1-1)",
+      "instEn": "Consumer Affairs Authority, Ministry of Trade, Commerce, Food Security and Co-operative Development",
+      "dateEn": null,
+      "status": "open",
+      "days": "—",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-15T12:09:43.848574+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/director-legal-enforcement-officer-consumer-affairs-authority-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/def8b71f-Director-Legal-and-Enforcement-Officer-CAA-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/db9db791-Director-Legal-and-Enforcement-Officer-CAA-S.pdf",
+      "sourceLabel": null,
+      "descEn": "The Consumer Affairs Authority is recruiting for three positions at its Head Office: Director (Administration & Human Resources), Assistant Director (Legal & Enforcement), and Legal & Enforcement Officer. Applications must be submitted within 14 days of the advertisement.",
+      "age": null,
+      "quota": "1 post",
+      "salary": null,
+      "qualEn": null,
+      "confidence": 0.7,
+      "qualificationLevel": null,
+      "locations": [
+        "Head Office, Colombo 02"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Submit application under registered cover to the Director General, Consumer Affairs Authority, 1st and 2nd Floor, CWE Secretarial Building, No. 27, Vauxhall Street, Colombo 02.",
+        "Attach copies of relevant certificates in proof of qualifications.",
+        "State the post applied for on the top left-hand corner of the envelope.",
+        "Applications from state sector employees must be forwarded through the relevant heads of institutions.",
+        "Applications must be received within 14 days of the advertisement."
+      ],
+      "requiredDocuments": [
+        "Copies of relevant certificates in proof of qualifications"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_ocr": true
+    },
+    {
+      "serial": "ING-52",
+      "titleEn": "Assistant Manager - Procurement",
+      "instEn": "Sri Lanka Convention Bureau",
+      "dateEn": null,
+      "status": "open",
+      "days": "—",
+      "elig": "check",
+      "match": null,
+      "category": "Administrative & Management",
+      "citation": null,
+      "citationType": null,
+      "sourceKind": "institution-notice",
+      "gazetteNumber": null,
+      "publishedDate": null,
+      "firstSeenAt": "2026-10-15T12:13:12.262101+00:00",
+      "sourceUrl": "https://www.gazette.lk/2026/10/assistant-manager-sri-lanka-convention-bureau-vacancies-2026.html",
+      "pdfUrl": "/gazette-pdfs/26031b5b-Assistant-Manager-SLCB-E.pdf",
+      "pdfUrlSi": "/gazette-pdfs/7f9c394d-Assistant-Manager-SLCB-S.pdf",
+      "sourceLabel": null,
+      "descEn": "The Sri Lanka Convention Bureau seeks an Assistant Manager - Procurement. Candidates must hold a recognized degree in Procurement, Supply Chain Management, Business Administration, Commerce, or a related field, with at least one year of post-qualification managerial experience. Applications must be sent by registered post within 14 days of publication.",
+      "age": "22-45 yrs (internal candidates exempt from max age)",
+      "quota": null,
+      "salary": "MM 1-2-2025: Rs. 94,170-10x2,480+15x3,450-170,720 plus government allowances",
+      "qualEn": "External: Degree in Procurement/Supply Chain Management/Business Administration/Commerce or any other recognized degree by UGC, plus at least 1 year post-qualification managerial experience. Internal: Same qualifications. General: Sri Lankan citizen, physically and mentally fit, excellent moral character.",
+      "confidence": 0.9,
+      "qualificationLevel": "degree",
+      "locations": [
+        "Island-wide"
+      ],
+      "employmentTerm": null,
+      "examType": null,
+      "selectionMethod": null,
+      "howToApply": [
+        "Prepare an application (CV) with copies of educational qualifications, certificates proving professional experience, and other relevant certificates.",
+        "Send by registered post to Chairman, Sri Lanka Convention Bureau, 4th Floor, Hotel School Building, No. 78, Galle Road, Colombo 03.",
+        "Apply within 14 days of the advertisement's publication.",
+        "Mark the envelope top left corner: \"Application for the Post of Assistant Manager — Procurement\".",
+        "Government employees must submit applications through their respective Heads of Departments/Institutions."
+      ],
+      "requiredDocuments": [
+        "Copies of educational qualifications",
+        "Certificates proving professional experience",
+        "Other relevant certificates"
+      ],
+      "verifiedAt": null,
+      "_needsReview": true,
+      "_ocr": true
     }
   ],
   "processedGazetteDates": [
@@ -4282,7 +4816,33 @@
     "2026-09-25",
     "2026-10-02"
   ],
-  "gazettePendingChunks": {},
+  "gazettePendingChunks": {
+    "2026-10-09": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20,
+      23,
+      26,
+      29,
+      31,
+      34,
+      36,
+      38,
+      39,
+      40,
+      42,
+      45
+    ]
+  },
   "skippedSourceUrls": {
     "https://www.gazette.lk/2026/10/chief-editor-department-of-cultural-affairs-vacancies-2026.html": {
       "reason": "duplicate: gazette.lk copy of Gazette 2,508's Chief Editor notice (GOVLK-13/14)",
@@ -4296,77 +4856,13 @@
       "reason": "duplicate: gazette.lk copy of Gazette 2,507's Agricultural Service exam (GOVLK-7..9)",
       "at": "2026-10-11T07:19:08.309900+00:00"
     },
-    "https://www.gazette.lk/2026/10/legal-officer-manager-state-pharmaceuticals-corporation-spc-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-11T13:43:00.789486+00:00"
-    },
-    "https://www.gazette.lk/2026/10/temporary-research-assistant-university-of-sri-jayewardenepura-job-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-11T13:43:39.052863+00:00"
-    },
-    "https://www.gazette.lk/2026/10/accounts-executive-litro-gas-limited-job-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-12T08:43:19.471561+00:00"
-    },
-    "https://www.gazette.lk/2026/10/assistant-manager-litro-gas-limited-job-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-12T08:43:20.374385+00:00"
-    },
-    "https://www.gazette.lk/2026/10/director-national-engineering-research-development-centre-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-12T08:43:21.206119+00:00"
-    },
-    "https://www.gazette.lk/2026/10/chief-executive-officer-national-agri-market-services-limited-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-12T08:43:21.999690+00:00"
-    },
-    "https://www.gazette.lk/2026/10/chief-manager-risk-management-state-mortgage-investment-bank-smib-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-12T16:12:30.937958+00:00"
-    },
-    "https://www.gazette.lk/2026/10/management-assistant-legal-officer-internal-audit-officer-assistant-director-legal-aid-commission-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-13T14:53:12.076873+00:00"
-    },
-    "https://www.gazette.lk/2026/10/assistant-registrar-national-institute-of-business-management-nibm-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-13T14:55:42.953040+00:00"
-    },
-    "https://www.gazette.lk/2026/10/sub-warden-kotelawala-defense-university-kdu-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-13T14:57:25.570870+00:00"
-    },
-    "https://www.gazette.lk/2026/10/management-assistant-quantity-surveyor-draughtsman-engineer-accountant-more-vacancies-ministry-of-agriculture-livestock-lands-and-irrigation-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-13T14:57:26.557843+00:00"
-    },
-    "https://www.gazette.lk/2026/10/youth-entrepreneurship-development-specialist-ministry-of-agriculture-livestock-lands-and-irrigation-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-13T14:57:27.353865+00:00"
-    },
-    "https://www.gazette.lk/2026/10/internal-auditor-sri-lanka-state-plantation-corporation-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-13T14:57:28.226192+00:00"
-    },
-    "https://www.gazette.lk/2026/10/management-assistant-junior-civil-engineer-ministry-of-agriculture-livestock-lands-and-irrigation-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-14T12:39:20.786761+00:00"
-    },
-    "https://www.gazette.lk/2026/10/receptionist-lake-house-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-14T12:40:32.655554+00:00"
-    },
-    "https://www.gazette.lk/2026/10/journalist-grade-iv-lake-house-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-14T12:40:33.515022+00:00"
-    },
-    "https://www.gazette.lk/2026/10/independent-television-network-limited-itn-vacancies-2026.html": {
-      "reason": "scanned PDF, no text layer",
-      "at": "2026-10-14T12:40:34.205034+00:00"
-    },
     "https://www.gazette.lk/2026/10/graduate-teaching-exam-results-2026-release-date-latest-update.html": {
       "reason": "exam results and interview call for the 24.05.2026 graduate teacher exam, not a vacancy",
       "at": "2026-10-14T13:11:58.990890+00:00"
+    },
+    "https://www.gazette.lk/2026/10/driver-kurunegala-plantation-limited-vacancies-2026.html": {
+      "reason": "no vacancy found in the notice",
+      "at": "2026-10-15T12:12:03.736329+00:00"
     }
   }
 }
